@@ -1,134 +1,122 @@
-import React, { useEffect, useState } from 'react';
-import '../styles.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from "../components/Navbar";
 import Sidebar from '../components/Sidebar';
-// Dashboard component
-const Dashboard = () => {
-  const [totalUsers, setTotalUsers] = useState(null);
-  const [totalEmp, setTotalEmp] = useState(null);
-  const [totalFreq, setTotalfreq] = useState(null);
-  const [totalReview, setTotalreview] = useState(null);
+import Swal from "sweetalert2";
+
+const EmployeeForm = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [users, setUsers] = useState([]);  // To hold frequency data
+  const [selectedUser, setSelectedUser] = useState('');  // Store selected frequency ID
+
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    const fetchUserCount = async () => {
-      try {
-        // Replace with your actual API URL
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/total-users`);
-        const data = await response.json();
-        setTotalUsers(data.count); // Assuming the API returns a count field
-      } catch (error) {
-        console.error('Error fetching user count:', error);
-      }
-    };
-
-    fetchUserCount();
+    fetch(`${process.env.REACT_APP_API_URL}/hods`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch register');
+        }
+        // console.log(response);  // Log response object
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Fetched userhod:', data);
+        setUsers(data);
+      })
+      .catch((error) => {
+        console.error('Error userhod user:', error);
+      });
   }, []);
 
-  useEffect(() => {
-    const fetchEmpCount = async () => {
-      try {
-        // Replace with your actual API URL
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/count-hods`);
-        const data = await response.json();
-        setTotalEmp(data.count); // Assuming the API returns a count field
-      } catch (error) {
-        console.error('Error fetching user Emp:', error);
-      }
-    };
+  const handleUserChange = (e) => {
+    setSelectedUser(e.target.value); // Set selected frequency ID
+  };
 
-    fetchEmpCount();
-  }, []);
-  
+  // Handle form submission to add a new employee
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const newEmployee = {
+        name, email,
+        user_id: selectedUser // Add the selected user (HOD ID) here
 
-  useEffect(() => {
-    const fetchFreqCount = async () => {
-      try {
-        // Replace with your actual API URL
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/count-freq`);
-        const data = await response.json();
-        setTotalfreq(data.count); // Assuming the API returns a count field
-      } catch (error) {
-        console.error('Error fetching user Emp:', error);
-      }
-    };
+      };
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/employee`, newEmployee);
+      Swal.fire({
+        title: "Employee Created Successfully",
+        // text: "Do you want to proceed with adding this employee?",
+        icon: "success",
+      }).then((result) => {
+        window.location.href = "/employees";
+      });
 
-    fetchFreqCount();
-  }, []);
-
-  useEffect(() => {
-    const fetchReviewCount = async () => {
-      try {
-        // Replace with your actual API URL
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/count-review`);
-        const data = await response.json();
-        setTotalreview(data.count); // Assuming the API returns a count field
-      } catch (error) {
-        console.error('Error fetching user setTotalreview:', error);
-      }
-    };
-
-    fetchReviewCount();
-  }, []);
-
+      setError('');
+    } catch (err) {
+      setError('Failed to create  Please try again.');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="app">
-    <Navbar />
-    <div className="content-wrapper">
-      <Sidebar />
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1>Welcome to the Admin Dashboard!</h1>
-      </div>
+      <Navbar />
+      <div className="content-wrapper">
+        <Sidebar />
+        <div className="container mt-5">
+          <h2>Add New Employee</h2>
+          {error && <p className="text-danger">{error}</p>}
+          {success && <p className="text-success">{success}</p>}
 
-      {/* <div className="dashboard-content" >
-        <div className="dashboard-card">
-          <h3>Total Application</h3>
-          {totalUsers !== null ? (
-          <p>{totalUsers}</p>
-        ) : (
-          <p>Loading...</p>
-        )}
-                </div>
-
-        <div className="dashboard-card">
-          <h3>Total Emp</h3>
-          {totalEmp !== null ? (
-          <p>{totalEmp}</p>
-        ) : (
-          <p>Loading...</p>
-        )}
-        </div>
-
-        <div className="dashboard-card">
-          <h3>No of Reviews</h3>
-          {totalReview !== null ? (
-          <p>{totalReview}</p>
-        ) : (
-          <p>Loading...</p>
-        )}    
-        </div>
-
-        <div className="dashboard-card">
-          <h3>Total Frequency</h3>
-          {totalFreq !== null ? (
-          <p>{totalFreq}</p>
-        ) : (
-          <p>Loading...</p>
-        )}    
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label">Employee Name</label>
+              <input
+                type="text"
+                id="name"
+                className="form-control"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
             </div>
+
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Employee Email</label>
+              <input
+                type="email"
+                id="email"
+                className="form-control"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>Select HOD:</label>
+              <select value={selectedUser} onChange={handleUserChange} className='form-control'>
+                <option value="">-- Select HOD --</option>
+                {users.map(user => (
+                  <option key={user._id} value={user._id}>
+                    {user.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+
+            <button type="submit" className="btn btn-primary" style={{backgroundColor: "#167340"}}>Add Employee</button>
+          </form>
+        </div>
       </div>
-
-      <div className="dashboard-footer">
-        <p>Dashboard Overview - 2025</p>
-      </div> */}
     </div>
-    </div>
-
-    </div>
-
   );
-
 };
 
-export default Dashboard;
+export default EmployeeForm;
