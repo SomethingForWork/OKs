@@ -1,110 +1,134 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useAuth } from '../auth/AuthContext';
-import Navbar from '../components/Navbar';
+import React, { useEffect, useState } from 'react';
+import '../styles.css';
+import Navbar from "../components/Navbar";
 import Sidebar from '../components/Sidebar';
-import Swal from "sweetalert2";
+// Dashboard component
+const Dashboard = () => {
+  const [totalUsers, setTotalUsers] = useState(null);
+  const [totalEmp, setTotalEmp] = useState(null);
+  const [totalFreq, setTotalfreq] = useState(null);
+  const [totalReview, setTotalreview] = useState(null);
 
-const ChangePassword = () => {
-    const { user } = useAuth();
-    const [oldPassword, setOldPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    const handlePasswordChange = async (e) => {
-        e.preventDefault();
-
-        if (newPassword !== confirmPassword) {
-            setMessage("New passwords don't match!");
-            return;
-        }
-
-        try {
-            setLoading(true);
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/change-password`, {
-                userId: user._id,
-                oldPassword,
-                newPassword
-            });
-
-            Swal.fire({
-                title: "Password Changed Successfully",
-                icon: "success",
-            }).then((result) => {
-                window.location.href = "/change-password";
-            });
-
-            setError('');
-        } catch (err) {
-            setError('Failed to create  Please try again.');
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
+  useEffect(() => {
+    const fetchUserCount = async () => {
+      try {
+        // Replace with your actual API URL
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/total-users`);
+        const data = await response.json();
+        setTotalUsers(data.count); // Assuming the API returns a count field
+      } catch (error) {
+        console.error('Error fetching user count:', error);
+      }
     };
 
-    return (
-        <div className="app">
-      <Navbar />
-      <div className="content-wrapper">
-        <Sidebar />
-        <div className="container mt-5 d-flex justify-content-center align-items-center">
-    
-                    <div className="change-password-card">
-                        <h2 className="change-password-title">Change Password</h2>
-                        {message && <p className="change-password-message">{message}</p>}
+    fetchUserCount();
+  }, []);
 
-                        <form onSubmit={handlePasswordChange}>
-                            <div className="change-password-input-group">
-                                <label className="change-password-label">Old Password</label>
-                                <input
-                                    type="password"
-                                    value={oldPassword}
-                                    onChange={(e) => setOldPassword(e.target.value)}
-                                    className="change-password-input"
-                                    required
-                                />
-                            </div>
+  useEffect(() => {
+    const fetchEmpCount = async () => {
+      try {
+        // Replace with your actual API URL
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/count-hods`);
+        const data = await response.json();
+        setTotalEmp(data.count); // Assuming the API returns a count field
+      } catch (error) {
+        console.error('Error fetching user Emp:', error);
+      }
+    };
 
-                            <div className="change-password-input-group">
-                                <label className="change-password-label">New Password</label>
-                                <input
-                                    type="password"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    className="change-password-input"
-                                    required
-                                />
-                            </div>
+    fetchEmpCount();
+  }, []);
+  
 
-                            <div className="change-password-input-group">
-                                <label className="change-password-label">Confirm New Password</label>
-                                <input
-                                    type="password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="change-password-input"
-                                    required
-                                />
-                            </div>
+  useEffect(() => {
+    const fetchFreqCount = async () => {
+      try {
+        // Replace with your actual API URL
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/count-freq`);
+        const data = await response.json();
+        setTotalfreq(data.count); // Assuming the API returns a count field
+      } catch (error) {
+        console.error('Error fetching user Emp:', error);
+      }
+    };
 
-                            <button
-                                type="submit"
-                                className="change-password-button"
-                                disabled={loading}
-                            >
-                                {loading ? 'Updating...' : 'Change Password'}
-                            </button>
-                        </form>
-                    </div>
+    fetchFreqCount();
+  }, []);
+
+  useEffect(() => {
+    const fetchReviewCount = async () => {
+      try {
+        // Replace with your actual API URL
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/count-review`);
+        const data = await response.json();
+        setTotalreview(data.count); // Assuming the API returns a count field
+      } catch (error) {
+        console.error('Error fetching user setTotalreview:', error);
+      }
+    };
+
+    fetchReviewCount();
+  }, []);
+
+
+  return (
+    <div className="app">
+    <Navbar />
+    <div className="content-wrapper">
+      <Sidebar />
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h1>Welcome to the Admin Dashboard!</h1>
+      </div>
+
+      {/* <div className="dashboard-content" >
+        <div className="dashboard-card">
+          <h3>Total Application</h3>
+          {totalUsers !== null ? (
+          <p>{totalUsers}</p>
+        ) : (
+          <p>Loading...</p>
+        )}
                 </div>
-            </div>
+
+        <div className="dashboard-card">
+          <h3>Total Emp</h3>
+          {totalEmp !== null ? (
+          <p>{totalEmp}</p>
+        ) : (
+          <p>Loading...</p>
+        )}
         </div>
-    );
+
+        <div className="dashboard-card">
+          <h3>No of Reviews</h3>
+          {totalReview !== null ? (
+          <p>{totalReview}</p>
+        ) : (
+          <p>Loading...</p>
+        )}    
+        </div>
+
+        <div className="dashboard-card">
+          <h3>Total Frequency</h3>
+          {totalFreq !== null ? (
+          <p>{totalFreq}</p>
+        ) : (
+          <p>Loading...</p>
+        )}    
+            </div>
+      </div>
+
+      <div className="dashboard-footer">
+        <p>Dashboard Overview - 2025</p>
+      </div> */}
+    </div>
+    </div>
+
+    </div>
+
+  );
+
 };
 
-export default ChangePassword;
+export default Dashboard;
