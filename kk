@@ -1,166 +1,117 @@
-import React, { useEffect, useState } from 'react';
-import Navbar from '../components/Navbar';  // Assuming you have a Navbar component
-import Sidebar from '../components/Sidebar';  // Assuming you have a Sidebar component
-// import AuditList from '../audit/AuditList';  // Assuming you have a Sidebar component
-// import PendingAuditList from '../audit/PendingAuditList'; // Remove this import
+import React, { useState } from 'react';
+import Navbar from '../components/Navbar';
+import Sidebar from '../components/Sidebar';
 import axios from 'axios';
-import { useAuth } from '../auth/AuthContext';
+import Swal from "sweetalert2";
 
-const Dashboard = () => {
-  const [completedReviews, setCompletedReviews] = useState([]);
+const AddUser = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [role, setRole] = useState(null);
   const [error, setError] = useState('');
-  const [applications, setApplications] = useState([]);
-  const [selectedApplication, setSelectedApplication] = useState('All');
-  const { user } = useAuth();
+  const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchCompletedReviews = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/completedReviews`, {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        });
-        setCompletedReviews(response.data);
-        setError('');
-        // Extract all unique application names
-        const appSet = new Set();
-        response.data.forEach(review => {
-          if (review.menuRights && typeof review.menuRights === 'object') {
-            // Try to get application name from menuRights if possible
-            if (review.applicationName) {
-              appSet.add(review.applicationName);
-            } else if (review.menuRights.appName) {
-              appSet.add(review.menuRights.appName);
-            }
-          }
-          if (review.applicationName) {
-            appSet.add(review.applicationName);
-          }
-        });
-        // Fallback: If applicationName is not present, use a string key from menuRights
-        if (appSet.size === 0) {
-          response.data.forEach(review => {
-            if (review.menuRights && typeof review.menuRights === 'object') {
-              Object.keys(review.menuRights).forEach(key => appSet.add(key));
-            }
-          });
-        }
-        setApplications(['All', ...Array.from(appSet)]);
-      } catch (err) {
-        setError('Failed to fetch completed reviews.');
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newUser = {
+      name,
+      email,
+      password,
+      company_name: companyName,
+      role,
     };
-    fetchCompletedReviews();
-  }, []);
 
-  // Dynamically determine all unique rights categories
-  const allRightsCategories = new Set();
-  completedReviews.forEach(review => {
-    if (review.menuRights && typeof review.menuRights === 'object') {
-      Object.keys(review.menuRights).forEach(cat => allRightsCategories.add(cat));
-    } else if (review.menuRights) {
-      allRightsCategories.add('Menu Rights');
-    }
-    if (review.branchRights) {
-      allRightsCategories.add('Branch Rights');
-    }
-  });
-  const rightsCategories = Array.from(allRightsCategories);
-
-  // Filter reviews by selected application
-  const filteredReviews = selectedApplication === 'All'
-    ? completedReviews
-    : completedReviews.filter(review => {
-        // Prefer applicationName field if present
-        if (review.applicationName) {
-          return review.applicationName === selectedApplication;
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/register`, newUser, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        // Fallback: check if menuRights has a key matching the application
-        if (review.menuRights && typeof review.menuRights === 'object') {
-          return Object.keys(review.menuRights).includes(selectedApplication);
-        }
-        return false;
+      });
+      Swal.fire({
+        title: "HOD Created Successfully",
+        // text: "Do you want to proceed with adding this HOD?",
+        icon: "success",
+      }).then((result) => {
+        window.location.href = "/hods";
       });
 
-  // After filtering reviews by application:
-  const rightsKeysSet = new Set();
-  filteredReviews.forEach(review => {
-    if (review.menuRights && typeof review.menuRights === 'object') {
-      Object.keys(review.menuRights).forEach(key => rightsKeysSet.add(key));
+      setError('');
+    } catch (err) {
+      setError('Failed to create  Please try again.');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
-  });
-  const rightsKeys = Array.from(rightsKeysSet);
+  };
 
   return (
     <div className="app">
       <Navbar />
       <div className="content-wrapper">
         <Sidebar />
-        <div className="dashboard-container">
-          <h2>Completed Reviews</h2>
-          {/* Dynamic Application Filter */}
-          <div className="filter-section mb-3">
-            <b>Filter By Application</b>
-            {applications.map(app => (
-              <div key={app} className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="applicationFilter"
-                  id={app}
-                  value={app}
-                  checked={selectedApplication === app}
-                  onChange={() => setSelectedApplication(app)}
-                />
-                <label className="form-check-label" htmlFor={app}>
-                  {app}
-                </label>
-              </div>
-            ))}
-          </div>
+        <div className="container mt-5">
+          <h2>Add New HOD/Reviewer</h2>
           {error && <p className="text-danger">{error}</p>}
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Employee Name</th>
-                {rightsKeys.map(key => (
-                  <th key={key}>{key}</th>
-                ))}
-                <th>Reviewer Remarks</th>
-                <th>Action Taken</th>
-                <th>Reviewed By</th>
-                <th>Review Date,Time</th>
-                {/* <th>Completed By</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {filteredReviews.length > 0 ? (
-                filteredReviews.map((review) => (
-                  <tr key={review._id}>
-                    <td>{review.employeeName || '-'}</td>
-                    {rightsKeys.map(key => (
-                      <td key={key}>
-                        {review.menuRights && review.menuRights[key] ? review.menuRights[key] : '-'}
-                      </td>
-                    ))}
-                    <td>{review.reviewerRemarks || '-'}</td>
-                    <td>{review.actionTaken ? review.actionTaken.charAt(0).toUpperCase() + review.actionTaken.slice(1) : '-'}</td>
-                    <td>{review.reviewerName || '-'}</td>
-                    <td>{review.submittedAt ? new Date(review.submittedAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-                    {/* <td>{review.reviewerName || 'N/A'}</td> */}
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={7 + rightsKeys.length} className="text-center">No completed reviews found.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          {success && <p className="text-success">{success}</p>}
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label">Name</label>
+              <input
+                type="text"
+                id="name"
+                className="form-control"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email</label>
+              <input
+                type="email"
+                id="email"
+                className="form-control"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">Password</label>
+              <input
+                type="password"
+                id="password"
+                className="form-control"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            {/* <div className="mb-3">
+              <label htmlFor="company_name" className="form-label">Company Name</label>
+              <input
+                type="text"
+                id="company_name"
+                className="form-control"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
+            </div> */}
+
+            <button type="submit" className="btn btn-primary" style={{backgroundColor: "#167340"}}>Add HOD/Reviewer</button>
+          </form>
         </div>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default AddUser;
