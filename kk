@@ -2,117 +2,65 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from "../components/Navbar";
 import Sidebar from '../components/Sidebar';
-import Swal from 'sweetalert2'; // Import SweetAlert for confirmation
-// import FrequencyForm from './FrequencyForm';
 
-const FrequencyIndex = () => {
-  const [frequencies, setFrequencies] = useState([]);
+const HodIndex = () => {
+  const [hods, sethod] = useState([]);
   const [error, setError] = useState('');
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State for modal visibility
-  const [currentFrequency, setCurrentFrequency] = useState(null); // State for the frequency being edited
-  const [editFormData, setEditFormData] = useState({ // State for the form data in the modal
+  const [showModal, setShowModal] = useState(false);
+  const [selectedHod, setSelectedHod] = useState(null);
+  const [formData, setFormData] = useState({
     name: '',
-    interval_days: '',
-    trigger_days: '',
+    email: '',
   });
 
-  // Fetch frequencies from the backend
-  const fetchFrequencies = async () => {
+  const fetchHods = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/frequency`);
-      setFrequencies(response.data);
-      setError('');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/hods`);
+      sethod(response.data);
     } catch (err) {
-      setError('Error fetching frequencies.');
-      console.error('Error fetching frequencies:', err);
+      setError('Error fetching HOD data.');
     }
   };
 
   useEffect(() => {
-    fetchFrequencies();
+    fetchHods();
   }, []);
 
-  // Handle input changes in the edit modal form
+  const handleModify = (hod) => {
+    setSelectedHod(hod);
+    setFormData({
+      name: hod.name,
+      email: hod.email,
+    });
+    setShowModal(true);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditFormData({ ...editFormData, [name]: value });
+    setFormData({ ...formData, [name]: value });
   };
 
-  // Handle edit button click
-  const handleEditClick = (frequency) => {
-    setCurrentFrequency(frequency);
-    setEditFormData({ // Pre-fill the form with the frequency data
-      name: frequency.name,
-      interval_days: frequency.interval_days,
-      trigger_days: frequency.trigger_days,
-    });
-    setIsEditModalOpen(true); // Open the modal
+  // This handler would be more complex for managing employee assignments
+  const handleEmployeeAssignmentChange = (employeeId) => {
+    // Placeholder for adding/removing employeeId from formData.employees
+    console.log(`Employee ID ${employeeId} assignment toggled`);
   };
 
-  // Handle delete button click
-  const handleDeleteClick = (id) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          // Call backend delete endpoint (will implement this next)
-          await axios.delete(`${process.env.REACT_APP_API_URL}/frequency/${id}`);
-          Swal.fire(
-            'Deleted!',
-            'The frequency has been deleted.',
-            'success'
-          );
-          fetchFrequencies(); // Refresh the list after deletion
-        } catch (err) {
-          Swal.fire(
-            'Error!',
-            'Failed to delete the frequency.',
-            'error'
-          );
-          console.error('Error deleting frequency:', err);
-        }
-      }
-    });
-  };
 
-  // Handle edit form submission
-  const handleEditSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!currentFrequency) return; // Should not happen if modal is opened correctly
-
     try {
-      // Call backend update endpoint (will implement this next)
-      const token = localStorage.getItem('token');
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/frequency/${currentFrequency._id}`,
-        editFormData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-      Swal.fire(
-        'Updated!',
-        'The frequency has been updated.',
-        'success'
-      );
-      setIsEditModalOpen(false); // Close the modal
-      fetchFrequencies(); // Refresh the list after update
+      console.log('Sending update data:', formData);
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/hods/${selectedHod._id}`, formData);
+      console.log('Backend response:', response.data);
+
+      // After successful update, re-fetch the HOD list to get the latest populated data
+      fetchHods();
+
+      setShowModal(false);
     } catch (err) {
-      Swal.fire(
-        'Error!',
-        'Failed to update the frequency.',
-        'error'
-      );
-      console.error('Error updating frequency:', err);
+      console.error("Failed to update HOD:", err.response?.data || err.message);
+      setError("Failed to update HOD");
     }
   };
 
@@ -122,124 +70,99 @@ const FrequencyIndex = () => {
       <div className="content-wrapper">
         <Sidebar />
         <div className="container mt-5">
-       
-          <h2>Frequencies</h2>
-          <a href='/create_frequency'>
-            <button  className='btn btn-md text-white' style={{backgroundColor: "#167340"}}>Create New Frequency</button>
+          <h2>HOD/Reviewer List</h2>
+          <a href='/hodcreate'>
+            <button  className='btn btn-md text-white' style={{backgroundColor: "#167340"}}>Create New HOD/Reviewer</button>
           </a>
+          <br/>
+          <br/>
           {error && <p className="text-danger">{error}</p>}
-         
-        
-          {frequencies.length > 0 ? (
-            <table className="table">
-              <thead>
+
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Employees</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            
+              {hods.length === 0 ? (
                 <tr>
-                  <th>Frequency Name</th>
-                  <th>Interval (Days)</th>
-                  <th>Trigger Days</th>
-                  <th className='d-none'>Status</th>
-                  <th>Actions</th> {/* New Actions column */}
+                  <td colSpan="4" className="text-center">No HODs found</td>
                 </tr>
-              </thead>
-              <tbody>
-                {frequencies.map((frequency) => (
-                  <tr key={frequency._id}>
-                    <td>{frequency.name}</td>
-                    <td>{frequency.interval_days}</td>
-                    <td>{frequency.trigger_days}</td>
-                    <td className='d-none'>{frequency.status}</td>
+              ) : (
+                hods.map((hod) => (
+                  <tr key={hod._id}>
                     <td>
-                      <button 
-                        className='btn btn-sm btn-warning me-2 text-white' style={{backgroundColor: "#167340"}} // me-2 for right margin
-                        onClick={() => handleEditClick(frequency)}
-                      >
-                        Edit
-                      </button>
-                      <button 
-                        className='btn btn-sm btn-danger'
-                        onClick={() => handleDeleteClick(frequency._id)}
-                      >
-                        Delete
+                      {hod.name}
+                    </td>
+                    <td>
+                      {hod.email}
+                    </td>
+                    <td>
+                      {Array.isArray(hod.employees) && hod.employees.length > 0
+                          ? hod.employees.map((emp) => emp.name).join(", ")
+                          : "No Employees Assigned"}
+                    </td>
+                    <td>
+                      <button className="btn btn-sm text-white" style={{ backgroundColor: "#167340"}} onClick={() => handleModify(hod)}>
+                        Modify
                       </button>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p>No frequencies found.</p>
-          )}
-
-          {/* Edit Frequency Modal */}
-          {isEditModalOpen && currentFrequency && (
-            <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Edit Frequency</h5>
-                    <button type="button" className="btn-close" onClick={() => setIsEditModalOpen(false)}></button>
-                  </div>
-                  <div className="modal-body">
-                    <form onSubmit={handleEditSubmit}>
-                      <div className="mb-3">
-                        <label htmlFor="name" className="form-label">Frequency Name</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          id="name" 
-                          name="name" 
-                          value={editFormData.name} 
-                          onChange={handleInputChange} 
-                          required
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="interval_days" className="form-label">Interval (Days)</label>
-                         <select 
-                            className='form-control' 
-                            id="interval_days" 
-                            name="interval_days" 
-                            value={editFormData.interval_days} 
-                            onChange={handleInputChange}
-                            required
-                          >
-                            <option value="">Select Interval</option>
-                            <option value="7">7</option>
-                            <option value="30">30</option>
-                            <option value="90">90</option>
-                            <option value="180">180</option>
-                          </select>
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="trigger_days" className="form-label">Trigger Days</label>
-                        <input 
-                          type="number" 
-                          className="form-control" 
-                          id="trigger_days" 
-                          name="trigger_days" 
-                          value={editFormData.trigger_days} 
-                          onChange={handleInputChange} 
-                          required
-                          min="1"
-                          max="31"
-                        />
-                      </div>
-                       <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" onClick={() => setIsEditModalOpen(false)}>Close</button>
-                        <button type="submit" className="btn btn-primary" style={{backgroundColor: "#167340"}}>Save changes</button>
-                      </div>
-                    </form>
-                  </div>
-                 
-                </div>
-              </div>
-            </div>
-          )}
-
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
+
+      {showModal && selectedHod && (
+        <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Modify HOD/Reviewer Details</h5>
+                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label className="form-label">Name</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Email</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Close</button>
+                    <button type="submit" className="btn btn-primary" style={{backgroundColor: "#167340"}}>Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default FrequencyIndex;
+export default HodIndex;
