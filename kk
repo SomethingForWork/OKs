@@ -1,214 +1,135 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Navbar from "../components/Navbar";
+import React, { useState } from "react";
+import * as XLSX from "xlsx";
+import axios from "axios";
+import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+const UploadEmployees = () => {
+    const [file, setFile] = useState(null);
+    const [message, setMessage] = useState("");
+    const [previewData, setPreviewData] = useState([]);
 
-const EmployeeIndex = () => {
-  const [employees, setEmployees] = useState([]);
-  const [error, setError] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [editingEmployee, setEditingEmployee] = useState(null);
-  const [editForm, setEditForm] = useState({
-    name: '',
-    email: ''
-  });
+    // Handle file selection
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (!selectedFile) return;
 
-  // Fetch employees data from the backend
-  const fetchEmployees = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/employee`);
-      setEmployees(response.data);
-    } catch (err) {
-      setError('Error fetching employee data.');
-    }
-  };
+        setFile(selectedFile);
 
-  // Update employee status (true: Enabled, false: Disabled)
-  const updateStatus = async (id, status) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/employee/${id}`, { status }, {
-        headers: {
-          Authorization: `Bearer ${token}`
+        // Read and preview Excel data
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const binaryStr = event.target.result;
+            const wb = XLSX.read(binaryStr, { type: "binary" });
+            // const ws = wb.Sheets[wb.SheetNames[0]]; // Reading Sheet 1
+            const ws = wb.Sheets["Sheet2"]; // Reading Sheet 2
+            const data = XLSX.utils.sheet_to_json(ws);
+            setPreviewData(data);  // Store preview data
+        };
+        reader.readAsBinaryString(selectedFile);
+    };
+
+    // Upload the file
+    const handleUpload = async () => {
+        if (!file) {
+            setMessage("Please select a file!");
+            return;
         }
-      });
-      if (response.data) {
-        // Update the local state with the new status
-        setEmployees(prevEmployees => 
-          prevEmployees.map(employee => 
-            employee._id === id ? { ...employee, status: status } : employee
-          )
-        );
-      }
-    } catch (err) {
-      console.error('Error updating status:', err);
-      setError('Failed to update employee status. Please try again.');
-    }
-  };
 
-  // Handle edit button click
-  const handleEditClick = (employee) => {
-    setEditingEmployee(employee);
-    setEditForm({
-      name: employee.name,
-      email: employee.email
-    });
-    setShowModal(true);
-  };
+        const formData = new FormData();
+        formData.append("file", file);
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditForm(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/employee/${editingEmployee._id}`, editForm, {
-        headers: {
-          Authorization: `Bearer ${token}`
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/uploadEmployees`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+            setMessage(response.data.message);
+            setPreviewData([]); // Clear preview after upload
+        } catch (error) {
+            console.error("Upload Error:", error);
+            setMessage("Error uploading file");
         }
-      });
-      setEmployees(employees.map(employee => 
-        employee._id === editingEmployee._id ? { ...employee, ...editForm } : employee
-      ));
-      setShowModal(false);
-    } catch (err) {
-      setError('Error updating employee details.');
-    }
-  };
+    };
 
-  // Fetch employees when the component mounts
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
+    // Function to download the Excel template
+    const handleDownloadTemplate = () => {
+        const headers = ["Emp Name", "Emp Email", "Reviewer Email", "Role"];
+        // Add a sample data row
+        const sampleData = [" ", " ", " ", "Reviewer, Employee"];
+        
+        // Create a worksheet from headers and sample data
+        const data = [headers, sampleData];
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, "EmployeeReviewerTemplate.xlsx");
+    };
 
-  return (
-    <div className="app">
-      <Navbar />
-      <div className="content-wrapper">
-        <Sidebar />
-        <div className="container mt-5">
-          <h2>Employee / Reviewer List</h2>
-          <a href='/employeescreate'>
-            <button className='btn btn-md btn-primary text-white' style={{backgroundColor: "#167340"}}>Create New Employee</button>
-          </a>
-          <br />
-          <br />
-          {error && <p className="text-danger">{error}</p>}
+    return (
+        <div className="app">
+            <Navbar />
+            <div className="content-wrapper">
+                <Sidebar />
+                <div className="dashboard-container">
+                    <div className="container mt-5">
+                        <h2 className="mb-3">Upload Employees from Excel</h2>
 
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Reviewer NAME</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {employees.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="text-center">No employees found</td>
-                </tr>
-              ) : (
-                employees.map((employee) => (
-                  <tr key={employee._id}>
-                    <td>{employee.name}</td>
-                    <td>{employee.email}</td>
-                    <td>{employee.user_id?.name}</td>
-                    <td>{employee.status === false ? 'Disabled' : 'Enabled'}</td>
-                    <td>
-                      <button 
-                        className='btn btn-sm me-2 mb-2 text-white' style={{backgroundColor: "#167340"}}
-                        onClick={() => handleEditClick(employee)}
-                      >
-                        Modify
-                      </button>
-                      {employee.status === true ? (
+                        {/* Download Template Button */}
                         <button 
-                          className='btn btn-sm btn-danger'
-                          onClick={() => updateStatus(employee._id, false)}
+                            onClick={handleDownloadTemplate} 
+                            className="btn btn-secondary mb-3 me-2"
                         >
-                          Disable
+                            Download Template
                         </button>
-                      ) : (
-                        <button 
-                          className='btn btn-sm btn-success'
-                          onClick={() => updateStatus(employee._id, true)}
-                        >
-                          Enable
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
-      {/* Edit Modal */}
-      {showModal && (
-        <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Edit Employee</h5>
-                <button 
-                  type="button" 
-                  className="btn-close" 
-                  onClick={() => setShowModal(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label">Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="name"
-                      value={editForm.name}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Email</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      name="email"
-                      value={editForm.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                      Close
-                    </button>
-                    <button type="submit" className="btn btn-primary" style={{backgroundColor: "#167340"}}>
-                      Save Changes
-                    </button>
-                  </div>
-                </form>
-              </div>
+                        <div className="mb-3">
+                            <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} className="form-control" />
+                        </div>
+                        <button onClick={handleUpload} className="btn btn-primary mb-3" style={{backgroundColor: "#167340"}}>Upload</button>
+                        {message && <p className="alert alert-info">{message}</p>}
+
+                        {previewData.length > 0 && (
+                            <div className="table-responsive">
+                                <h4>Preview Data:</h4>
+                                <table className="table table-bordered">
+                                    <thead className="table-dark">
+                                        <tr>
+                                            <th>Emp Name</th>
+                                            <th>Email ID</th>
+                                            <th>HOD</th>
+                                        </tr>
+                                    </thead>
+                                    {/* <tbody>
+                                        {previewData.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{item.Emp_Name || "N/A"}</td>
+                                                <td>{item.Email_ID || "N/A"}</td>
+                                                <td>{item.HOD || "N/A"}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody> */}
+
+
+                                    <tbody>
+                                        {previewData.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{item["Emp Name"] || "-"}</td>
+                                                <td>{item["Email ID"] || "-"}</td>
+                                                <td>{item["HOD"] || "-"}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
             </div>
-          </div>
         </div>
-      )}
-    </div>
-  );
+
+    );
 };
 
-export default EmployeeIndex;
+export default UploadEmployees;
