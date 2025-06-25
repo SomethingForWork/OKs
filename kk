@@ -1,5 +1,7 @@
-"scripts": {
-  "start": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
-  "start:network": "set NODE_OPTIONS=--openssl-legacy-provider && set HOST=0.0.0.0 && react-scripts start",
-  ...
-}
+curl -X POST http://<backend-ip>:3002/create-admin \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Admin Name",
+    "email": "admin@example.com",
+    "password": "yourpassword"
+  }'
