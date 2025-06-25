@@ -1,194 +1,267 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '../auth/AuthContext';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
 
-const CreateAuditForm = () => {
-  const [empId, setEmpId] = useState('');
-  const [selectedemp, setSelectedEmp] = useState('');
+const AuditList = () => {
+  const { user } = useAuth();
 
-  const [frequencyId, setFrequencyId] = useState('');
-  const [selectedFrequency, setSelectedFrequency] = useState('');
-  const [userId, setUserId] = useState('');
-  const [selectedUserId, setSelectedUserId] = useState(''); // Added state for selected user
-  const [applicationId, setApplicationId] = useState('');
-  const [selectedApplicationId, setSelectedApplicationId] = useState('');
-  const [next_audit_date, setNextAuditDate] = useState('');
-  const [auditDate, setAuditDate] = useState('');
-  const [inactive, setInactive] = useState(false);
-  const [rights, setRights] = useState('');
-  const [reviewerRemarks, setReviewerRemarks] = useState('');
+  const [audits, setAudits] = useState([]);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [appRights, setAppRights] = useState([]);
-  const [frequencies, setFrequencies] = useState([]);
-  const [employees, setEmployees] = useState([]);
-  const [users, setUsers] = useState([]);
   const [applications, setApplications] = useState([]);
-  const [selectedRights, setSelectedRights] = useState([]);
-  const [rightsDetails, setRightsDetails] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState('All');
+  const [displayedRightsCategories, setDisplayedRightsCategories] = useState([]); // State to store unique categories from displayed audits
+  const [editingAuditId, setEditingAuditId] = useState(null); // State to track which audit is being edited (original rights edit state)
+  const [editedRights, setEditedRights] = useState({}); // State to store edited rights values (original rights edit state)
+  const [isSaving, setIsSaving] = useState(false); // State to track saving status (original rights edit state)
+  const [mandatoryRemarksAuditIds, setMandatoryRemarksAuditIds] = useState([]); // New state to track audits where remarks are mandatory
+  const [reviewCompleted, setReviewCompleted] = useState({}); // { [auditId]: boolean }
+  const [selectedActions, setSelectedActions] = useState({});
 
-  useEffect(() => {
-    // fetch employees
-    fetch(`${process.env.REACT_APP_API_URL}/employee`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch frequencies');
+  // Handler for modify button (now primarily for making remarks mandatory)
+  const handleModify = (auditId) => {
+    setMandatoryRemarksAuditIds(prevIds => [...prevIds, auditId]);
+    // We don't need to set editingAuditId or initialize editedRights here
+  };
+
+  // Handler for rights input change (keeping the function but it won't be called if rights editing is removed from render)
+  const handleRightsChange = (auditId, category, value) => {
+    setEditedRights(prev => ({
+      ...prev,
+      [category]: value
+    }));
+  };
+
+  // Handler for save button (keeping the function but it won't be used if Save button is removed from render)
+  const handleSave = async (auditId) => {
+    try {
+      setIsSaving(true);
+      setError('');
+
+      // Original save logic for rights (will not be triggered from the UI)
+      const audit = audits.find(a => a._id === auditId);
+      if (!audit) {
+        throw new Error('Audit not found');
+      }
+
+      const updatedRights = {};
+      Object.entries(editedRights).forEach(([category, value]) => {
+        if (value.trim() !== '') {
+          updatedRights[category] = value.split(',').map(v => v.trim());
         }
-        return response.json();
-      })
-      .then((data) => {
-        setEmployees(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching frequencies:', error);
       });
 
-    // Fetch frequencies
-    fetch(`${process.env.REACT_APP_API_URL}/frequency`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch frequencies');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setFrequencies(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching frequencies:', error);
-      });
+      const updateData = {
+        auditId,
+        rights: updatedRights,
+        reviewer: user._id,
+        emp: audit.emp_id._id,
+        app: audit.application_id._id
+      };
 
-    // Fetch users
-    fetch(`${process.env.REACT_APP_API_URL}/register`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUsers(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching users:', error);
-      });
+      const response = await axios.post('http://localhost:3002/updateAuditRights', updateData);
 
-    // Fetch applications
-    fetch(`${process.env.REACT_APP_API_URL}/creating`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch applications');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setApplications(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching applications:', error);
-      });
-  }, []);
+      if (response.data.success) {
+        setAudits(prevAudits => 
+          prevAudits.map(a => 
+            a._id === auditId 
+              ? { ...a, excelRightsData: { ...a.excelRightsData, ...updatedRights } }
+              : a
+          )
+        );
+        
+        setEditingAuditId(null);
+        setEditedRights({});
+        
+        alert('Rights updated successfully');
+      } else {
+        throw new Error(response.data.message || 'Failed to update rights');
+      }
+    } catch (error) {
+      console.error('Error saving rights:', error);
+      setError(error.message || 'Failed to save changes');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Handler for cancel button (keeping the function but it won't be used if Cancel button is removed from render)
+  const handleCancel = () => {
+    setEditingAuditId(null);
+    setEditedRights({});
+    setError('');
+  };
 
-    // Validate that all selected rights have details
-    const missingDetails = selectedRights.filter(right => !rightsDetails[right]?.trim());
-    if (missingDetails.length > 0) {
-      setError(`Please provide details for: ${missingDetails.join(', ')}`);
+  // Handler for submit button
+  const handleSubmit = async (auditId) => {
+    // Validate review completed checkbox
+    if (!reviewCompleted[auditId]) {
+      setError('Please check the Review Completed box before submitting.');
       return;
     }
+    try {
+      // Get the remark value from the textarea
+      const remarkTextarea = document.querySelector(`textarea[data-audit-id='${auditId}']`);
+      const remark = remarkTextarea.value;
 
-    const newAudit = {
-      emp_id: empId,
-      user_id: userId,
-      application_id: applicationId,
-      initialRights: selectedRights.join(","),
-      excelRightsData: rightsDetails // Store the rights details in the same format as Excel uploads
+      // Check if remarks are mandatory for this audit and if the field is empty
+      if (mandatoryRemarksAuditIds.includes(auditId) && remark.trim() === '') {
+        alert('Reviewer Remarks are mandatory for this submission.');
+        remarkTextarea.style.borderColor = 'red';
+        return;
+      }
+      remarkTextarea.style.borderColor = '';
+
+      // Get the selected action from state
+      const selectedAction = selectedActions[auditId];
+      if (!selectedAction) {
+        alert('Please select an action (Revoke, Retain, or Modify).');
+        return;
+      }
+
+      const audit = audits.find(a => a._id === auditId);
+      if (!audit || !audit.emp_id || !audit.application_id) {
+        console.error('Audit data is incomplete for submission.', audit);
+        alert('Unable to submit review due to missing information.');
+        return;
+      }
+
+      // Gather rights data
+      let rightsDetails = '';
+      if (audit.excelRightsData && typeof audit.excelRightsData === 'object') {
+        for (const category in audit.excelRightsData) {
+          if (audit.excelRightsData.hasOwnProperty(category)) {
+            const rightsArray = audit.excelRightsData[category];
+            if (Array.isArray(rightsArray) && rightsArray.length > 0) {
+              rightsDetails += `${category}: ${rightsArray.join(', ')}; `;
+            }
+          }
+        }
+      }
+
+      // Log the request payload for debugging
+      const payload = {
+        auditID: auditId,
+        remark,
+        rights: audit.excelRightsData || {},
+        reviewer: user._id,
+        reviewerName: user.name,
+        emp: audit.emp_id._id,
+        app: audit.application_id._id,
+        action: selectedAction
+      };
+      console.log('Submitting review:', payload);
+
+      // Call /submitReview to save the completed review
+      await axios.post('http://localhost:3002/submitReview', payload);
+
+      Swal.fire({
+        title: "Review marked as completed!",
+        icon: "success",
+        timer: 1200,
+        showConfirmButton: false
+      });
+      // Optionally remove from audits list or refresh
+      setAudits(prev => prev.filter(a => a._id !== auditId));
+    } catch (error) {
+      console.error('Error handling submit:', error);
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+        alert(error.response.data.message);
+      } else {
+        setError('Failed to process the action');
+      }
+    }
+  };
+
+  // Fetch audits based on filter
+  useEffect(() => {
+    const fetchAudits = async () => {
+      try {
+        // Normalize the user's email for comparison
+        const normalizedUserEmail = user?.email?.trim().toLowerCase();
+        console.log('Fetching audits for user:', normalizedUserEmail); // Add logging
+
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/pastAudits`, {
+          params: {
+            user: user?.role === 'admin' ? 'admin' : user?._id,
+            application: selectedApplication
+          }
+        });
+
+        // Filter audits based on normalized email comparison
+        const filteredAudits = response.data.filter(audit => {
+          if (user?.role === 'admin') return true;
+          
+          const auditHodEmail = audit.user_id?.email?.trim().toLowerCase();
+          const isAssignedToHod = auditHodEmail === normalizedUserEmail;
+          
+          console.log(`Audit HOD email: ${auditHodEmail}, Matches user: ${isAssignedToHod}`); // Add logging
+          
+          return isAssignedToHod && audit.status === true;
+        });
+
+        console.log('Filtered audits:', filteredAudits); // Add logging
+        setAudits(filteredAudits);
+
+        // Extract unique rights categories from all audits
+        const categories = new Set();
+        filteredAudits.forEach(audit => {
+          if (audit.excelRightsData) {
+            Object.keys(audit.excelRightsData).forEach(category => {
+              categories.add(category);
+            });
+          }
+        });
+        setDisplayedRightsCategories(Array.from(categories));
+
+      } catch (err) {
+        console.error('Error fetching audits:', err);
+        setError('Failed to fetch audits');
+      }
     };
 
-    try {
-      const response = await axios.post('http://localhost:3002/audit', newAudit);
-      Swal.fire({
-        title: "Review Created Successfully",
-        icon: "success",
-      }).then((result) => {
-        window.location.href = "/create_audit";
-      });
+    fetchAudits();
+  }, [user, selectedApplication]);
 
-      setError('');
-    } catch (err) {
-      setError('Failed to create review. Please try again.');
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Fetch all applications (only for the filter dropdown, not for category headers)
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/creating`); // Fetch all applications
+        setApplications(response.data); // Store applications for the filter dropdown
 
-  const handleApplicationChange = async (e) => {
-
-    const applicationId = e.target.value;
-    setApplicationId(applicationId);
-    setSelectedRights([]); // Clear previously selected rights
-    setAppRights({}); // Clear appRights state before fetching
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/getApplicationDataForReview`, {
-        params: { application_id: applicationId }  // Send frequency_id in the query parameters
-      });
-      
-      const fetchedAppRights = response.data.message.app_rights;
-      let formattedAppRights = {};
-
-      if (fetchedAppRights) {
-          if (typeof fetchedAppRights === 'object' && !Array.isArray(fetchedAppRights)) {
-            // If it's already a nested object
-            formattedAppRights = fetchedAppRights;
-          } else if (Array.isArray(fetchedAppRights)) {
-            // If it's a simple array, put it under a 'default' category
-            formattedAppRights = { 'default': fetchedAppRights };
-          } 
-          // If fetchedAppRights is null, undefined, or other, formattedAppRights remains {} (empty object)
+      } catch (err) {
+        console.error('Error fetching applications:', err);
+        // Handle error, maybe set an error state for the applications fetch
       }
+    };
 
-      setAppRights(formattedAppRights); // Set the state with the formatted object
-      setNextAuditDate(response.data.nextAuditDate);
-      setError('');  // Clear any previous error
-    } catch (err) {
-      console.error('Failed to fetch application data for review:', err);
-      setError('Failed to fetch application data for review.');
-      setAppRights({}); // Set to empty object on error
-      setNextAuditDate(null);
-    }
-  };
+    fetchApplications();
+  }, []); // Run once on component mount
 
-  const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;
-    setSelectedRights((prevRights) => {
-      const newRights = checked 
-        ? [...prevRights, value] 
-        : prevRights.filter((right) => right !== value);
-      
-      // Update rightsDetails when rights are deselected
-      if (!checked) {
-        setRightsDetails(prev => {
-          const newDetails = { ...prev };
-          delete newDetails[value];
-          return newDetails;
-        });
+  /*
+   * Helper function to render the content of the rights cell.
+   * Displays value from excel if header matches user-defined right, or if it's an additional excel 'rights' header.
+   * Highlights user-defined rights in red if not found in excel.
+   */
+  const renderRightsCell = (audit, category, applications) => {
+    // Get the rights data from the audit
+    const rightsData = audit.excelRightsData || {};
+    
+    // If the category exists in the rights data, display it
+    if (rightsData.hasOwnProperty(category)) {
+      const value = rightsData[category];
+      // Handle both array and string values
+      if (Array.isArray(value)) {
+        return value.join(', ');
       }
-      
-      return newRights;
-    });
-  };
-
-  const handleRightsDetailsChange = (right, value) => {
-    setRightsDetails(prev => ({
-      ...prev,
-      [right]: value
-    }));
+      return value;
+    }
+    
+    return '-';
   };
 
   return (
@@ -196,146 +269,157 @@ const CreateAuditForm = () => {
       <Navbar />
       <div className="content-wrapper">
         <Sidebar />
-        <div className="container mt-5">
-          <h2>Create New Review</h2>
-
-          {error && <p className="text-danger">{error}</p>}
-          {success && <p className="text-success">{success}</p>}
-
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label>Select Application:</label>
-              <select value={applicationId} onChange={handleApplicationChange} className='form-control' required>
-                <option value="" selected disabled>Select</option>
-                {applications.map((application) => (
-                  <option key={application._id} value={application._id}>
-                    {application.appName}
-                  </option>
-                ))}
-              </select>
-              {next_audit_date && (
-                <small>
-                  Next Review Date: <b>{new Date(next_audit_date).toLocaleDateString('en-US', {
-                    weekday: 'long', // e.g. 'Monday'
-                    year: 'numeric', // e.g. '2025'
-                    month: 'long', // e.g. 'February'
-                    day: 'numeric' // e.g. '17'
-                  })}</b>
-                </small>
-              )}
-
-            </div>
-            <div className="mb-3">
-              <label>Select Employee:</label>
-              <select value={empId} onChange={(e) => setEmpId(e.target.value)} className='form-control' required>
-                <option value="" selected disabled>Select</option>
-                {employees.map((emp) => (
-                  <option key={emp._id} value={emp._id}>
-                    {emp.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mb-3">
-              <label>Select HOD/Reviewer:</label>
-              <select value={userId} onChange={(e) => setUserId(e.target.value)} className='form-control'>
-                <option value="" selected disabled>Select</option>
-                {users.map((user) => (
-                  <option key={user._id} value={user._id}>
-                    {user.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-
-
-            <div className="mb-3">
-              <label htmlFor="rights" className="form-label">Initial Rights:</label><br></br>
-              
-              {appRights && typeof appRights === 'object' && Object.keys(appRights).length > 0 ? (
-                Object.keys(appRights).map(categoryKey => (
-                  <div key={categoryKey} className="mb-2">
-                    <h6>{categoryKey}</h6>
-                    {Array.isArray(appRights[categoryKey]) && appRights[categoryKey].length > 0 ? (
-                      appRights[categoryKey].map((right, rightIndex) => (
-                        <div key={`${categoryKey}-${rightIndex}`} className="form-check mb-2">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id={`right-${categoryKey}-${rightIndex}`}
-                            value={right}
-                            onChange={handleCheckboxChange}
-                            checked={selectedRights.includes(right)}
-                          />
-                          <label className="form-check-label" htmlFor={`right-${categoryKey}-${rightIndex}`}>
-                            {right}
-                          </label>
-                          {selectedRights.includes(right) && (
-                            <div className="mt-2">
-                              <textarea
-                                className="form-control"
-                                placeholder={`Enter details for ${right}`}
-                                value={rightsDetails[right] || ''}
-                                onChange={(e) => handleRightsDetailsChange(right, e.target.value)}
-                                required
-                              />
-                            </div>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      <small className='text-muted'>No rights in this category</small>
-                    )}
-                  </div>
-                ))
-              ) : Array.isArray(appRights) && appRights.length > 0 ? (
-                <div className="mb-2">
-                  <h6>Default Category</h6>
-                  {appRights.map((right, index) => (
-                    <div key={`default-${index}`} className="form-check mb-2">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id={`right-default-${index}`}
-                        value={right}
-                        onChange={handleCheckboxChange}
-                        checked={selectedRights.includes(right)}
-                      />
-                      <label className="form-check-label" htmlFor={`right-default-${index}`}>
-                        {right}
-                      </label>
-                      {selectedRights.includes(right) && (
-                        <div className="mt-2">
-                          <textarea
-                            className="form-control"
-                            placeholder={`Enter details for ${right}`}
-                            value={rightsDetails[right] || ''}
-                            onChange={(e) => handleRightsDetailsChange(right, e.target.value)}
-                            required
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))}
+        <div className="dashboard-container">
+          <div className="container mt-5">
+            <h2>Pending Reviews</h2>
+            {/* Filter Section */}
+            <div className="filter-section mb-3">
+              <h5>Filter By Application</h5>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="applicationFilter"
+                  id="all-applications"
+                  value="All"
+                  checked={selectedApplication === 'All'}
+                  onChange={() => setSelectedApplication('All')}
+                />
+                <label className="form-check-label" htmlFor="all-applications">
+                  All
+                </label>
+              </div>
+              {applications.map((app) => (
+                <div key={app._id} className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="applicationFilter"
+                    id={app._id}
+                    value={app._id}
+                    checked={selectedApplication === app._id}
+                    onChange={() => setSelectedApplication(app._id)}
+                  />
+                  <label className="form-check-label" htmlFor={app._id}>
+                    {app.appName}
+                  </label>
                 </div>
-              ) : (appRights && typeof appRights === 'object' && Object.keys(appRights).length === 0) ? (
-                <small className='text-muted'>No rights assigned to this application</small>
-              ) : (
-                <small className='text-muted'>Select Application First</small>
-              )}
+              ))}
             </div>
-
-            <button type="submit" className="btn btn-primary" style={{backgroundColor: "#167340"}} disabled={isLoading}>
-              {isLoading ? 'Creating...' : 'Create Audit'}
-            </button>
-          </form>
+            {error && <p className="text-danger">{error}</p>}
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  {/* Removed Application header */}
+                  {/* <th>Application</th> */}
+                  {/* Dynamically generated rights columns from unique categories in displayed audits */}
+                  {displayedRightsCategories.map(category => (
+                    <th key={category}>{category}</th>
+                  ))}
+                  <th>Reviewer Remarks</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {audits.length > 0 ? (
+                  audits.map((audit) => (
+                    <tr key={audit._id}>
+                      <td>
+                        {audit.emp_id && typeof audit.emp_id === 'object' && audit.emp_id.name 
+                          ? audit.emp_id.name
+                          : '-'}
+                      </td>
+                      {displayedRightsCategories.map(category => (
+                        <td key={category}>{renderRightsCell(audit, category, applications)}</td>
+                      ))}
+                      <td>
+                        <label htmlFor={`remarks-${audit._id}`}> {mandatoryRemarksAuditIds.includes(audit._id) && <span className="text-danger">*</span>}</label>
+                        <textarea placeholder='Comments' className='form-control'
+                          id={`remarks-${audit._id}`}
+                          data-audit-id={audit._id}
+                          defaultValue={audit.reviewer_remarks || ""}
+                        ></textarea>
+                      </td>
+                      <td>
+                        <div className="d-flex flex-column gap-2">
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name={`action-${audit._id}`}
+                              id={`revoke-${audit._id}`}
+                              value="revoke"
+                              checked={selectedActions[audit._id] === 'revoke'}
+                              onChange={() => {
+                                setSelectedActions(prev => ({ ...prev, [audit._id]: 'revoke' }));
+                                setMandatoryRemarksAuditIds(prev => prev.filter(id => id !== audit._id));
+                              }}
+                            />
+                            <label className="form-check-label" htmlFor={`revoke-${audit._id}`}>Revoke</label>
+                          </div>
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name={`action-${audit._id}`}
+                              id={`retain-${audit._id}`}
+                              value="retain"
+                              checked={selectedActions[audit._id] === 'retain'}
+                              onChange={() => {
+                                setSelectedActions(prev => ({ ...prev, [audit._id]: 'retain' }));
+                                setMandatoryRemarksAuditIds(prev => prev.filter(id => id !== audit._id));
+                              }}
+                            />
+                            <label className="form-check-label" htmlFor={`retain-${audit._id}`}>Retain</label>
+                          </div>
+                          <div className="form-check mt-2">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name={`action-${audit._id}`}
+                              id={`modify-${audit._id}`}
+                              value="modify"
+                              checked={selectedActions[audit._id] === 'modify'}
+                              onChange={() => {
+                                setSelectedActions(prev => ({ ...prev, [audit._id]: 'modify' }));
+                                handleModify(audit._id);
+                              }}
+                            />
+                            <label className="form-check-label" htmlFor={`modify-${audit._id}`}>Modify</label>
+                          </div>
+                          <div className="form-check mt-2">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id={`review-completed-${audit._id}`}
+                              checked={!!reviewCompleted[audit._id]}
+                              onChange={e => setReviewCompleted(prev => ({ ...prev, [audit._id]: e.target.checked }))}
+                            />
+                            <label className="form-check-label" htmlFor={`review-completed-${audit._id}`}><span className="text-danger">*</span>Review Completed  </label>
+                          </div>
+                          <button 
+                            className="btn btn-secondary btn-sm mt-2" 
+                            onClick={() => handleSubmit(audit._id)}
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">No audits found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-    // TODO
   );
 };
 
-export default CreateAuditForm;
+export default AuditList;
