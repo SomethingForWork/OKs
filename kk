@@ -1,168 +1,166 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';  // Assuming you have a Navbar component
+import Sidebar from '../components/Sidebar';  // Assuming you have a Sidebar component
+// import AuditList from '../audit/AuditList';  // Assuming you have a Sidebar component
+// import PendingAuditList from '../audit/PendingAuditList'; // Remove this import
 import axios from 'axios';
-import Navbar from "../components/Navbar";
-import Sidebar from '../components/Sidebar';
+import { useAuth } from '../auth/AuthContext';
 
-const HodIndex = () => {
-  const [hods, sethod] = useState([]);
+const Dashboard = () => {
+  const [completedReviews, setCompletedReviews] = useState([]);
   const [error, setError] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [selectedHod, setSelectedHod] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-  });
-
-  const fetchHods = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/hods`);
-      sethod(response.data);
-    } catch (err) {
-      setError('Error fetching HOD data.');
-    }
-  };
+  const [applications, setApplications] = useState([]);
+  const [selectedApplication, setSelectedApplication] = useState('All');
+  const { user } = useAuth();
 
   useEffect(() => {
-    fetchHods();
+    const fetchCompletedReviews = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/completedReviews`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        setCompletedReviews(response.data);
+        setError('');
+        // Extract all unique application names
+        const appSet = new Set();
+        response.data.forEach(review => {
+          if (review.menuRights && typeof review.menuRights === 'object') {
+            // Try to get application name from menuRights if possible
+            if (review.applicationName) {
+              appSet.add(review.applicationName);
+            } else if (review.menuRights.appName) {
+              appSet.add(review.menuRights.appName);
+            }
+          }
+          if (review.applicationName) {
+            appSet.add(review.applicationName);
+          }
+        });
+        // Fallback: If applicationName is not present, use a string key from menuRights
+        if (appSet.size === 0) {
+          response.data.forEach(review => {
+            if (review.menuRights && typeof review.menuRights === 'object') {
+              Object.keys(review.menuRights).forEach(key => appSet.add(key));
+            }
+          });
+        }
+        setApplications(['All', ...Array.from(appSet)]);
+      } catch (err) {
+        setError('Failed to fetch completed reviews.');
+      }
+    };
+    fetchCompletedReviews();
   }, []);
 
-  const handleModify = (hod) => {
-    setSelectedHod(hod);
-    setFormData({
-      name: hod.name,
-      email: hod.email,
-    });
-    setShowModal(true);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // This handler would be more complex for managing employee assignments
-  const handleEmployeeAssignmentChange = (employeeId) => {
-    // Placeholder for adding/removing employeeId from formData.employees
-    console.log(`Employee ID ${employeeId} assignment toggled`);
-  };
-
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      console.log('Sending update data:', formData);
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/hods/${selectedHod._id}`, formData);
-      console.log('Backend response:', response.data);
-
-      // After successful update, re-fetch the HOD list to get the latest populated data
-      fetchHods();
-
-      setShowModal(false);
-    } catch (err) {
-      console.error("Failed to update HOD:", err.response?.data || err.message);
-      setError("Failed to update HOD");
+  // Dynamically determine all unique rights categories
+  const allRightsCategories = new Set();
+  completedReviews.forEach(review => {
+    if (review.menuRights && typeof review.menuRights === 'object') {
+      Object.keys(review.menuRights).forEach(cat => allRightsCategories.add(cat));
+    } else if (review.menuRights) {
+      allRightsCategories.add('Menu Rights');
     }
-  };
+    if (review.branchRights) {
+      allRightsCategories.add('Branch Rights');
+    }
+  });
+  const rightsCategories = Array.from(allRightsCategories);
+
+  // Filter reviews by selected application
+  const filteredReviews = selectedApplication === 'All'
+    ? completedReviews
+    : completedReviews.filter(review => {
+        // Prefer applicationName field if present
+        if (review.applicationName) {
+          return review.applicationName === selectedApplication;
+        }
+        // Fallback: check if menuRights has a key matching the application
+        if (review.menuRights && typeof review.menuRights === 'object') {
+          return Object.keys(review.menuRights).includes(selectedApplication);
+        }
+        return false;
+      });
+
+  // After filtering reviews by application:
+  const rightsKeysSet = new Set();
+  filteredReviews.forEach(review => {
+    if (review.menuRights && typeof review.menuRights === 'object') {
+      Object.keys(review.menuRights).forEach(key => rightsKeysSet.add(key));
+    }
+  });
+  const rightsKeys = Array.from(rightsKeysSet);
 
   return (
     <div className="app">
       <Navbar />
       <div className="content-wrapper">
         <Sidebar />
-        <div className="container mt-5">
-          <h2>HOD/Reviewer List</h2>
-          <a href='/hodcreate'>
-            <button  className='btn btn-md text-white' style={{backgroundColor: "#167340"}}>Create New HOD/Reviewer</button>
-          </a>
-          <br/>
-          <br/>
+        <div className="dashboard-container">
+          <h2>Completed Reviews</h2>
+          {/* Dynamic Application Filter */}
+          <div className="filter-section mb-3">
+            <b>Filter By Application</b>
+            {applications.map(app => (
+              <div key={app} className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="applicationFilter"
+                  id={app}
+                  value={app}
+                  checked={selectedApplication === app}
+                  onChange={() => setSelectedApplication(app)}
+                />
+                <label className="form-check-label" htmlFor={app}>
+                  {app}
+                </label>
+              </div>
+            ))}
+          </div>
           {error && <p className="text-danger">{error}</p>}
-
-          <table className="table table-bordered">
+          <table className="table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Employees</th>
-                <th>Action</th>
+                <th>Employee Name</th>
+                {rightsKeys.map(key => (
+                  <th key={key}>{key}</th>
+                ))}
+                <th>Reviewer Remarks</th>
+                <th>Action Taken</th>
+                <th>Reviewed By</th>
+                <th>Review Date,Time</th>
+                {/* <th>Completed By</th> */}
               </tr>
             </thead>
             <tbody>
-            
-              {hods.length === 0 ? (
-                <tr>
-                  <td colSpan="4" className="text-center">No HODs found</td>
-                </tr>
-              ) : (
-                hods.map((hod) => (
-                  <tr key={hod._id}>
-                    <td>
-                      {hod.name}
-                    </td>
-                    <td>
-                      {hod.email}
-                    </td>
-                    <td>
-                      {Array.isArray(hod.employees) && hod.employees.length > 0
-                          ? hod.employees.map((emp) => emp.name).join(", ")
-                          : "No Employees Assigned"}
-                    </td>
-                    <td>
-                      <button className="btn btn-sm text-white" style={{ backgroundColor: "#167340"}} onClick={() => handleModify(hod)}>
-                        Modify
-                      </button>
-                    </td>
+              {filteredReviews.length > 0 ? (
+                filteredReviews.map((review) => (
+                  <tr key={review._id}>
+                    <td>{review.employeeName || '-'}</td>
+                    {rightsKeys.map(key => (
+                      <td key={key}>
+                        {review.menuRights && review.menuRights[key] ? review.menuRights[key] : '-'}
+                      </td>
+                    ))}
+                    <td>{review.reviewerRemarks || '-'}</td>
+                    <td>{review.actionTaken ? review.actionTaken.charAt(0).toUpperCase() + review.actionTaken.slice(1) : '-'}</td>
+                    <td>{review.reviewerName || '-'}</td>
+                    <td>{review.submittedAt ? new Date(review.submittedAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                    {/* <td>{review.reviewerName || 'N/A'}</td> */}
                   </tr>
                 ))
+              ) : (
+                <tr>
+                  <td colSpan={7 + rightsKeys.length} className="text-center">No completed reviews found.</td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
       </div>
-
-      {showModal && selectedHod && (
-        <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Modify HOD/Reviewer Details</h5>
-                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-              </div>
-              <div className="modal-body">
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label">Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Email</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-
-                  <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Close</button>
-                    <button type="submit" className="btn btn-primary" style={{backgroundColor: "#167340"}}>Save changes</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default HodIndex;
+export default Dashboard;
