@@ -1,117 +1,110 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useAuth } from '../auth/AuthContext';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
-import axios from 'axios';
 import Swal from "sweetalert2";
 
-const AddUser = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [role, setRole] = useState(null);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+const ChangePassword = () => {
+    const { user } = useAuth();
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handlePasswordChange = async (e) => {
+        e.preventDefault();
 
-    const newUser = {
-      name,
-      email,
-      password,
-      company_name: companyName,
-      role,
+        if (newPassword !== confirmPassword) {
+            setMessage("New passwords don't match!");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/change-password`, {
+                userId: user._id,
+                oldPassword,
+                newPassword
+            });
+
+            Swal.fire({
+                title: "Password Changed Successfully",
+                icon: "success",
+            }).then((result) => {
+                window.location.href = "/change-password";
+            });
+
+            setError('');
+        } catch (err) {
+            setError('Failed to create  Please try again.');
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/register`, newUser, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      Swal.fire({
-        title: "HOD Created Successfully",
-        // text: "Do you want to proceed with adding this HOD?",
-        icon: "success",
-      }).then((result) => {
-        window.location.href = "/hods";
-      });
-
-      setError('');
-    } catch (err) {
-      setError('Failed to create  Please try again.');
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <div className="app">
+    return (
+        <div className="app">
       <Navbar />
       <div className="content-wrapper">
         <Sidebar />
-        <div className="container mt-5">
-          <h2>Add New HOD/Reviewer</h2>
-          {error && <p className="text-danger">{error}</p>}
-          {success && <p className="text-success">{success}</p>}
+        <div className="container mt-5 d-flex justify-content-center align-items-center">
+    
+                    <div className="change-password-card">
+                        <h2 className="change-password-title">Change Password</h2>
+                        {message && <p className="change-password-message">{message}</p>}
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="name" className="form-label">Name</label>
-              <input
-                type="text"
-                id="name"
-                className="form-control"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+                        <form onSubmit={handlePasswordChange}>
+                            <div className="change-password-input-group">
+                                <label className="change-password-label">Old Password</label>
+                                <input
+                                    type="password"
+                                    value={oldPassword}
+                                    onChange={(e) => setOldPassword(e.target.value)}
+                                    className="change-password-input"
+                                    required
+                                />
+                            </div>
+
+                            <div className="change-password-input-group">
+                                <label className="change-password-label">New Password</label>
+                                <input
+                                    type="password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    className="change-password-input"
+                                    required
+                                />
+                            </div>
+
+                            <div className="change-password-input-group">
+                                <label className="change-password-label">Confirm New Password</label>
+                                <input
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    className="change-password-input"
+                                    required
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="change-password-button"
+                                disabled={loading}
+                            >
+                                {loading ? 'Updating...' : 'Change Password'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
-
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">Email</label>
-              <input
-                type="email"
-                id="email"
-                className="form-control"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">Password</label>
-              <input
-                type="password"
-                id="password"
-                className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            {/* <div className="mb-3">
-              <label htmlFor="company_name" className="form-label">Company Name</label>
-              <input
-                type="text"
-                id="company_name"
-                className="form-control"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-              />
-            </div> */}
-
-            <button type="submit" className="btn btn-primary" style={{backgroundColor: "#167340"}}>Add HOD/Reviewer</button>
-          </form>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
-export default AddUser;
+export default ChangePassword;
