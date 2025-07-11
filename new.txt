@@ -1,0 +1,6 @@
+https://deb.nodesource.com/setup_18.x https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+https://www.mongodb.org/static/pgp/server-6.0.asc https://repo.mongodb.org/apt/ubuntu/dists/jammy/mongodb-org/6.0/multiverse/binary-amd64/
+https://registry.npmjs.org/pm2/-/pm2-5.3.0.tgz
+http://nginx.org/packages/ubuntu/dists/jammy/nginx/binary-amd64/
+https://github.com/SomethingForWork/ER_Linux.git https://github.com/SomethingForWork/ER_Linux/archive/refs/heads/main.zip
+http://archive.ubuntu.com/ubuntu/ http://security.ubuntu.com/ubuntu/
