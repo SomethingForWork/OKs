@@ -9,6 +9,5 @@ systemctl start mongod
 
 
 
-
-curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc \
-  | gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg
+rm -f /usr/share/keyrings/mongodb-server-6.0.gpg
+curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg
