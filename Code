@@ -6,3 +6,8 @@ apt update
 apt install -y mongodb-org
 systemctl enable mongod
 systemctl start mongod
+
+
+
+
+curl -I https://repo.mongodb.org/apt/ubuntu/dists/jammy/mongodb-org/6.0/Release
