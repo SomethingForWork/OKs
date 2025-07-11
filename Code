@@ -10,4 +10,24 @@ systemctl start mongod
 
 
 
+
 curl -I https://repo.mongodb.org/apt/ubuntu/dists/jammy/mongodb-org/6.0/Release
+
+
+
+# 1. Import the MongoDB GPG key
+curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg
+
+# 2. Create the MongoDB APT source list
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" > /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+# 3. Clean old APT cache and update
+rm -rf /var/lib/apt/lists/*
+apt update
+
+# 4. Install MongoDB
+apt install -y mongodb-org
+
+# 5. Enable and start the service
+systemctl enable mongod
+systemctl start mongod
