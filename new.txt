@@ -1,25 +1,23 @@
-Use --update-env to update environment variables
-[PM2] Applying action restartProcessId on app [all](ids: [ 0 ])
-[PM2] [er-backend](0) ✓
-┌────┬───────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
-│ id │ name          │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
-├────┼───────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 0  │ er-backend    │ default     │ 1.0.0   │ fork    │ 308015   │ 0s     │ 1    │ online    │ 0%       │ 28.9mb   │ root     │ disabled │
-└────┴───────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-root@DELRHDERS001U:/etc/nginx/sites-available# node index.js &
-[1] 308061
-root@DELRHDERS001U:/etc/nginx/sites-available# node:internal/modules/cjs/loader:1143
-  throw err;
-  ^
+(node:308191) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+Connected to MongoDB
+node:events:495
+      throw er; // Unhandled 'error' event
+      ^
 
-Error: Cannot find module '/etc/nginx/sites-available/index.js'
-    at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
-    at Module._load (node:internal/modules/cjs/loader:981:27)
-    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12)
-    at node:internal/main/run_main_module:28:49 {
-  code: 'MODULE_NOT_FOUND',
-  requireStack: []
+Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
+    at Server.setupListenHandle [as _listen2] (node:net:1817:16)
+    at listenInCluster (node:net:1865:12)
+    at doListen (node:net:2014:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:83:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1844:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3000
 }
 
 Node.js v18.20.6
-
+root@DELRHDERS001U:/opt/ER_Linux/server#
