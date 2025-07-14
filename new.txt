@@ -1,17 +1,4 @@
-🧹 Step 1: Remove the corrupted file masquerading as a directory
-bash
-Copy
-Edit
-sudo rm -f /etc/ssl/religare
-🧠 Why: This removes the file that's blocking the creation of the real religare directory.
-
-📁 Step 2: Create the correct directory path
-bash
-Copy
-Edit
-sudo mkdir -p /etc/ssl/religare
-📥 Step 3: Copy your .crt file correctly
-bash
-Copy
-Edit
-sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare/
+root@DELRHDERS001U:~# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare/
+root@DELRHDERS001U:~# ls -l /etc/ssl/religare
+total 4
+-rw-r----- 1 root root 2269 Jul 14 17:49 religare.in.crt
