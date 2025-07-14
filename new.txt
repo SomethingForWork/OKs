@@ -1,35 +1,30 @@
-Your GPG key is valid — fingerprint matches `6A26B1AE64C3C388`, and it's in the correct path.
+root@DELRHDERS001U:~# gpg --dearmor /usr/share/keyrings/mongodb-server-6.0.gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg
+usage: gpg [options] --dearmor [file]
+root@DELRHDERS001U:~# sudo apt update
+Hit:1 https://deb.nodesource.com/node_18.x nodistro InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-security InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+root@DELRHDERS001U:~# ^[[200~sudo apt install -y mongodb-org
+sudo: command not found
+root@DELRHDERS001U:~# ~sudo apt install -y mongodb-org
+Command '~sudo' not found, did you mean:
+  command 'sudo' from deb sudo (1.9.9-1ubuntu2.4)
+  command 'sudo' from deb sudo-ldap (1.9.9-1ubuntu2.4)
+Try: apt install <deb name>
+root@DELRHDERS001U:~# sudo apt install -y mongodb-org
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+E: Unable to locate package mongodb-org
+root@DELRHDERS001U:~#
 
-The problem is the `.gpg` file was created incorrectly: it's still in **ASCII armored format (.asc)**, not in **binary `.gpg` format**.
 
-MongoDB `signed-by=` requires the key to be in **binary (dearmored)** form.
 
----
 
-## 🔧 Fix: Convert `.asc` to `.gpg` correctly
 
-Run this:
-
-```bash
-gpg --dearmor /usr/share/keyrings/mongodb-server-6.0.gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-
-If that errors (because it overwrites itself), do this instead:
-
-```bash
-gpg --dearmor /usr/share/keyrings/mongodb-server-6.0.gpg -o /usr/share/keyrings/mongodb-server-6.0-fixed.gpg
-sudo mv /usr/share/keyrings/mongodb-server-6.0-fixed.gpg /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-
----
-
-## 🔁 Then Re-run
-
-```bash
-sudo apt update
-sudo apt install -y mongodb-org
-```
-
----
-
-This will now work. The previous error confirms the key wasn't in the expected binary format required by `signed-by=...`.
