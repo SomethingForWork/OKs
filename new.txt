@@ -1,7 +1,8 @@
 curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg
 
-
-echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc -o server-6.0.asc
+ls -l server-6.0.asc
+cat server-6.0.asc
 
 
 
@@ -14,3 +15,6 @@ gpg --show-keys --with-fingerprint /usr/share/keyrings/mongodb-server-6.0.gpg
 
 
 // gpg key show
+
+
+
