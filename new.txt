@@ -1,23 +1,33 @@
-You did everything right **except one critical detail**:
-Your `/etc/apt/sources.list.d/mongodb-org-6.0.list` is still pointing to the **unsigned** repository because it doesn’t reference the `signed-by=` key you created.
+You're still hitting the same GPG error because:
+
+* The **repo file path is incorrect**
+* You likely have **duplicate or broken entries**
+* You **haven’t removed the old bad `.list` file**
+* The keyfile is now correct, but APT isn't referencing it properly
 
 ---
 
-## 🔥 Root Cause
+## 🧨 Current Problem Summary
 
-You correctly created the binary GPG key:
+APT still doesn’t associate the repository with your GPG key due to:
+
+1. You added the repo to `/etc/apt/sources.list.d/.mongodb-org-6.0.list` → bad filename (starts with a dot).
+2. Likely duplicate/broken MongoDB repo entries.
+3. GPG key is valid, but never actually used by APT.
+
+---
+
+## ✅ Fix It Properly — Copy-Paste Exactly
+
+### 1. Remove all old MongoDB list files
 
 ```bash
-/usr/share/keyrings/mongodb-server-6.0.gpg
+sudo rm -f /etc/apt/sources.list.d/*mongodb*.list
 ```
-
-But your APT source is **not configured to use it**.
 
 ---
 
-## ✅ Fix Immediately
-
-### 1. Overwrite the repo list file with the correct `signed-by` line:
+### 2. Add the correct MongoDB 6.0 repo pointing to the correct key
 
 ```bash
 echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
@@ -25,7 +35,7 @@ echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mo
 
 ---
 
-### 2. Update and install:
+### 3. Run update + install
 
 ```bash
 sudo apt update
@@ -34,4 +44,16 @@ sudo apt install -y mongodb-org
 
 ---
 
-This time it will work. The GPG key was correct; the repo line was wrong.
+### 4. Verify success
+
+You should **not** see:
+
+```
+NO_PUBKEY 6A26B1AE64C3C388
+```
+
+And install should proceed.
+
+---
+
+No more edits. Don’t add `.mongodb...list`, don’t reuse old lists, and don’t rename the key.
