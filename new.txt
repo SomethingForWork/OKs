@@ -1,32 +1,44 @@
-f: /opt/ER_Linux/frontend/build/index.html
-drwxr-xr-x root     root     /
-drwxr-xr-x root     root     opt
-drwxr-x--x root     root     ER_Linux
-drwxr-x--x root     root     frontend
-drwxr-xr-x www-data www-data build
--rwxr-xr-x www-data www-data index.html
-root@DELRHDERS001U:/opt/ER_Linux/server# ^C
-root@DELRHDERS001U:/opt/ER_Linux/server# ip addr
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-2: ens160: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
-    link/ether 00:50:56:b6:2f:55 brd ff:ff:ff:ff:ff:ff
-    altname enp3s0
-    inet 10.91.41.16/24 brd 10.91.41.255 scope global ens160
-       valid_lft forever preferred_lft forever
-    inet6 fc00:0:0:1::1e/124 scope global
-       valid_lft forever preferred_lft forever
-    inet6 fe80::250:56ff:feb6:2f55/64 scope link
-       valid_lft forever preferred_lft forever
-3: ens192: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
-    link/ether 00:50:56:b6:19:5d brd ff:ff:ff:ff:ff:ff
-    altname enp11s0
-    inet 10.32.248.116/23 brd 10.32.249.255 scope global ens192
-       valid_lft forever preferred_lft forever
-    inet6 fe80::250:56ff:feb6:195d/64 scope link
-       valid_lft forever preferred_lft forever
-root@DELRHDERS001U:/opt/ER_Linux/server#
+root@DELRHDERS001U:/opt/ER_Linux/server# pm2 logs
+[TAILING] Tailing last 15 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 15 lines:
+PM2        | 2025-07-14T17:56:40: PM2 log: App [er-backend:0] starting in -fork mode-
+PM2        | 2025-07-14T17:56:40: PM2 log: App [er-backend:0] online
+PM2        | 2025-07-14T18:40:23: PM2 log: Stopping app:er-backend id:0
+PM2        | 2025-07-14T18:40:23: PM2 log: App [er-backend:0] exited with code [0] via signal [SIGINT]
+PM2        | 2025-07-14T18:40:23: PM2 log: pid=288263 msg=process killed
+PM2        | 2025-07-14T18:40:23: PM2 log: App [er-backend:0] starting in -fork mode-
+PM2        | 2025-07-14T18:40:23: PM2 log: App [er-backend:0] online
+PM2        | 2025-07-14T18:48:12: PM2 log: App [er-backend:0] exited with code [0] via signal [SIGKILL]
+PM2        | 2025-07-14T18:48:12: PM2 log: App [er-backend:0] starting in -fork mode-
+PM2        | 2025-07-14T18:48:12: PM2 log: App [er-backend:0] online
+PM2        | 2025-07-14T18:48:28: PM2 log: Stopping app:er-backend id:0
+PM2        | 2025-07-14T18:48:28: PM2 log: App [er-backend:0] exited with code [0] via signal [SIGINT]
+PM2        | 2025-07-14T18:48:28: PM2 log: pid=308571 msg=process killed
+PM2        | 2025-07-14T18:48:28: PM2 log: App [er-backend:0] starting in -fork mode-
+PM2        | 2025-07-14T18:48:28: PM2 log: App [er-backend:0] online
+
+/root/.pm2/logs/er-backend-error.log last 15 lines:
+0|er-backe | (node:288263) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er-backe | (node:288263) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (node:308015) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er-backe | (node:308015) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (node:308571) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er-backe | (node:308571) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (node:308605) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er-backe | (node:308605) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+
+/root/.pm2/logs/er-backend-out.log last 15 lines:
+0|er-backe | Connected to MongoDB
+0|er-backe | Server is running on port http://0.0.0.0:3000
+0|er-backe | Connected to MongoDB
+0|er-backe | Server is running on port http://0.0.0.0:3000
+0|er-backe | Connected to MongoDB
+0|er-backe | Server is running on port http://0.0.0.0:3000
+0|er-backe | Connected to MongoDB
+0|er-backe | Server is running on port http://0.0.0.0:3000
+
+
