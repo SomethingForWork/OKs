@@ -13,3 +13,62 @@ gpg --show-keys --with-fingerprint /usr/share/keyrings/mongodb-server-6.0.gpg
 
 
 
+root@DELRHDERS001U:~/test# curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc -o server-6.0.asc
+ls -l server-6.0.asc
+cat server-6.0.asc
+^Z
+[9]+  Stopped                 curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc -o server-6.0.asc
+ls: cannot access 'server-6.0.asc': No such file or directory
+cat: server-6.0.asc: No such file or directory
+root@DELRHDERS001U:~/test# curl -v https://www.mongodb.org/static/pgp/server-6.0.asc
+*   Trying 54.175.147.155:443...
+* Connected to www.mongodb.org (54.175.147.155) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+*  CAfile: /etc/ssl/certs/ca-certificates.crt
+*  CApath: /etc/ssl/certs
+* TLSv1.0 (OUT), TLS header, Certificate Status (22):
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS header, Certificate Status (22):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS header, Finished (20):
+* TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS header, Certificate Status (22):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS header, Finished (20):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=US; ST=New York; L=New York; O=MongoDB, Inc.; CN=*.mongodb.org
+*  start date: Dec  5 00:00:00 2024 GMT
+*  expire date: Jan  2 23:59:59 2026 GMT
+*  subjectAltName: host "www.mongodb.org" matched cert's "*.mongodb.org"
+*  issuer: C=US; O=DigiCert Inc; CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+*  SSL certificate verify ok.
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+> GET /static/pgp/server-6.0.asc HTTP/1.1
+> Host: www.mongodb.org
+> User-Agent: curl/7.81.0
+> Accept: */*
+>
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 301 Moved Permanently
+< Content-Type: text/html
+< Date: Mon, 14 Jul 2025 07:24:02 GMT
+< Location: https://pgp.mongodb.com/server-6.0.asc
+< Connection: Keep-Alive
+< Content-Length: 0
+<
+* Connection #0 to host www.mongodb.org left intact
+root@DELRHDERS001U:~/test#
