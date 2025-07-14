@@ -1,12 +1,3 @@
-The project was built assuming it is hosted at /.
-You can control this with the homepage field in your package.json.
-
-The build folder is ready to be deployed.
-You may serve it with a static server:
-
-  npm install -g serve
-  serve -s build
-
 Find out more about deployment here:
 
   bit.ly/CRA-deploy
@@ -19,4 +10,8 @@ ls: cannot access 'etc/ssl/religare': No such file or directory
 root@DELRHDERS001U:/opt/ER_Linux/frontend# cd
 root@DELRHDERS001U:~# ls -l etc/ssl/religare
 ls: cannot access 'etc/ssl/religare': No such file or directory
+root@DELRHDERS001U:~# ^C
+root@DELRHDERS001U:~# ls -l /etc/ssl/religare
+total 4
+-rw-r----- 1 root root 2269 Jul 14 17:49 religare.in.crt
 root@DELRHDERS001U:~#
