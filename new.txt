@@ -79,3 +79,85 @@ sudo apt install -y mongodb-org
 
 **If wget also hangs, the issue is network/firewall and you’ll need to ask your IT/network team to check access to `www.mongodb.org`.**  
 If you get a specific error, paste it here for a targeted solution!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+root@DELRHDERS001U:~/test#   curl -v https://www.mongodb.org/static/pgp/server-6.0.asc
+*   Trying 52.21.89.200:443...
+* Connected to www.mongodb.org (52.21.89.200) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+*  CAfile: /etc/ssl/certs/ca-certificates.crt
+*  CApath: /etc/ssl/certs
+* TLSv1.0 (OUT), TLS header, Certificate Status (22):
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS header, Certificate Status (22):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS header, Finished (20):
+* TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS header, Certificate Status (22):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS header, Finished (20):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=US; ST=New York; L=New York; O=MongoDB, Inc.; CN=*.mongodb.org
+*  start date: Dec  5 00:00:00 2024 GMT
+*  expire date: Jan  2 23:59:59 2026 GMT
+*  subjectAltName: host "www.mongodb.org" matched cert's "*.mongodb.org"
+*  issuer: C=US; O=DigiCert Inc; CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+*  SSL certificate verify ok.
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+> GET /static/pgp/server-6.0.asc HTTP/1.1
+> Host: www.mongodb.org
+> User-Agent: curl/7.81.0
+> Accept: */*
+>
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 301 Moved Permanently
+< Content-Type: text/html
+< Date: Mon, 14 Jul 2025 07:43:11 GMT
+< Location: https://pgp.mongodb.com/server-6.0.asc
+< Connection: Keep-Alive
+< Content-Length: 0
+<
+* Connection #0 to host www.mongodb.org left intact
+root@DELRHDERS001U:~/test# wget https://www.mongodb.org/static/pgp/server-6.0.asc -O /tmp/server-6.0.asc
+sudo cp /tmp/server-6.0.asc /usr/share/keyrings/mongodb-server-6.0.gpg
+--2025-07-14 13:13:26--  https://www.mongodb.org/static/pgp/server-6.0.asc
+Resolving www.mongodb.org (www.mongodb.org)... 52.206.222.245, 54.175.147.155, 52.21.89.200
+Connecting to www.mongodb.org (www.mongodb.org)|52.206.222.245|:443... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: https://pgp.mongodb.com/server-6.0.asc [following]
+--2025-07-14 13:13:27--  https://pgp.mongodb.com/server-6.0.asc
+Resolving pgp.mongodb.com (pgp.mongodb.com)... 18.66.63.46, 18.66.63.73, 18.66.63.124, ...
+Connecting to pgp.mongodb.com (pgp.mongodb.com)|18.66.63.46|:443...
