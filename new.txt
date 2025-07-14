@@ -1,5 +1,2 @@
-# Extract modulus from the certificate
 openssl x509 -noout -modulus -in /etc/ssl/religare/religare.in.crt | openssl md5
-
-# Extract modulus from the key
 openssl rsa -noout -modulus -in /etc/ssl/religare/religare.in.key | openssl md5
