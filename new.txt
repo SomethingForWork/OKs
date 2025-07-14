@@ -1,66 +1,25 @@
-You're still using the **broken key file** — the ASCII `.asc` version — not the required **binary dearmored `.gpg`**.
+root@DELRHDERS001U:~# sudo rm /usr/share/keyrings/mongodb-server-6.0.gpg
+root@DELRHDERS001U:~# git clone https://github.com/SomethingForWork/tests.git
+fatal: destination path 'tests' already exists and is not an empty directory.
+root@DELRHDERS001U:~# gpg --dearmor tests/server-6.0.asc | sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null
+File 'tests/server-6.0.asc.gpg' exists. Overwrite? (y/N) y
+root@DELRHDERS001U:~# file /usr/share/keyrings/mongodb-server-6.0.gpg
+/usr/share/keyrings/mongodb-server-6.0.gpg: empty
+root@DELRHDERS001U:~#
 
----
 
-## Your mistake:
 
-You never ran:
 
-```bash
-gpg --dearmor tests/server-6.0.asc | sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null
-```
 
-So `/usr/share/keyrings/mongodb-server-6.0.gpg` is still the wrong format — and `apt` refuses to use it.
 
----
 
-## Fix It Now, Cleanly
 
-### 1. **Delete the broken file**
 
-```bash
-sudo rm /usr/share/keyrings/mongodb-server-6.0.gpg
-```
 
----
 
-### 2. **Clone your repo (if not already cloned)**
 
-```bash
-git clone https://github.com/SomethingForWork/tests.git
-```
 
----
 
-### 3. **Convert the `.asc` key to binary**
 
-```bash
-gpg --dearmor tests/server-6.0.asc | sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null
-```
 
----
 
-### 4. **Check if it's finally correct**
-
-```bash
-file /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-
-Output must be:
-
-```
-/usr/share/keyrings/mongodb-server-6.0.gpg: GPG key public ring (v4) ...
-```
-
----
-
-### 5. **Re-run update + install**
-
-```bash
-sudo apt update
-sudo apt install -y mongodb-org
-```
-
----
-
-This time it will succeed. You've been using the wrong file format the entire time. Fixing that is the only issue.
