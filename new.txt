@@ -1,73 +1,110 @@
-root@DELRHDERS001U:~# sudo rm -f /usr/share/keyrings/mongodb-server-6.0.gpg
+You're still blocked because:
+
+1. The MongoDB **GPG key isn't accepted**, even though your `.gpg` file is correct.
+2. You're still getting `NO_PUBKEY` → apt is **not using the key file**.
+3. You didn't fix the **cache lock**, so installation didn't run.
+
+---
+
+## 🔥 Fix It — Final Clean Execution
+
+### 🔁 1. Clean broken setup and existing MongoDB lists
+
+```bash
+sudo rm -f /usr/share/keyrings/mongodb-server-6.0.gpg
 sudo rm -f /etc/apt/sources.list.d/*mongodb*.list
+sudo rm -rf /var/lib/apt/lists/*
 sudo apt clean
-root@DELRHDERS001U:~# git clone https://github.com/SomethingForWork/tests.git || true
-fatal: destination path 'tests' already exists and is not an empty directory.
-root@DELRHDERS001U:~# sudo gpg --dearmor < tests/server-6.0.asc > /usr/share/keyrings/mongodb-server-6.0.gpg
-root@DELRHDERS001U:~# file /usr/share/keyrings/mongodb-server-6.0.gpg
-/usr/share/keyrings/mongodb-server-6.0.gpg: OpenPGP Public Key Version 4, Created Wed Feb 23 15:11:54 2022, RSA (Encrypt or Sign, 4096 bits); User ID; Signature; OpenPGP Certificate
-root@DELRHDERS001U:~# echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse
-root@DELRHDERS001U:~# sudo apt update
+```
+
+---
+
+### ✅ 2. Add new GPG key correctly
+
+You already cloned the repo. Now run:
+
+```bash
+sudo gpg --dearmor < tests/server-6.0.asc | sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null
+```
+
+Confirm:
+
+```bash
+file /usr/share/keyrings/mongodb-server-6.0.gpg
+```
+
+Should say `GPG key public ring`.
+
+---
+
+### ✅ 3. Create correct apt source list
+
+```bash
+echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+```
+
+---
+
+### ✅ 4. Force apt to use the key
+
+Clear the apt cache again and re-index:
+
+```bash
+sudo apt clean
+sudo apt update --allow-insecure-repositories
+```
+
+⚠️ If same error: bypass apt-key by directly importing to the system keyring (fallback):
+
+```bash
+sudo cp /usr/share/keyrings/mongodb-server-6.0.gpg /etc/apt/trusted.gpg.d/mongodb-server-6.0.gpg
+```
+
+Then run:
+
+```bash
+sudo apt update
+```
+
+---
+
+### ⚙️ 5. Ensure no other apt process is blocking
+
+Run:
+
+```bash
+ps aux | grep apt
+```
+
+If `apt` process still running, **kill it**:
+
+```bash
+sudo kill -9 PID
+```
+
+Replace `PID` with the actual process ID you see.
+
+---
+
+### 🚀 6. Install
+
+```bash
 sudo apt install -y mongodb-org
-Hit:1 https://deb.nodesource.com/node_18.x nodistro InRelease
-Get:2 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease [4,009 B]
-Hit:3 http://archive.ubuntu.com/ubuntu jammy InRelease
-Err:2 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease
-  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
-Hit:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
-Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
-Hit:6 http://archive.ubuntu.com/ubuntu jammy-security InRelease
-Reading package lists... Done
-W: GPG error: https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
-E: The repository 'https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease' is not signed.
-N: Updating from such a repository can't be done securely, and is therefore disabled by default.
-N: See apt-secure(8) manpage for repository creation and user configuration details.
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)
-^Ziting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 259462 (apt)... 41s
-[7]+  Stopped                 sudo apt install -y mongodb-org
-root@DELRHDERS001U:~# sudo systemctl enable mongod
-sudo systemctl start mongod
-Failed to enable unit: Unit file mongod.service does not exist.
-Failed to start mongod.service: Unit mongod.service not found.
-root@DELRHDERS001U:~#
+```
+
+---
+
+### 🔁 If It Still Fails
+
+Download `.deb` manually from a system with internet:
+[https://www.mongodb.com/try/download/community](https://www.mongodb.com/try/download/community)
+
+Use “Linux x86\_64 Ubuntu 22.04” → Copy the `.deb` files to server via GitHub or SCP and install:
+
+```bash
+sudo dpkg -i *.deb
+```
+
+---
+
+This is the end of online install troubleshooting. If this doesn’t work, use **offline .deb install** only.
