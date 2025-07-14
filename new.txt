@@ -1,77 +1,17 @@
-nodejs is already the newest version (18.20.6-1nodesource1).
-The following packages were automatically installed and are no longer required:
-  linux-headers-5.15.0-126 linux-headers-5.15.0-126-generic linux-image-5.15.0-126-generic linux-modules-5.15.0-126-generic linux-modules-extra-5.15.0-126-generic
-Use 'sudo apt autoremove' to remove them.
-0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-root@DELRHDERS001U:~# sudo npm install -g pm2
+# Import MongoDB GPG key (new method)
+curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | \
+  gpg --dearmor -o /usr/share/keyrings/mongodb-org-6.0.gpg
 
-changed 135 packages in 13s
+# Add MongoDB APT source with signed-by
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-org-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | \
+  sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
 
-13 packages are looking for funding
-  run `npm fund` for details
-root@DELRHDERS001U:~# pm2 -v
-6.0.8
-root@DELRHDERS001U:~# git clone https://github.com/vandralcapital/mongo.git
-Cloning into 'mongo'...
+# Update package index
+sudo apt update
 
-remote: Enumerating objects: 7, done.
-remote: Total 7 (delta 0), reused 0 (delta 0), pack-reused 7 (from 1)
-Receiving objects: 100% (7/7), 47.85 MiB | 5.59 MiB/s, done.
-root@DELRHDERS001U:~#
-root@DELRHDERS001U:~# cd mongo
-root@DELRHDERS001U:~/mongo# ls
-mongodb-org_6.0.24_amd64.deb         mongodb-org-server_6.0.24_amd64.deb  mongodb-org-tools_6.0.24_amd64.deb
-mongodb-org-mongos_6.0.24_amd64.deb  mongodb-org-shell_6.0.24_amd64.deb
-root@DELRHDERS001U:~/mongo# sudo dpkg -i *.deb || true
-Selecting previously unselected package mongodb-org.
-(Reading database ... 249105 files and directories currently installed.)
-Preparing to unpack mongodb-org_6.0.24_amd64.deb ...
-Unpacking mongodb-org (6.0.24) ...
-Selecting previously unselected package mongodb-org-mongos.
-Preparing to unpack mongodb-org-mongos_6.0.24_amd64.deb ...
-Unpacking mongodb-org-mongos (6.0.24) ...
-Selecting previously unselected package mongodb-org-server.
-Preparing to unpack mongodb-org-server_6.0.24_amd64.deb ...
-Unpacking mongodb-org-server (6.0.24) ...
-Selecting previously unselected package mongodb-org-shell.
-Preparing to unpack mongodb-org-shell_6.0.24_amd64.deb ...
-Unpacking mongodb-org-shell (6.0.24) ...
-Selecting previously unselected package mongodb-org-tools.
-Preparing to unpack mongodb-org-tools_6.0.24_amd64.deb ...
-Unpacking mongodb-org-tools (6.0.24) ...
-dpkg: dependency problems prevent configuration of mongodb-org:
- mongodb-org depends on mongodb-org-database; however:
-  Package mongodb-org-database is not installed.
- mongodb-org depends on mongodb-mongosh; however:
-  Package mongodb-mongosh is not installed.
+# Install MongoDB
+sudo apt install -y mongodb-org
 
-dpkg: error processing package mongodb-org (--install):
- dependency problems - leaving unconfigured
-dpkg: dependency problems prevent configuration of mongodb-org-mongos:
- mongodb-org-mongos depends on libssl1.1 (>= 1.1.1); however:
-  Package libssl1.1 is not installed.
-
-dpkg: error processing package mongodb-org-mongos (--install):
- dependency problems - leaving unconfigured
-dpkg: dependency problems prevent configuration of mongodb-org-server:
- mongodb-org-server depends on libssl1.1 (>= 1.1.1); however:
-  Package libssl1.1 is not installed.
-
-dpkg: error processing package mongodb-org-server (--install):
- dependency problems - leaving unconfigured
-Setting up mongodb-org-shell (6.0.24) ...
-dpkg: dependency problems prevent configuration of mongodb-org-tools:
- mongodb-org-tools depends on mongodb-database-tools; however:
-  Package mongodb-database-tools is not installed.
- mongodb-org-tools depends on mongodb-org-database-tools-extra; however:
-  Package mongodb-org-database-tools-extra is not installed.
-
-dpkg: error processing package mongodb-org-tools (--install):
- dependency problems - leaving unconfigured
-Processing triggers for man-db (2.10.2-1) ...
-Errors were encountered while processing:
- mongodb-org
- mongodb-org-mongos
- mongodb-org-server
- mongodb-org-tools
-root@DELRHDERS001U:~/mongo
+# Enable and start MongoDB service
+sudo systemctl enable mongod
+sudo systemctl start mongod
