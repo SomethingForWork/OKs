@@ -1,2 +1,63 @@
-openssl x509 -noout -modulus -in /etc/ssl/religare/religare.in.crt | openssl md5
-openssl rsa -noout -modulus -in /etc/ssl/religare/religare.in.key | openssl md5
+root@DELRHDERS001U:/opt/ER_Linux/server# curl -vk https://10.91.41.16/
+*   Trying 10.91.41.16:443...
+* Connected to 10.91.41.16 (10.91.41.16) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* TLSv1.0 (OUT), TLS header, Certificate Status (22):
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS header, Finished (20):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+* TLSv1.2 (OUT), TLS header, Finished (20):
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server accepted to use http/1.1
+* Server certificate:
+*  subject: C=IN; ST=Uttar Pradesh; L=Noida; O=RELIGARE ENTERPRISES LIMITED; CN=*.religare.in
+*  start date: Jul 10 13:17:07 2025 GMT
+*  expire date: Jun 21 10:11:04 2026 GMT
+*  issuer: C=BE; O=GlobalSign nv-sa; CN=GlobalSign RSA OV SSL CA 2018
+*  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+> GET / HTTP/1.1
+> Host: 10.91.41.16
+> User-Agent: curl/7.81.0
+> Accept: */*
+>
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* old SSL session ID is stale, removing
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 500 Internal Server Error
+< Server: nginx/1.18.0 (Ubuntu)
+< Date: Mon, 14 Jul 2025 13:27:47 GMT
+< Content-Type: text/html
+< Content-Length: 186
+< Connection: close
+<
+<html>
+<head><title>500 Internal Server Error</title></head>
+<body>
+<center><h1>500 Internal Server Error</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+* Closing connection 0
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS alert, close notify (256):
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+* TLSv1.3 (OUT), TLS alert, close notify (256):
+root@DELRHDERS001U:/opt/ER_Linux/server#
