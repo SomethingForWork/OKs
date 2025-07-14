@@ -1,7 +1,65 @@
-root@DELRHDERS001U:~# ls -l /etc/ssl/religare
-total 4
--rw-r----- 1 root root 2269 Jul 14 17:49 religare.in.crt
-root@DELRHDERS001U:~# ^C
-root@DELRHDERS001U:~# ls -l /etc/ssl/religare/religare.in.key
-ls: cannot access '/etc/ssl/religare/religare.in.key': No such file or directory
-root@DELRHDERS001U:~#
+To **search for the `.key` file** in your Ubuntu server, use the following commands — but be warned, this can take some time depending on your file system size.
+
+---
+
+## 🔍 Step-by-Step: Find `.key` Files on Your Server
+
+### 1. **Search for all `.key` files**
+
+```bash
+sudo find / -type f -name "*.key" 2>/dev/null
+```
+
+* This will **recursively search** the entire filesystem.
+* `2>/dev/null` suppresses permission denied errors.
+
+---
+
+### 2. **Narrow to likely SSL/private key folders**
+
+You can try these faster scoped searches:
+
+```bash
+sudo find /etc/ssl -type f -name "*.key"
+sudo find /opt -type f -name "*.key"
+sudo find /home -type f -name "*.key"
+```
+
+---
+
+### 3. **Check known SSL paths manually**
+
+```bash
+ls -l /etc/ssl/private/
+ls -l /etc/nginx/ssl/
+ls -l /etc/letsencrypt/live/
+```
+
+---
+
+## 🧠 Bonus: Check For Your Specific Key
+
+If you know it might be named `religare.in.key`:
+
+```bash
+sudo find / -type f -name "religare.in.key" 2>/dev/null
+```
+
+---
+
+## ⚠️ If You Still Don’t Find It
+
+* It **was never uploaded** to this server.
+* It’s likely sitting with whoever generated the certificate (on their local dev, laptop, or signing server).
+* Without it, **your NGINX TLS config will break** — you *must* get this file.
+
+---
+
+Once you find or retrieve `religare.in.key`, copy it to:
+
+```bash
+sudo cp path/to/religare.in.key /etc/ssl/religare/religare.in.key
+sudo chmod 600 /etc/ssl/religare/religare.in.key
+```
+
+Let me know once it’s in place — we’ll move on to the secure NGINX HTTPS config.
