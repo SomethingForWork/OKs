@@ -1,40 +1,79 @@
-root@DELRHDERS001U:~# curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | \
-  gpg --dearmor -o /usr/share/keyrings/mongodb-org-6.0.gpg
-root@DELRHDERS001U:~# echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-org-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | \
-  sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-org-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse
-root@DELRHDERS001U:~# sudo apt update
-Hit:1 https://deb.nodesource.com/node_18.x nodistro InRelease
-Get:2 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease [4,009 B]
-Err:2 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease
-  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
-Hit:3 http://archive.ubuntu.com/ubuntu jammy InRelease
-Hit:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
-Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
-Hit:6 http://archive.ubuntu.com/ubuntu jammy-security InRelease
-Reading package lists... Done
-W: GPG error: https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
-E: The repository 'https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease' is not signed.
-N: Updating from such a repository can't be done securely, and is therefore disabled by default.
-N: See apt-secure(8) manpage for repository creation and user configuration details.
-root@DELRHDERS001U:~# sudo apt install -y mongodb-org
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-mongodb-org is already the newest version (6.0.24).
-You might want to run 'apt --fix-broken install' to correct these.
-The following packages have unmet dependencies:
- mongodb-org : Depends: mongodb-org-database but it is not installable
-               Depends: mongodb-mongosh but it is not installable
- mongodb-org-mongos : Depends: libssl1.1 (>= 1.1.1) but it is not installable
- mongodb-org-server : Depends: libssl1.1 (>= 1.1.1) but it is not installable
- mongodb-org-tools : Depends: mongodb-database-tools but it is not installable
-                     Depends: mongodb-org-database-tools-extra but it is not installable
-E: Unmet dependencies. Try 'apt --fix-broken install' with no packages (or specify a solution).
-root@DELRHDERS001U:~# sudo systemctl enable mongod
-Created symlink /etc/systemd/system/multi-user.target.wants/mongod.service → /lib/systemd/system/mongod.service.
-root@DELRHDERS001U:~# mongod --version
-mongod: error while loading shared libraries: libcrypto.so.1.1: cannot open shared object file: No such file or directory
-root@DELRHDERS001U:~#
+Perfect. Since MongoDB 6.0 is giving dependency hell on Ubuntu 22.04 (`jammy`), upgrading to **MongoDB 7.0** is a clean solution — it supports `libssl3` and is officially compatible with jammy out of the box.
 
+---
 
+## ✅ Clean & Secure MongoDB 7.0 Install (Ubuntu 22.04 Jammy – No `apt-key`)
+
+### Step 1: Import GPG key (modern way)
+
+```bash
+curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
+  gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
+```
+
+---
+
+### Step 2: Add MongoDB 7.0 source list
+
+```bash
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | \
+  sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+```
+
+---
+
+### Step 3: Update package index
+
+```bash
+sudo apt update
+```
+
+---
+
+### Step 4: Install MongoDB 7.0
+
+```bash
+sudo apt install -y mongodb-org
+```
+
+---
+
+### Step 5: Start and enable MongoDB
+
+```bash
+sudo systemctl enable mongod
+sudo systemctl start mongod
+```
+
+---
+
+### 🔍 Verify
+
+```bash
+mongod --version
+sudo systemctl status mongod
+mongosh
+```
+
+---
+
+## ✅ Bonus: Clean up 6.0 leftovers (optional)
+
+If you want to wipe 6.0 packages before fresh 7.0:
+
+```bash
+sudo apt purge mongodb-org mongodb-org-*
+sudo rm -rf /var/log/mongodb /var/lib/mongodb
+```
+
+---
+
+Let me know if you're setting up:
+
+* Remote access (`bindIp`)
+* Replica sets
+* Docker-based Mongo setup
+* MongoDB with Auth
+* WiredTiger tuning for production
+
+I can template that too.
