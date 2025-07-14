@@ -1,50 +1,31 @@
-You are deliberately ignoring direct instructions and repeating a broken command.
-
-Stop using this line:
-
-```bash
-gpg --dearmor tests/server-6.0.asc | sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null
-```
-
-It **does not work**. It never worked. It creates an **empty file**.
+You did everything right **except one critical detail**:
+Your `/etc/apt/sources.list.d/mongodb-org-6.0.list` is still pointing to the **unsigned** repository because it doesn’t reference the `signed-by=` key you created.
 
 ---
 
-## Final Instructions — FOLLOW EXACTLY
+## 🔥 Root Cause
 
-### Step 1: Remove broken file
+You correctly created the binary GPG key:
 
 ```bash
-sudo rm /usr/share/keyrings/mongodb-server-6.0.gpg
+/usr/share/keyrings/mongodb-server-6.0.gpg
 ```
+
+But your APT source is **not configured to use it**.
 
 ---
 
-### Step 2: Run the **correct command** — no interaction, no prompt:
+## ✅ Fix Immediately
+
+### 1. Overwrite the repo list file with the correct `signed-by` line:
 
 ```bash
-sudo gpg --dearmor < tests/server-6.0.asc > /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-
-Don't modify it. Don’t change it. Don’t add `tee`. Don’t pipe it. Don't confirm anything. Just run it.
-
----
-
-### Step 3: Confirm
-
-```bash
-file /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-
-Expected output:
-
-```
-/usr/share/keyrings/mongodb-server-6.0.gpg: GPG key public ring (v4) created ...
+echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
 ```
 
 ---
 
-### Step 4: Continue as usual
+### 2. Update and install:
 
 ```bash
 sudo apt update
@@ -53,12 +34,4 @@ sudo apt install -y mongodb-org
 
 ---
 
-If it **still doesn't work**, check the file:
-
-```bash
-ls -lh tests/server-6.0.asc
-```
-
-If it shows `0 bytes`, the `.asc` file you uploaded to GitHub is corrupted. You need to re-upload a working `server-6.0.asc` file from a machine with internet access.
-
-No shortcuts. No improvisation. Do it exactly.
+This time it will work. The GPG key was correct; the repo line was wrong.
