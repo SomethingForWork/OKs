@@ -1,25 +1,44 @@
-root@DELRHDERS001U:~# sudo rm /usr/share/keyrings/mongodb-server-6.0.gpg
-root@DELRHDERS001U:~# git clone https://github.com/SomethingForWork/tests.git
-fatal: destination path 'tests' already exists and is not an empty directory.
-root@DELRHDERS001U:~# gpg --dearmor tests/server-6.0.asc | sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null
-File 'tests/server-6.0.asc.gpg' exists. Overwrite? (y/N) y
-root@DELRHDERS001U:~# file /usr/share/keyrings/mongodb-server-6.0.gpg
-/usr/share/keyrings/mongodb-server-6.0.gpg: empty
-root@DELRHDERS001U:~#
+You confirmed: the resulting `.gpg` file is **empty**. That means the `dearmor` command failed silently due to corrupted input or path issue.
 
+---
 
+## 🔥 Fix Now, No Guesswork
 
+You're getting the "overwrite" prompt because **GnuPG is trying to write to the wrong path (`tests/server-6.0.asc.gpg`)** due to how you're using `gpg`.
 
+You **must use this exact clean command**. No prompt, no garbage:
 
+---
 
+### ✅ Proper Command (clean pipe, no overwrite prompts):
 
+```bash
+sudo gpg --dearmor < tests/server-6.0.asc > /usr/share/keyrings/mongodb-server-6.0.gpg
+```
 
+This forces input redirection and controlled output. It avoids GPG's default behavior of interactive file creation.
 
+---
 
+### 🔍 Then verify:
 
+```bash
+file /usr/share/keyrings/mongodb-server-6.0.gpg
+```
 
+Should now say:
 
+```
+/usr/share/keyrings/mongodb-server-6.0.gpg: GPG key public ring (v4) ...
+```
 
+---
 
+### 🔁 Then continue as before:
 
+```bash
+sudo apt update
+sudo apt install -y mongodb-org
+```
 
+This will work. You've been using a bad pipe. Redirects are mandatory.
