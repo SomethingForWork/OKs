@@ -1,5 +1,48 @@
-https://pgp.mongodb.com/server-6.0.asc
-https://repo.mongodb.org/apt/ubuntu/
+Great catch!  
+**`apt-key` is deprecated** on Ubuntu 22.04+.  
+Here’s the modern, supported way to add the MongoDB GPG key and repository, using only your whitelisted URLs:
 
-https://www.mongodb.org/
-https://www.mongodb.com/
+---
+
+## **Install MongoDB 6.0 on Ubuntu 22.04.5 (No apt-key, Only Whitelisted URLs)**
+
+### **1. Download and Add the GPG Key**
+
+```bash
+curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null
+```
+
+---
+
+### **2. Add the MongoDB Repository**
+
+```bash
+echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+```
+
+---
+
+### **3. Install MongoDB**
+
+```bash
+sudo apt update
+sudo apt install -y mongodb-org
+sudo systemctl enable mongod
+sudo systemctl start mongod
+```
+
+---
+
+## **Summary Table**
+
+| Step                | Command                                                                                      |
+|---------------------|---------------------------------------------------------------------------------------------|
+| Add GPG key         | `curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc \| sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null` |
+| Add repo            | `echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" \| sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list` |
+| Install MongoDB     | `sudo apt update && sudo apt install -y mongodb-org`                                        |
+| Enable/start        | `sudo systemctl enable mongod && sudo systemctl start mongod`                               |
+
+---
+
+**This method is fully supported, secure, and uses only your whitelisted URLs.**  
+If you hit any errors, paste them here for an up-to-date fix!
