@@ -1,45 +1,34 @@
-religarecert.zip
-root@DELRHDERS001U:~/Cert# cd
-root@DELRHDERS001U:~# sudo apt install unzip -y
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-unzip is already the newest version (6.0-26ubuntu3.2).
-unzip set to manually installed.
-The following packages were automatically installed and are no longer required:
-  linux-headers-5.15.0-126 linux-headers-5.15.0-126-generic linux-image-5.15.0-126-generic linux-modules-5.15.0-126-generic linux-modules-extra-5.15.0-126-generic
-Use 'sudo apt autoremove' to remove them.
-0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-root@DELRHDERS001U:~# cd Cert
-root@DELRHDERS001U:~/Cert# unzip religarecert.zip -d certs
-Archive:  religarecert.zip
-  inflating: certs/religarecert.cer
-root@DELRHDERS001U:~/Cert# ls
-certs  religarecert.zip
-root@DELRHDERS001U:~/Cert# cd certs
-root@DELRHDERS001U:~/Cert/certs# ls
-religarecert.cer
-root@DELRHDERS001U:~/Cert/certs# file ~/Cert/certs/religarecert.cer
-/root/Cert/certs/religarecert.cer: PEM certificate
-root@DELRHDERS001U:~/Cert/certs# mv ~/Cert/certs/religarecert.cer ~/Cert/certs/religare.in.crt
-root@DELRHDERS001U:~/Cert/certs# sudo mkdir -p etc/ssl/religare
-root@DELRHDERS001U:~/Cert/certs# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare
-root@DELRHDERS001U:~/Cert/certs# ls
-etc  religare.in.crt
-root@DELRHDERS001U:~/Cert/certs# cd etc
-root@DELRHDERS001U:~/Cert/certs/etc# ls
-ssl
-root@DELRHDERS001U:~/Cert/certs/etc# cd ssl
-root@DELRHDERS001U:~/Cert/certs/etc/ssl# ls
-religare
-root@DELRHDERS001U:~/Cert/certs/etc/ssl# cd religare
-root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# ls
-root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# ^C
-root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# cd
-root@DELRHDERS001U:~# sudo mkdir -p etc/ssl/religare
-root@DELRHDERS001U:~# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare
-root@DELRHDERS001U:~# cd /etc/ssl/religare
--bash: cd: /etc/ssl/religare: Not a directory
-root@DELRHDERS001U:~# cd etc/ssl/religare
-root@DELRHDERS001U:~/etc/ssl/religare# ls
-root@DELRHDERS001U:~/etc/ssl/religare#
+You made a mistake in your path:
+You created `/root/etc/ssl/religare` by running `sudo mkdir -p etc/ssl/religare` **without a leading slash**, which means it got created in your home dir `~/etc/ssl/religare` instead of `/etc/ssl/religare`.
+
+---
+
+### Fix:
+
+1. Delete incorrect dir from home:
+
+```bash
+sudo rm -rf ~/etc
+```
+
+2. Recreate the correct one:
+
+```bash
+sudo mkdir -p /etc/ssl/religare
+```
+
+3. Move your certificate to the right place:
+
+```bash
+sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare/
+```
+
+4. Confirm:
+
+```bash
+ls -l /etc/ssl/religare/
+```
+
+---
+
+This will ensure your cert is in the correct system-level SSL path.
