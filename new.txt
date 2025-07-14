@@ -1,72 +1,77 @@
-Good. Online install is broken due to GPG + apt + lock issues. Strip it all. Do a clean slate for offline `.deb` install.
+nodejs is already the newest version (18.20.6-1nodesource1).
+The following packages were automatically installed and are no longer required:
+  linux-headers-5.15.0-126 linux-headers-5.15.0-126-generic linux-image-5.15.0-126-generic linux-modules-5.15.0-126-generic linux-modules-extra-5.15.0-126-generic
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+root@DELRHDERS001U:~# sudo npm install -g pm2
 
----
+changed 135 packages in 13s
 
-## 🧹 Purge Everything MongoDB-Related (Clean Reset)
+13 packages are looking for funding
+  run `npm fund` for details
+root@DELRHDERS001U:~# pm2 -v
+6.0.8
+root@DELRHDERS001U:~# git clone https://github.com/vandralcapital/mongo.git
+Cloning into 'mongo'...
 
-Run all these commands:
+remote: Enumerating objects: 7, done.
+remote: Total 7 (delta 0), reused 0 (delta 0), pack-reused 7 (from 1)
+Receiving objects: 100% (7/7), 47.85 MiB | 5.59 MiB/s, done.
+root@DELRHDERS001U:~#
+root@DELRHDERS001U:~# cd mongo
+root@DELRHDERS001U:~/mongo# ls
+mongodb-org_6.0.24_amd64.deb         mongodb-org-server_6.0.24_amd64.deb  mongodb-org-tools_6.0.24_amd64.deb
+mongodb-org-mongos_6.0.24_amd64.deb  mongodb-org-shell_6.0.24_amd64.deb
+root@DELRHDERS001U:~/mongo# sudo dpkg -i *.deb || true
+Selecting previously unselected package mongodb-org.
+(Reading database ... 249105 files and directories currently installed.)
+Preparing to unpack mongodb-org_6.0.24_amd64.deb ...
+Unpacking mongodb-org (6.0.24) ...
+Selecting previously unselected package mongodb-org-mongos.
+Preparing to unpack mongodb-org-mongos_6.0.24_amd64.deb ...
+Unpacking mongodb-org-mongos (6.0.24) ...
+Selecting previously unselected package mongodb-org-server.
+Preparing to unpack mongodb-org-server_6.0.24_amd64.deb ...
+Unpacking mongodb-org-server (6.0.24) ...
+Selecting previously unselected package mongodb-org-shell.
+Preparing to unpack mongodb-org-shell_6.0.24_amd64.deb ...
+Unpacking mongodb-org-shell (6.0.24) ...
+Selecting previously unselected package mongodb-org-tools.
+Preparing to unpack mongodb-org-tools_6.0.24_amd64.deb ...
+Unpacking mongodb-org-tools (6.0.24) ...
+dpkg: dependency problems prevent configuration of mongodb-org:
+ mongodb-org depends on mongodb-org-database; however:
+  Package mongodb-org-database is not installed.
+ mongodb-org depends on mongodb-mongosh; however:
+  Package mongodb-mongosh is not installed.
 
-```bash
-sudo systemctl stop mongod 2>/dev/null
-sudo systemctl disable mongod 2>/dev/null
+dpkg: error processing package mongodb-org (--install):
+ dependency problems - leaving unconfigured
+dpkg: dependency problems prevent configuration of mongodb-org-mongos:
+ mongodb-org-mongos depends on libssl1.1 (>= 1.1.1); however:
+  Package libssl1.1 is not installed.
 
-sudo apt purge -y mongodb-org*
-sudo apt autoremove -y
-sudo apt clean
-```
+dpkg: error processing package mongodb-org-mongos (--install):
+ dependency problems - leaving unconfigured
+dpkg: dependency problems prevent configuration of mongodb-org-server:
+ mongodb-org-server depends on libssl1.1 (>= 1.1.1); however:
+  Package libssl1.1 is not installed.
 
-Remove all keys, sources, leftovers:
+dpkg: error processing package mongodb-org-server (--install):
+ dependency problems - leaving unconfigured
+Setting up mongodb-org-shell (6.0.24) ...
+dpkg: dependency problems prevent configuration of mongodb-org-tools:
+ mongodb-org-tools depends on mongodb-database-tools; however:
+  Package mongodb-database-tools is not installed.
+ mongodb-org-tools depends on mongodb-org-database-tools-extra; however:
+  Package mongodb-org-database-tools-extra is not installed.
 
-```bash
-sudo rm -f /etc/apt/sources.list.d/*mongodb*.list
-sudo rm -f /usr/share/keyrings/mongodb-*.gpg
-sudo rm -f /etc/apt/trusted.gpg.d/mongodb-*.gpg
-sudo rm -rf /var/lib/mongodb
-sudo rm -rf /var/log/mongodb
-sudo rm -rf /var/lib/apt/lists/*
-```
-
-Verify:
-
-```bash
-dpkg -l | grep mongo
-```
-
-Output should be empty.
-
----
-
-## ✅ Now You're Ready for Offline Install
-
-From your open internet laptop:
-
-1. Go to: [https://www.mongodb.com/try/download/community](https://www.mongodb.com/try/download/community)
-2. Select:
-
-   * OS: **Ubuntu**
-   * Version: **22.04+ / x86\_64**
-   * Package: **.deb**
-3. Download all `.deb` files (you'll get 4–5 .deb packages).
-
-Transfer them to your Ubuntu server:
-
-* Easiest via GitHub private repo
-* Or `scp` to server
-* Or USB if air-gapped
-
-On the server:
-
-```bash
-sudo dpkg -i mongodb-*.deb
-sudo systemctl enable mongod
-sudo systemctl start mongod
-```
-
-Verify:
-
-```bash
-mongod --version
-sudo systemctl status mongod
-```
-
-This will be 100% under your control. No external key errors. No GPG failures. Clean, offline, stable.
+dpkg: error processing package mongodb-org-tools (--install):
+ dependency problems - leaving unconfigured
+Processing triggers for man-db (2.10.2-1) ...
+Errors were encountered while processing:
+ mongodb-org
+ mongodb-org-mongos
+ mongodb-org-server
+ mongodb-org-tools
+root@DELRHDERS001U:~/mongo
