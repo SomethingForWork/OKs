@@ -1,25 +1,110 @@
-root@DELRHDERS001U:~# sudo rm -f /etc/apt/sources.list.d/*mongodb*.list
-root@DELRHDERS001U:~# echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse
-root@DELRHDERS001U:~# sudo apt update
+Blunt step-by-step guide. Follow it **exactly** on your Ubuntu 22.04.5 server with **no internet** but GitHub access. Your goal: install **MongoDB 6.0**.
+
+---
+
+## 🧱 Preconditions
+
+* You already have `server-6.0.asc` in a GitHub repo at:
+  `https://github.com/SomethingForWork/tests.git`
+* Server OS: Ubuntu 22.04.5
+* `pgp.mongodb.com` is **blocked**, so GPG key must be transferred manually
+
+---
+
+## ✅ Clean Install MongoDB 6.0 — Start to End
+
+### 1. Remove old garbage
+
+```bash
+sudo rm -f /usr/share/keyrings/mongodb-server-6.0.gpg
+sudo rm -f /etc/apt/sources.list.d/*mongodb*.list
+sudo apt clean
+```
+
+---
+
+### 2. Clone repo and prepare key
+
+```bash
+git clone https://github.com/SomethingForWork/tests.git || true
+```
+
+If it says "already exists", skip.
+
+---
+
+### 3. Convert ASCII key to binary GPG format
+
+```bash
+sudo gpg --dearmor < tests/server-6.0.asc > /usr/share/keyrings/mongodb-server-6.0.gpg
+```
+
+### 4. Confirm it's a valid binary key
+
+```bash
+file /usr/share/keyrings/mongodb-server-6.0.gpg
+```
+
+Must output:
+
+```
+/usr/share/keyrings/mongodb-server-6.0.gpg: GPG key public ring (v4) ...
+```
+
+If it says ASCII or empty: your `.asc` is broken → fix it.
+
+---
+
+### 5. Add MongoDB 6.0 repo using the signed key
+
+```bash
+echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+```
+
+---
+
+### 6. Update and install MongoDB
+
+```bash
+sudo apt update
 sudo apt install -y mongodb-org
-Hit:1 https://deb.nodesource.com/node_18.x nodistro InRelease
-Get:2 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease [4,009 B]
-Err:2 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease
-  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
-Hit:3 http://archive.ubuntu.com/ubuntu jammy InRelease
-Hit:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
-Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
-Hit:6 http://archive.ubuntu.com/ubuntu jammy-security InRelease
-Reading package lists... Done
-W: GPG error: https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
-E: The repository 'https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease' is not signed.
-N: Updating from such a repository can't be done securely, and is therefore disabled by default.
-N: See apt-secure(8) manpage for repository creation and user configuration details.
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-E: Unable to locate package mongodb-org
-root@DELRHDERS001U:~# root@DELRHDERS001U:~# sudo rm -f /etc/apt/sources.list.d/*mongodb*.list
-root@DELRHDERS001U:~# echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse
+```
+
+---
+
+### 7. Enable and start MongoDB
+
+```bash
+sudo systemctl enable mongod
+sudo systemctl start mongod
+```
+
+---
+
+## 🧪 Verify Installation
+
+```bash
+mongod --version
+```
+
+---
+
+## If It Still Fails
+
+Run:
+
+```bash
+ls -lh tests/server-6.0.asc
+```
+
+If it shows `0 bytes`, the key is corrupted. Re-upload a proper one:
+
+```bash
+wget https://pgp.mongodb.com/server-6.0.asc -O server-6.0.asc
+```
+
+Transfer this file to GitHub again.
+
+---
+
+No deviation. No improvisation. This works if your `.asc` is valid.
