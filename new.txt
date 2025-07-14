@@ -1,44 +1,69 @@
-root@DELRHDERS001U:/opt/ER_Linux/server# pm2 logs
-[TAILING] Tailing last 15 lines for [all] processes (change the value with --lines option)
-/root/.pm2/pm2.log last 15 lines:
-PM2        | 2025-07-14T17:56:40: PM2 log: App [er-backend:0] starting in -fork mode-
-PM2        | 2025-07-14T17:56:40: PM2 log: App [er-backend:0] online
-PM2        | 2025-07-14T18:40:23: PM2 log: Stopping app:er-backend id:0
-PM2        | 2025-07-14T18:40:23: PM2 log: App [er-backend:0] exited with code [0] via signal [SIGINT]
-PM2        | 2025-07-14T18:40:23: PM2 log: pid=288263 msg=process killed
-PM2        | 2025-07-14T18:40:23: PM2 log: App [er-backend:0] starting in -fork mode-
-PM2        | 2025-07-14T18:40:23: PM2 log: App [er-backend:0] online
-PM2        | 2025-07-14T18:48:12: PM2 log: App [er-backend:0] exited with code [0] via signal [SIGKILL]
-PM2        | 2025-07-14T18:48:12: PM2 log: App [er-backend:0] starting in -fork mode-
-PM2        | 2025-07-14T18:48:12: PM2 log: App [er-backend:0] online
-PM2        | 2025-07-14T18:48:28: PM2 log: Stopping app:er-backend id:0
-PM2        | 2025-07-14T18:48:28: PM2 log: App [er-backend:0] exited with code [0] via signal [SIGINT]
-PM2        | 2025-07-14T18:48:28: PM2 log: pid=308571 msg=process killed
-PM2        | 2025-07-14T18:48:28: PM2 log: App [er-backend:0] starting in -fork mode-
-PM2        | 2025-07-14T18:48:28: PM2 log: App [er-backend:0] online
-
-/root/.pm2/logs/er-backend-error.log last 15 lines:
-0|er-backe | (node:288263) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
-0|er-backe | (node:288263) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-0|er-backe | (node:308015) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
-0|er-backe | (node:308015) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-0|er-backe | (node:308571) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
-0|er-backe | (node:308571) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-0|er-backe | (node:308605) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
-0|er-backe | (node:308605) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-
-/root/.pm2/logs/er-backend-out.log last 15 lines:
-0|er-backe | Connected to MongoDB
-0|er-backe | Server is running on port http://0.0.0.0:3000
-0|er-backe | Connected to MongoDB
-0|er-backe | Server is running on port http://0.0.0.0:3000
-0|er-backe | Connected to MongoDB
-0|er-backe | Server is running on port http://0.0.0.0:3000
-0|er-backe | Connected to MongoDB
-0|er-backe | Server is running on port http://0.0.0.0:3000
-
-
+^C
+root@DELRHDERS001U:/opt/ER_Linux/server# curl -vk https://10.91.41.16
+*   Trying 10.91.41.16:443...
+* Connected to 10.91.41.16 (10.91.41.16) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* TLSv1.0 (OUT), TLS header, Certificate Status (22):
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS header, Finished (20):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+* TLSv1.2 (OUT), TLS header, Finished (20):
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server accepted to use http/1.1
+* Server certificate:
+*  subject: C=IN; ST=Uttar Pradesh; L=Noida; O=RELIGARE ENTERPRISES LIMITED; CN=*.religare.in
+*  start date: Jul 10 13:17:07 2025 GMT
+*  expire date: Jun 21 10:11:04 2026 GMT
+*  issuer: C=BE; O=GlobalSign nv-sa; CN=GlobalSign RSA OV SSL CA 2018
+*  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+> GET / HTTP/1.1
+> Host: 10.91.41.16
+> User-Agent: curl/7.81.0
+> Accept: */*
+>
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* old SSL session ID is stale, removing
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< Server: nginx/1.18.0 (Ubuntu)
+< Date: Mon, 14 Jul 2025 13:45:47 GMT
+< Content-Type: text/html
+< Content-Length: 2272
+< Last-Modified: Mon, 14 Jul 2025 12:34:17 GMT
+< Connection: keep-alive
+< ETag: "6874f949-8e0"
+< Accept-Ranges: bytes
+<
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Web site created using create-react-app"/><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><title>React App</title><link href="/static/css/2.dbb74888.chunk.css" rel="stylesheet"><link href="/static/css/main.22c8eb71.chunk.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script>!function(e){function r(r){for(var n,f,l=r[0],i=r[1],a=r[2],c=0,s=[];c<l.length;c++)f=l[c],Object.prototype.hasOwnProperty.call(o,f)&&o[f]&&s.push(o[f][0]),o[f]=0;for(n in i)Object.prototype.hasOwnProperty.call(i,n)&&(e[n]=i[n]);for(p&&p(r);s.length;)s.shift()();return u.push.apply(u,a||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,l=1;l<t.length;l++){var i=t[l];0!==o[i]&&(n=!1)}n&&(u.splice(r--,1),e=f(f.s=t[0]))}return e}var n={},o={1:0},u=[];function f(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,f),t.l=!0,t.exports}f.m=e,f.c=n,f.d=function(e,r,t){f.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},f.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},f.t=function(e,r){if(1&r&&(e=f(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(f.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var n in e)f.d(t,n,function(r){return e[r]}.bind(null,n));return t},f.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return f.d(r,"a",r),r},f.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},f.p="/";var l=this.webpackJsonpfweb=this.webpackJsonpfweb||[]* Connection #0 to host 10.91.41.16 left intact
+,i=l.push.bind(l);l.push=r,l=l.slice();for(var a=0;a<l.length;a++)r(l[a]);var p=i;t()}([])</script><script src="/static/js/2.da22d4d9.chunk.js"></script><script src="/static/js/main.b5ec346b.chunk.js"></script></body></html>root@DELRHDERS001U:/opt/ER_Linux/server#
+root@DELRHDERS001U:/opt/ER_Linux/server# curl -v https://localhost:3000/register
+*   Trying 127.0.0.1:3000...
+* Connected to localhost (127.0.0.1) port 3000 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+*  CAfile: /etc/ssl/certs/ca-certificates.crt
+*  CApath: /etc/ssl/certs
+* TLSv1.0 (OUT), TLS header, Certificate Status (22):
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* (5454) (IN), , Unknown (72):
+* error:0A00010B:SSL routines::wrong version number
+* Closing connection 0
+curl: (35) error:0A00010B:SSL routines::wrong 
