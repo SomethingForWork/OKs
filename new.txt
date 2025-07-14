@@ -1,2 +1,28 @@
-https://github.com/vandralcapital/mongo.git
-
+Build Info: {
+    "version": "7.0.8",
+    "gitVersion": "c5d33e55ba38d98e2f48765ec4e55338d67a4a64",
+    "openSSLVersion": "OpenSSL 3.0.2 15 Mar 2022",
+    "modules": [],
+    "allocator": "tcmalloc",
+    "environment": {
+        "distmod": "ubuntu2204",
+        "distarch": "x86_64",
+        "target_arch": "x86_64"
+    }
+}
+root@DELRHDERS001U:~/mongo# sudo systemctl start mongod
+root@DELRHDERS001U:~/mongo# mongod --version
+db version v7.0.8
+Build Info: {
+    "version": "7.0.8",
+    "gitVersion": "c5d33e55ba38d98e2f48765ec4e55338d67a4a64",
+    "openSSLVersion": "OpenSSL 3.0.2 15 Mar 2022",
+    "modules": [],
+    "allocator": "tcmalloc",
+    "environment": {
+        "distmod": "ubuntu2204",
+        "distarch": "x86_64",
+        "target_arch": "x86_64"
+    }
+}
+root@DELRHDERS001U:~/mongo#
