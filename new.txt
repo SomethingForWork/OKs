@@ -20,10 +20,6 @@ Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 E: Unable to locate package mongodb-org
-root@DELRHDERS001U:~#
-
-
-
-
-
-
+root@DELRHDERS001U:~# root@DELRHDERS001U:~# sudo rm -f /etc/apt/sources.list.d/*mongodb*.list
+root@DELRHDERS001U:~# echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse
