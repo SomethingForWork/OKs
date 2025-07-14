@@ -1,34 +1,67 @@
-Great catch!  
-**`apt-key` is deprecated** on Ubuntu 22.04+.  
-Here’s the modern, supported way to add the MongoDB GPG key and repository, using only your whitelisted URLs:
+If the `curl` command is not responding, here are some troubleshooting steps and alternatives, **all using your whitelisted sources**:
 
 ---
 
-## **Install MongoDB 6.0 on Ubuntu 22.04.5 (No apt-key, Only Whitelisted URLs)**
+## 1. **Check Network/Firewall**
 
-### **1. Download and Add the GPG Key**
+- Make sure your server can reach `https://www.mongodb.org/static/pgp/server-6.0.asc`.
+- Try:
+  ```bash
+  curl -v https://www.mongodb.org/static/pgp/server-6.0.asc
+  ```
+  - If this hangs or fails, your server may not have outbound access to that URL, or there is a proxy/firewall issue.
+
+---
+
+## 2. **Try wget Instead of curl**
 
 ```bash
-curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null
+wget https://www.mongodb.org/static/pgp/server-6.0.asc -O /tmp/server-6.0.asc
+sudo cp /tmp/server-6.0.asc /usr/share/keyrings/mongodb-server-6.0.gpg
+```
+- This uses `wget` (also whitelisted) and avoids curl.
+
+---
+
+## 3. **Direct Download and Move**
+
+If you have access to another machine with internet, download the key there and then SCP it to your server:
+```bash
+# On your local machine:
+wget https://www.mongodb.org/static/pgp/server-6.0.asc
+
+# Then copy to your server:
+scp server-6.0.asc user@your-server:/tmp/
+# On the server:
+sudo cp /tmp/server-6.0.asc /usr/share/keyrings/mongodb-server-6.0.gpg
 ```
 
 ---
 
-### **2. Add the MongoDB Repository**
+## 4. **Check for Proxy Issues**
 
+If your organization uses a proxy, you may need to set `http_proxy` and `https_proxy` environment variables for `curl` or `wget` to work.
+
+---
+
+## 5. **Verify File After Download**
+
+After using any method, check the file:
+```bash
+ls -l /usr/share/keyrings/mongodb-server-6.0.gpg
+head /usr/share/keyrings/mongodb-server-6.0.gpg
+```
+- It should start with `-----BEGIN PGP PUBLIC KEY BLOCK-----`
+
+---
+
+## 6. **Continue with Repository Setup**
+
+Once the key is in place, continue with:
 ```bash
 echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-```
-
----
-
-### **3. Install MongoDB**
-
-```bash
 sudo apt update
 sudo apt install -y mongodb-org
-sudo systemctl enable mongod
-sudo systemctl start mongod
 ```
 
 ---
@@ -37,12 +70,12 @@ sudo systemctl start mongod
 
 | Step                | Command                                                                                      |
 |---------------------|---------------------------------------------------------------------------------------------|
-| Add GPG key         | `curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc \| sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null` |
-| Add repo            | `echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" \| sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list` |
+| Download with wget  | `wget https://www.mongodb.org/static/pgp/server-6.0.asc -O /tmp/server-6.0.asc`             |
+| Move to keyrings    | `sudo cp /tmp/server-6.0.asc /usr/share/keyrings/mongodb-server-6.0.gpg`                    |
+| Add repo            | `echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list` |
 | Install MongoDB     | `sudo apt update && sudo apt install -y mongodb-org`                                        |
-| Enable/start        | `sudo systemctl enable mongod && sudo systemctl start mongod`                               |
 
 ---
 
-**This method is fully supported, secure, and uses only your whitelisted URLs.**  
-If you hit any errors, paste them here for an up-to-date fix!
+**If wget also hangs, the issue is network/firewall and you’ll need to ask your IT/network team to check access to `www.mongodb.org`.**  
+If you get a specific error, paste it here for a targeted solution!
