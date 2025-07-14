@@ -1,4 +1,80 @@
+root@DELRHDERS001U:~# cd ~
+root@DELRHDERS001U:~# git clone https://github.com/religareit411/Cert
+Cloning into 'Cert'...
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Receiving objects: 100% (3/3), done.
+root@DELRHDERS001U:~# cd Cert
+root@DELRHDERS001U:~/Cert# ls
+religarecert.zip
+root@DELRHDERS001U:~/Cert# cd
+root@DELRHDERS001U:~# sudo apt install unzip -y
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+unzip is already the newest version (6.0-26ubuntu3.2).
+unzip set to manually installed.
+The following packages were automatically installed and are no longer required:
+  linux-headers-5.15.0-126 linux-headers-5.15.0-126-generic linux-image-5.15.0-126-generic linux-modules-5.15.0-126-generic linux-modules-extra-5.15.0-126-generic
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+root@DELRHDERS001U:~# cd Cert
+root@DELRHDERS001U:~/Cert# unzip religarecert.zip -d certs
+Archive:  religarecert.zip
+  inflating: certs/religarecert.cer
+root@DELRHDERS001U:~/Cert# ls
+certs  religarecert.zip
+root@DELRHDERS001U:~/Cert# cd certs
+root@DELRHDERS001U:~/Cert/certs# ls
+religarecert.cer
+root@DELRHDERS001U:~/Cert/certs# file ~/Cert/certs/religarecert.cer
+/root/Cert/certs/religarecert.cer: PEM certificate
+root@DELRHDERS001U:~/Cert/certs# mv ~/Cert/certs/religarecert.cer ~/Cert/certs/religare.in.crt
+root@DELRHDERS001U:~/Cert/certs# sudo mkdir -p etc/ssl/religare
+root@DELRHDERS001U:~/Cert/certs# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare
+root@DELRHDERS001U:~/Cert/certs# ls
+etc  religare.in.crt
+root@DELRHDERS001U:~/Cert/certs# cd etc
+root@DELRHDERS001U:~/Cert/certs/etc# ls
+ssl
+root@DELRHDERS001U:~/Cert/certs/etc# cd ssl
+root@DELRHDERS001U:~/Cert/certs/etc/ssl# ls
+religare
+root@DELRHDERS001U:~/Cert/certs/etc/ssl# cd religare
+root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# ls
+root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# ^C
+root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# cd
+root@DELRHDERS001U:~# sudo mkdir -p etc/ssl/religare
+root@DELRHDERS001U:~# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare
+root@DELRHDERS001U:~# cd /etc/ssl/religare
+-bash: cd: /etc/ssl/religare: Not a directory
+root@DELRHDERS001U:~# cd etc/ssl/religare
+root@DELRHDERS001U:~/etc/ssl/religare# ls
+root@DELRHDERS001U:~/etc/ssl/religare# ^C
+root@DELRHDERS001U:~/etc/ssl/religare# sudo rm -rf ~/etc
+root@DELRHDERS001U:~/etc/ssl/religare# sudo mkdir -p /etc/ssl/religare
+mkdir: cannot create directory ‘/etc/ssl/religare’: File exists
+root@DELRHDERS001U:~/etc/ssl/religare# sudo rm -rf ~/etc
+root@DELRHDERS001U:~/etc/ssl/religare# sudo mkdir -p /etc/ssl/religare
+mkdir: cannot create directory ‘/etc/ssl/religare’: File exists
+root@DELRHDERS001U:~/etc/ssl/religare# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare/
+cp: failed to access '/etc/ssl/religare/': Not a directory
+root@DELRHDERS001U:~/etc/ssl/religare# cd
+root@DELRHDERS001U:~# sudo rm -rf ~/etc
+root@DELRHDERS001U:~# sudo mkdir -p /etc/ssl/religare
+mkdir: cannot create directory ‘/etc/ssl/religare’: File exists
+root@DELRHDERS001U:~# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare/
+cp: failed to access '/etc/ssl/religare/': Not a directory
+root@DELRHDERS001U:~# ls -l /etc/ssl/religare/
+ls: cannot access '/etc/ssl/religare/': Not a directory
+root@DELRHDERS001U:~# ^C
+root@DELRHDERS001U:~# sudo rm -f /etc/ssl/religare
+root@DELRHDERS001U:~# sudo mkdir -p /etc/ssl/religare
 root@DELRHDERS001U:~# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare/
 root@DELRHDERS001U:~# ls -l /etc/ssl/religare
 total 4
 -rw-r----- 1 root root 2269 Jul 14 17:49 religare.in.crt
+root@DELRHDERS001U:~# ^C
+root@DELRHDERS001U:~#
