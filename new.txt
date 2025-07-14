@@ -1,90 +1,25 @@
-Excellent, you’ve made progress!  
-Now, **Nginx is serving HTTPS and the SSL handshake is working**.  
-But you’re getting a **500 Internal Server Error** from Nginx when accessing `/`.
-
----
-
-## What does this mean?
-
-A 500 error from Nginx (when accessing `/`) almost always means:
-- Nginx tried to serve a file or proxy a request, but something failed **on the server side**.
-- Since `/` should serve your React build’s `index.html`, the most likely causes are:
-  1. The build directory is missing or permissions are wrong.
-  2. The `root` or `index` directive in your Nginx config is incorrect.
-  3. There’s a typo or misconfiguration in your Nginx config.
-  4. SELinux/AppArmor is blocking access (less common).
-
----
-
-## **Step-by-step Fix**
-
-### 1. **Check React Build Directory**
-
-```bash
-ls -l /opt/ER_Linux/frontend/build
-```
-- You should see `index.html` and static files.
-- If not, you need to rebuild your frontend.
-
----
-
-### 2. **Check Nginx Config**
-
-**Your config should have:**
-```nginx
-root /opt/ER_Linux/frontend/build;
-index index.html;
-location / {
-  try_files $uri /index.html;
-}
-```
-- Make sure there are **no typos** in the path.
-- Make sure the `root` path is correct and matches the actual build directory.
-
----
-
-### 3. **Check Permissions**
-
-```bash
-ls -ld /opt/ER_Linux/frontend/build
-ls -l /opt/ER_Linux/frontend/build
-```
-- The `build` directory and its files should be **readable by the nginx user** (usually `www-data`).
-- If not, fix with:
-  ```bash
-  sudo chown -R www-data:www-data /opt/ER_Linux/frontend/build
+root@DELRHDERS001U:/opt/ER_Linux/server#   sudo chown -R www-data:www-data /opt/ER_Linux/frontend/build
   sudo chmod -R 755 /opt/ER_Linux/frontend/build
-  ```
-
----
-
-### 4. **Check Nginx Error Log**
-
-```bash
-sudo tail -n 50 /var/log/nginx/error.log
-```
-- This will show the **exact reason** for the 500 error (e.g., file not found, permission denied, etc.).
-
----
-
-### 5. **Reload Nginx**
-
-After any changes:
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
----
-
-## **What to do next:**
-
-1. **Run the above checks.**
-2. **Paste the output of:**
-   - `ls -l /opt/ER_Linux/frontend/build`
-   - `sudo tail -n 50 /var/log/nginx/error.log`
-3. **If you spot a permissions or missing file error, fix it and reload Nginx.**
-
----
-
-**Once you provide the above outputs, I’ll help you resolve the 500 error!**
+root@DELRHDERS001U:/opt/ER_Linux/server# sudo tail -n 50 /var/log/nginx/error.log
+2025/07/14 18:18:55 [emerg] 306718#306718: SSL_CTX_use_PrivateKey("/etc/ssl/religare/religare.in.key") failed (SSL: error:05800074:x509 certificate routines::key values mismatch)
+2025/07/14 18:27:06 [notice] 307202#307202: signal process started
+2025/07/14 18:33:05 [notice] 307608#307608: signal process started
+2025/07/14 18:36:42 [notice] 307829#307829: signal process started
+2025/07/14 18:56:54 [notice] 309205#309205: signal process started
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [crit] 309206#309206: *2 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/14 18:57:47 [error] 309206#309206: *2 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 10.91.41.16, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+root@DELRHDERS001U:/opt/ER_Linux/server# sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@DELRHDERS001U:/opt/ER_Linux/server# sudo systemctl reload nginx
+root@DELRHDERS001U:/opt/ER_Linux/server#
