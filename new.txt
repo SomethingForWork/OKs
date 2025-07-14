@@ -1,23 +1,18 @@
-server {
-    listen 443 ssl;
-    server_name ers.religare.in;
+✅ 2. Enable the Config
+Create a symbolic link to activate it:
 
-    ssl_certificate /etc/ssl/religare/religare.in.crt;
-    ssl_certificate_key /etc/ssl/religare/religare.in.key;
-
-    root /opt/ER_Linux/frontend/build;
-    index index.html;
-
-    location / {
-        try_files $uri /index.html;
-    }
-
-    location /api/ {
-        proxy_pass http://localhost:3000/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
+bash
+Copy
+Edit
+sudo ln -s /etc/nginx/sites-available/erapp /etc/nginx/sites-enabled/
+✅ 3. Disable the Default Site (optional but recommended)
+bash
+Copy
+Edit
+sudo rm /etc/nginx/sites-enabled/default
+✅ 4. Test NGINX and Reload
+bash
+Copy
+Edit
+sudo nginx -t
+sudo systemctl reload nginx
