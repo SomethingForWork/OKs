@@ -1,163 +1,22 @@
-If the `curl` command is not responding, here are some troubleshooting steps and alternatives, **all using your whitelisted sources**:
-
----
-
-## 1. **Check Network/Firewall**
-
-- Make sure your server can reach `https://www.mongodb.org/static/pgp/server-6.0.asc`.
-- Try:
-  ```bash
-  curl -v https://www.mongodb.org/static/pgp/server-6.0.asc
-  ```
-  - If this hangs or fails, your server may not have outbound access to that URL, or there is a proxy/firewall issue.
-
----
-
-## 2. **Try wget Instead of curl**
-
-```bash
-wget https://www.mongodb.org/static/pgp/server-6.0.asc -O /tmp/server-6.0.asc
-sudo cp /tmp/server-6.0.asc /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-- This uses `wget` (also whitelisted) and avoids curl.
-
----
-
-## 3. **Direct Download and Move**
-
-If you have access to another machine with internet, download the key there and then SCP it to your server:
-```bash
-# On your local machine:
-wget https://www.mongodb.org/static/pgp/server-6.0.asc
-
-# Then copy to your server:
-scp server-6.0.asc user@your-server:/tmp/
-# On the server:
-sudo cp /tmp/server-6.0.asc /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-
----
-
-## 4. **Check for Proxy Issues**
-
-If your organization uses a proxy, you may need to set `http_proxy` and `https_proxy` environment variables for `curl` or `wget` to work.
-
----
-
-## 5. **Verify File After Download**
-
-After using any method, check the file:
-```bash
-ls -l /usr/share/keyrings/mongodb-server-6.0.gpg
-head /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-- It should start with `-----BEGIN PGP PUBLIC KEY BLOCK-----`
-
----
-
-## 6. **Continue with Repository Setup**
-
-Once the key is in place, continue with:
-```bash
-echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-sudo apt update
-sudo apt install -y mongodb-org
-```
-
----
-
-## **Summary Table**
-
-| Step                | Command                                                                                      |
-|---------------------|---------------------------------------------------------------------------------------------|
-| Download with wget  | `wget https://www.mongodb.org/static/pgp/server-6.0.asc -O /tmp/server-6.0.asc`             |
-| Move to keyrings    | `sudo cp /tmp/server-6.0.asc /usr/share/keyrings/mongodb-server-6.0.gpg`                    |
-| Add repo            | `echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list` |
-| Install MongoDB     | `sudo apt update && sudo apt install -y mongodb-org`                                        |
-
----
-
-**If wget also hangs, the issue is network/firewall and you’ll need to ask your IT/network team to check access to `www.mongodb.org`.**  
-If you get a specific error, paste it here for a targeted solution!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-root@DELRHDERS001U:~/test#   curl -v https://www.mongodb.org/static/pgp/server-6.0.asc
-*   Trying 52.21.89.200:443...
-* Connected to www.mongodb.org (52.21.89.200) port 443 (#0)
-* ALPN, offering h2
-* ALPN, offering http/1.1
-*  CAfile: /etc/ssl/certs/ca-certificates.crt
-*  CApath: /etc/ssl/certs
-* TLSv1.0 (OUT), TLS header, Certificate Status (22):
-* TLSv1.3 (OUT), TLS handshake, Client hello (1):
-* TLSv1.2 (IN), TLS header, Certificate Status (22):
-* TLSv1.3 (IN), TLS handshake, Server hello (2):
-* TLSv1.2 (IN), TLS header, Certificate Status (22):
-* TLSv1.2 (IN), TLS handshake, Certificate (11):
-* TLSv1.2 (IN), TLS header, Certificate Status (22):
-* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
-* TLSv1.2 (IN), TLS header, Certificate Status (22):
-* TLSv1.2 (IN), TLS handshake, Server finished (14):
-* TLSv1.2 (OUT), TLS header, Certificate Status (22):
-* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
-* TLSv1.2 (OUT), TLS header, Finished (20):
-* TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
-* TLSv1.2 (OUT), TLS header, Certificate Status (22):
-* TLSv1.2 (OUT), TLS handshake, Finished (20):
-* TLSv1.2 (IN), TLS header, Finished (20):
-* TLSv1.2 (IN), TLS header, Certificate Status (22):
-* TLSv1.2 (IN), TLS handshake, Finished (20):
-* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-SHA256
-* ALPN, server did not agree to a protocol
-* Server certificate:
-*  subject: C=US; ST=New York; L=New York; O=MongoDB, Inc.; CN=*.mongodb.org
-*  start date: Dec  5 00:00:00 2024 GMT
-*  expire date: Jan  2 23:59:59 2026 GMT
-*  subjectAltName: host "www.mongodb.org" matched cert's "*.mongodb.org"
-*  issuer: C=US; O=DigiCert Inc; CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-*  SSL certificate verify ok.
-* TLSv1.2 (OUT), TLS header, Supplemental data (23):
-> GET /static/pgp/server-6.0.asc HTTP/1.1
-> Host: www.mongodb.org
-> User-Agent: curl/7.81.0
-> Accept: */*
->
-* TLSv1.2 (IN), TLS header, Supplemental data (23):
-* Mark bundle as not supporting multiuse
-< HTTP/1.1 301 Moved Permanently
-< Content-Type: text/html
-< Date: Mon, 14 Jul 2025 07:43:11 GMT
-< Location: https://pgp.mongodb.com/server-6.0.asc
-< Connection: Keep-Alive
-< Content-Length: 0
-<
-* Connection #0 to host www.mongodb.org left intact
-root@DELRHDERS001U:~/test# wget https://www.mongodb.org/static/pgp/server-6.0.asc -O /tmp/server-6.0.asc
-sudo cp /tmp/server-6.0.asc /usr/share/keyrings/mongodb-server-6.0.gpg
---2025-07-14 13:13:26--  https://www.mongodb.org/static/pgp/server-6.0.asc
-Resolving www.mongodb.org (www.mongodb.org)... 52.206.222.245, 54.175.147.155, 52.21.89.200
-Connecting to www.mongodb.org (www.mongodb.org)|52.206.222.245|:443... connected.
-HTTP request sent, awaiting response... 301 Moved Permanently
-Location: https://pgp.mongodb.com/server-6.0.asc [following]
---2025-07-14 13:13:27--  https://pgp.mongodb.com/server-6.0.asc
-Resolving pgp.mongodb.com (pgp.mongodb.com)... 18.66.63.46, 18.66.63.73, 18.66.63.124, ...
-Connecting to pgp.mongodb.com (pgp.mongodb.com)|18.66.63.46|:443...
+root@DELRHDERS001U:~# sudo apt update
+Hit:1 https://deb.nodesource.com/node_18.x nodistro InRelease
+Get:2 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease [4,009 B]
+Get:3 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 InRelease [3,005 B]
+Err:2 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease
+  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
+Err:3 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 InRelease
+  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 41DE058A4E7DCA05
+Hit:4 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:7 http://archive.ubuntu.com/ubuntu jammy-security InRelease
+Reading package lists... Done
+W: GPG error: https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
+E: The repository 'https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+W: GPG error: https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 41DE058A4E7DCA05
+E: The repository 'https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+root@DELRHDERS001U:~#
