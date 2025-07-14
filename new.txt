@@ -1,2 +1,15 @@
+✅ 1. Check modulus of the certificate
+bash
+Copy
+Edit
 openssl x509 -noout -modulus -in /etc/ssl/religare/religare.in.crt | openssl md5
+✅ 2. Check modulus of existing key (which failed)
+bash
+Copy
+Edit
 openssl rsa -noout -modulus -in /etc/ssl/religare/religare.in.key | openssl md5
+✅ 3. Check modulus of the new key you found:
+bash
+Copy
+Edit
+openssl rsa -noout -modulus -in /home/clouduser/ers.religare.in.key | openssl md5
