@@ -1,34 +1,45 @@
-You made a mistake in your path:
-You created `/root/etc/ssl/religare` by running `sudo mkdir -p etc/ssl/religare` **without a leading slash**, which means it got created in your home dir `~/etc/ssl/religare` instead of `/etc/ssl/religare`.
-
----
-
-### Fix:
-
-1. Delete incorrect dir from home:
-
-```bash
-sudo rm -rf ~/etc
-```
-
-2. Recreate the correct one:
-
-```bash
-sudo mkdir -p /etc/ssl/religare
-```
-
-3. Move your certificate to the right place:
-
-```bash
-sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare/
-```
-
-4. Confirm:
-
-```bash
-ls -l /etc/ssl/religare/
-```
-
----
-
-This will ensure your cert is in the correct system-level SSL path.
+certs  religarecert.zip
+root@DELRHDERS001U:~/Cert# cd certs
+root@DELRHDERS001U:~/Cert/certs# ls
+religarecert.cer
+root@DELRHDERS001U:~/Cert/certs# file ~/Cert/certs/religarecert.cer
+/root/Cert/certs/religarecert.cer: PEM certificate
+root@DELRHDERS001U:~/Cert/certs# mv ~/Cert/certs/religarecert.cer ~/Cert/certs/religare.in.crt
+root@DELRHDERS001U:~/Cert/certs# sudo mkdir -p etc/ssl/religare
+root@DELRHDERS001U:~/Cert/certs# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare
+root@DELRHDERS001U:~/Cert/certs# ls
+etc  religare.in.crt
+root@DELRHDERS001U:~/Cert/certs# cd etc
+root@DELRHDERS001U:~/Cert/certs/etc# ls
+ssl
+root@DELRHDERS001U:~/Cert/certs/etc# cd ssl
+root@DELRHDERS001U:~/Cert/certs/etc/ssl# ls
+religare
+root@DELRHDERS001U:~/Cert/certs/etc/ssl# cd religare
+root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# ls
+root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# ^C
+root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# cd
+root@DELRHDERS001U:~# sudo mkdir -p etc/ssl/religare
+root@DELRHDERS001U:~# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare
+root@DELRHDERS001U:~# cd /etc/ssl/religare
+-bash: cd: /etc/ssl/religare: Not a directory
+root@DELRHDERS001U:~# cd etc/ssl/religare
+root@DELRHDERS001U:~/etc/ssl/religare# ls
+root@DELRHDERS001U:~/etc/ssl/religare# ^C
+root@DELRHDERS001U:~/etc/ssl/religare# sudo rm -rf ~/etc
+root@DELRHDERS001U:~/etc/ssl/religare# sudo mkdir -p /etc/ssl/religare
+mkdir: cannot create directory ‘/etc/ssl/religare’: File exists
+root@DELRHDERS001U:~/etc/ssl/religare# sudo rm -rf ~/etc
+root@DELRHDERS001U:~/etc/ssl/religare# sudo mkdir -p /etc/ssl/religare
+mkdir: cannot create directory ‘/etc/ssl/religare’: File exists
+root@DELRHDERS001U:~/etc/ssl/religare# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare/
+cp: failed to access '/etc/ssl/religare/': Not a directory
+root@DELRHDERS001U:~/etc/ssl/religare# cd
+root@DELRHDERS001U:~# sudo rm -rf ~/etc
+root@DELRHDERS001U:~# sudo mkdir -p /etc/ssl/religare
+mkdir: cannot create directory ‘/etc/ssl/religare’: File exists
+root@DELRHDERS001U:~# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare/
+cp: failed to access '/etc/ssl/religare/': Not a directory
+root@DELRHDERS001U:~# ls -l /etc/ssl/religare/
+ls: cannot access '/etc/ssl/religare/': Not a directory
+root@DELRHDERS001U:~#
