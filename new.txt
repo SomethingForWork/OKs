@@ -1,182 +1,23 @@
-  Line 11:23:  'setCompanyName' is assigned a value but never used  no-unused-vars
-  Line 12:16:  'setRole' is assigned a value but never used         no-unused-vars
-  Line 14:19:  'setSuccess' is assigned a value but never used      no-unused-vars
-  Line 15:10:  'isLoading' is assigned a value but never used       no-unused-vars
-  Line 29:13:  'response' is assigned a value but never used        no-unused-vars
+server {
+    listen 443 ssl;
+    server_name ers.religare.in;
 
-./src/reviewer_dashboard/Dashboard.js
-  Line 14:11:  'user' is assigned a value but never used              no-unused-vars
-  Line 68:9:   'rightsCategories' is assigned a value but never used  no-unused-vars
+    ssl_certificate /etc/ssl/religare/religare.in.crt;
+    ssl_certificate_key /etc/ssl/religare/religare.in.key;
 
-./src/reviewer_dashboard/changepass.js
-  Line 15:12:  'isLoading' is assigned a value but never used  no-unused-vars
-  Line 16:12:  'error' is assigned a value but never used      no-unused-vars
-  Line 28:19:  'response' is assigned a value but never used   no-unused-vars
+    root /opt/ER_Linux/frontend/build;
+    index index.html;
 
-./src/audit/AuditList.js
-  Line 16:10:   'editingAuditId' is assigned a value but never used      no-unused-vars
-  Line 18:10:   'isSaving' is assigned a value but never used            no-unused-vars
-  Line 30:9:    'handleRightsChange' is assigned a value but never used  no-unused-vars
-  Line 38:9:    'handleSave' is assigned a value but never used          no-unused-vars
-  Line 91:9:    'handleCancel' is assigned a value but never used        no-unused-vars
-  Line 132:11:  'rightsDetails' is assigned a value but never used       no-unused-vars
+    location / {
+        try_files $uri /index.html;
+    }
 
-./src/components/Sidebar.js
-  Line 16:20:  Expected '===' and instead saw '=='  eqeqeq
-  Line 21:20:  Expected '===' and instead saw '=='  eqeqeq
-  Line 26:20:  Expected '===' and instead saw '=='  eqeqeq
-  Line 31:20:  Expected '===' and instead saw '=='  eqeqeq
-  Line 36:20:  Expected '===' and instead saw '=='  eqeqeq
-  Line 49:20:  Expected '===' and instead saw '=='  eqeqeq
-  Line 54:20:  Expected '===' and instead saw '=='  eqeqeq
-  Line 59:20:  Expected '===' and instead saw '=='  eqeqeq
-  Line 75:20:  Expected '===' and instead saw '=='  eqeqeq
-
-./src/App.js
-  Line 20:8:   'Dashboard' is defined but never used      no-unused-vars
-  Line 31:8:   'Reviewer' is defined but never used       no-unused-vars
-  Line 50:28:  'user' is assigned a value but never used  no-unused-vars
-
-./src/user/CreateAdmin.js
-  Line 28:13:  'response' is assigned a value but never used  no-unused-vars
-
-./src/applications/Application.js
-  Line 2:10:    'Link' is defined but never used                   no-unused-vars
-  Line 41:9:    'handleDelete' is assigned a value but never used  no-unused-vars
-  Line 146:13:  'response' is assigned a value but never used      no-unused-vars
-
-./src/auth/AuthContext.js
-  Line 2:17:   'Component' is defined but never used  no-unused-vars
-  Line 16:37:  Expected '!==' and instead saw '!='    eqeqeq
-
-./src/pages/RoleBasedDashboard.js
-  Line 2:8:  'Dashboard' is defined but never used  no-unused-vars
-
-./src/auth/ProtectedRoute.js
-  Line 3:17:  'Component' is defined but never used  no-unused-vars
-
-./src/pages/Signup.js
-  Line 3:17:  'Component' is defined but never used  no-unused-vars
-
-./src/hod/HodIndex.js
-  Line 44:9:  'handleEmployeeAssignmentChange' is assigned a value but never used  no-unused-vars
-
-./src/pages/Login.js
-  Line 4:17:  'Component' is defined but never used  no-unused-vars
-
-./src/pages/Logout.js
-  Line 4:17:  'Component' is defined but never used  no-unused-vars
-
-./src/applications/CreateApp.js
-  Line 5:10:   'Navigate' is defined but never used                   no-unused-vars
-  Line 5:20:   'useNavigate' is defined but never used                no-unused-vars
-  Line 12:17:  'setRoles' is assigned a value but never used          no-unused-vars
-  Line 14:10:  'last_audit_date' is assigned a value but never used   no-unused-vars
-  Line 14:27:  'setLastAuditDate' is assigned a value but never used  no-unused-vars
-  Line 20:19:  'setSuccess' is assigned a value but never used        no-unused-vars
-  Line 74:13:  'response' is assigned a value but never used          no-unused-vars
-
-./src/frequency/Create_freq.js
-  Line 5:8:  'Swal' is defined but never used  no-unused-vars
-
-./src/employee/IndexEmoloyee.js
-  Line 73:13:  'response' is assigned a value but never used  no-unused-vars
-
-./src/pages/Dashboard.js
-  Line 7:10:   'totalUsers' is assigned a value but never used   no-unused-vars
-  Line 8:10:   'totalEmp' is assigned a value but never used     no-unused-vars
-  Line 9:10:   'totalFreq' is assigned a value but never used    no-unused-vars
-  Line 10:10:  'totalReview' is assigned a value but never used  no-unused-vars
-
-./src/excel/UploadExcel.js
-  Line 8:12:    'selectedFile' is assigned a value but never used  no-unused-vars
-  Line 160:19:  'excelHeaders' is assigned a value but never used  no-unused-vars
-
-./src/audit/create_audit.js
-  Line 9:10:    'selectedemp' is assigned a value but never used               no-unused-vars
-  Line 9:23:    'setSelectedEmp' is assigned a value but never used            no-unused-vars
-  Line 11:10:   'frequencyId' is assigned a value but never used               no-unused-vars
-  Line 11:23:   'setFrequencyId' is assigned a value but never used            no-unused-vars
-  Line 12:10:   'selectedFrequency' is assigned a value but never used         no-unused-vars
-  Line 12:29:   'setSelectedFrequency' is assigned a value but never used      no-unused-vars
-  Line 14:10:   'selectedUserId' is assigned a value but never used            no-unused-vars
-  Line 14:26:   'setSelectedUserId' is assigned a value but never used         no-unused-vars
-  Line 16:10:   'selectedApplicationId' is assigned a value but never used     no-unused-vars
-  Line 16:33:   'setSelectedApplicationId' is assigned a value but never used  no-unused-vars
-  Line 18:10:   'auditDate' is assigned a value but never used                 no-unused-vars
-  Line 18:21:   'setAuditDate' is assigned a value but never used              no-unused-vars
-  Line 19:10:   'inactive' is assigned a value but never used                  no-unused-vars
-  Line 19:20:   'setInactive' is assigned a value but never used               no-unused-vars
-  Line 20:10:   'rights' is assigned a value but never used                    no-unused-vars
-  Line 20:18:   'setRights' is assigned a value but never used                 no-unused-vars
-  Line 21:10:   'reviewerRemarks' is assigned a value but never used           no-unused-vars
-  Line 21:27:   'setReviewerRemarks' is assigned a value but never used        no-unused-vars
-  Line 23:19:   'setSuccess' is assigned a value but never used                no-unused-vars
-  Line 25:10:   'frequencies' is assigned a value but never used               no-unused-vars
-  Line 114:13:  'response' is assigned a value but never used                  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-File sizes after gzip:
-
-  252.84 KB  build/static/js/2.da22d4d9.chunk.js
-  29.98 KB   build/static/css/2.dbb74888.chunk.css
-  11.95 KB   build/static/js/main.b5ec346b.chunk.js
-  1.04 KB    build/static/css/main.22c8eb71.chunk.css
-  774 B      build/static/js/runtime-main.3fd1b672.js
-
-The project was built assuming it is hosted at /.
-You can control this with the homepage field in your package.json.
-
-The build folder is ready to be deployed.
-You may serve it with a static server:
-
-  npm install -g serve
-  serve -s build
-
-Find out more about deployment here:
-
-  bit.ly/CRA-deploy
-
-root@DELRHDERS001U:/opt/ER_Linux/frontend# ^C
-root@DELRHDERS001U:/opt/ER_Linux/frontend# ls -l etc/ssl.religare
-ls: cannot access 'etc/ssl.religare': No such file or directory
-root@DELRHDERS001U:/opt/ER_Linux/frontend# ls -l etc/ssl/religare
-ls: cannot access 'etc/ssl/religare': No such file or directory
-root@DELRHDERS001U:/opt/ER_Linux/frontend# cd
-root@DELRHDERS001U:~# ls -l etc/ssl/religare
-ls: cannot access 'etc/ssl/religare': No such file or directory
-root@DELRHDERS001U:~# ^C
-root@DELRHDERS001U:~# ls -l /etc/ssl/religare
-total 4
--rw-r----- 1 root root 2269 Jul 14 17:49 religare.in.crt
-root@DELRHDERS001U:~# ^C
-root@DELRHDERS001U:~# ls -l /etc/ssl/religare/religare.in.key
-ls: cannot access '/etc/ssl/religare/religare.in.key': No such file or directory
-root@DELRHDERS001U:~# ^C
-root@DELRHDERS001U:~# sudo find / -type f -name "*.key" 2>/dev/null
-/home/clouduser/ers.religare.in.key
-/home/clouduser/religare.in.key
-/usr/share/dns/root.key
-/usr/share/doc/openvpn/examples/sample-keys/client-pass.key
-/usr/share/doc/openvpn/examples/sample-keys/server.key
-/usr/share/doc/openvpn/examples/sample-keys/client.key
-/usr/share/doc/openvpn/examples/sample-keys/server-ec.key
-/usr/share/doc/openvpn/examples/sample-keys/ta.key
-/usr/share/doc/openvpn/examples/sample-keys/client-ec.key
-/usr/share/doc/openvpn/examples/sample-keys/ca.key
-/var/lib/fwupd/pki/secret.key
-/etc/ssl/private/ssl-cert-snakeoil.key
-/etc/brlapi.key
-root@DELRHDERS001U:~# sudo cp /home/clouduser/religare.in.key /etc/ssl/religare
-root@DELRHDERS001U:~# ls -l /etc/ssl/religare
-total 8
--rw-r----- 1 root root 2269 Jul 14 17:49 religare.in.crt
--rw------- 1 root root 1704 Jul 14 18:13 religare.in.key
-root@DELRHDERS001U:~# sudo nano /etc/nginx/site-available/erapp
-root@DELRHDERS001U:~# cd /etc/nginx/site-available/
--bash: cd: /etc/nginx/site-available/: No such file or directory
-root@DELRHDERS001U:~# cd /etc/nginx/site-available
--bash: cd: /etc/nginx/site-available: No such file or directory
-root@DELRHDERS001U:~#
+    location /api/ {
+        proxy_pass http://localhost:3000/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
