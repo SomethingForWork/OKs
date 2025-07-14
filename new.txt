@@ -7,3 +7,10 @@ echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mo
 
 sudo apt update
 sudo apt install -y mongodb-org
+
+
+
+gpg --show-keys --with-fingerprint /usr/share/keyrings/mongodb-server-6.0.gpg
+
+
+// gpg key show
