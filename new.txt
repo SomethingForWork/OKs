@@ -1,63 +1,90 @@
-root@DELRHDERS001U:/opt/ER_Linux/server# curl -vk https://10.91.41.16/
-*   Trying 10.91.41.16:443...
-* Connected to 10.91.41.16 (10.91.41.16) port 443 (#0)
-* ALPN, offering h2
-* ALPN, offering http/1.1
-* TLSv1.0 (OUT), TLS header, Certificate Status (22):
-* TLSv1.3 (OUT), TLS handshake, Client hello (1):
-* TLSv1.2 (IN), TLS header, Certificate Status (22):
-* TLSv1.3 (IN), TLS handshake, Server hello (2):
-* TLSv1.2 (IN), TLS header, Finished (20):
-* TLSv1.2 (IN), TLS header, Supplemental data (23):
-* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
-* TLSv1.2 (IN), TLS header, Supplemental data (23):
-* TLSv1.3 (IN), TLS handshake, Certificate (11):
-* TLSv1.2 (IN), TLS header, Supplemental data (23):
-* TLSv1.3 (IN), TLS handshake, CERT verify (15):
-* TLSv1.2 (IN), TLS header, Supplemental data (23):
-* TLSv1.3 (IN), TLS handshake, Finished (20):
-* TLSv1.2 (OUT), TLS header, Finished (20):
-* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
-* TLSv1.2 (OUT), TLS header, Supplemental data (23):
-* TLSv1.3 (OUT), TLS handshake, Finished (20):
-* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
-* ALPN, server accepted to use http/1.1
-* Server certificate:
-*  subject: C=IN; ST=Uttar Pradesh; L=Noida; O=RELIGARE ENTERPRISES LIMITED; CN=*.religare.in
-*  start date: Jul 10 13:17:07 2025 GMT
-*  expire date: Jun 21 10:11:04 2026 GMT
-*  issuer: C=BE; O=GlobalSign nv-sa; CN=GlobalSign RSA OV SSL CA 2018
-*  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
-* TLSv1.2 (OUT), TLS header, Supplemental data (23):
-> GET / HTTP/1.1
-> Host: 10.91.41.16
-> User-Agent: curl/7.81.0
-> Accept: */*
->
-* TLSv1.2 (IN), TLS header, Supplemental data (23):
-* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-* TLSv1.2 (IN), TLS header, Supplemental data (23):
-* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-* old SSL session ID is stale, removing
-* TLSv1.2 (IN), TLS header, Supplemental data (23):
-* Mark bundle as not supporting multiuse
-< HTTP/1.1 500 Internal Server Error
-< Server: nginx/1.18.0 (Ubuntu)
-< Date: Mon, 14 Jul 2025 13:27:47 GMT
-< Content-Type: text/html
-< Content-Length: 186
-< Connection: close
-<
-<html>
-<head><title>500 Internal Server Error</title></head>
-<body>
-<center><h1>500 Internal Server Error</h1></center>
-<hr><center>nginx/1.18.0 (Ubuntu)</center>
-</body>
-</html>
-* Closing connection 0
-* TLSv1.2 (IN), TLS header, Supplemental data (23):
-* TLSv1.3 (IN), TLS alert, close notify (256):
-* TLSv1.2 (OUT), TLS header, Supplemental data (23):
-* TLSv1.3 (OUT), TLS alert, close notify (256):
-root@DELRHDERS001U:/opt/ER_Linux/server#
+Excellent, you’ve made progress!  
+Now, **Nginx is serving HTTPS and the SSL handshake is working**.  
+But you’re getting a **500 Internal Server Error** from Nginx when accessing `/`.
+
+---
+
+## What does this mean?
+
+A 500 error from Nginx (when accessing `/`) almost always means:
+- Nginx tried to serve a file or proxy a request, but something failed **on the server side**.
+- Since `/` should serve your React build’s `index.html`, the most likely causes are:
+  1. The build directory is missing or permissions are wrong.
+  2. The `root` or `index` directive in your Nginx config is incorrect.
+  3. There’s a typo or misconfiguration in your Nginx config.
+  4. SELinux/AppArmor is blocking access (less common).
+
+---
+
+## **Step-by-step Fix**
+
+### 1. **Check React Build Directory**
+
+```bash
+ls -l /opt/ER_Linux/frontend/build
+```
+- You should see `index.html` and static files.
+- If not, you need to rebuild your frontend.
+
+---
+
+### 2. **Check Nginx Config**
+
+**Your config should have:**
+```nginx
+root /opt/ER_Linux/frontend/build;
+index index.html;
+location / {
+  try_files $uri /index.html;
+}
+```
+- Make sure there are **no typos** in the path.
+- Make sure the `root` path is correct and matches the actual build directory.
+
+---
+
+### 3. **Check Permissions**
+
+```bash
+ls -ld /opt/ER_Linux/frontend/build
+ls -l /opt/ER_Linux/frontend/build
+```
+- The `build` directory and its files should be **readable by the nginx user** (usually `www-data`).
+- If not, fix with:
+  ```bash
+  sudo chown -R www-data:www-data /opt/ER_Linux/frontend/build
+  sudo chmod -R 755 /opt/ER_Linux/frontend/build
+  ```
+
+---
+
+### 4. **Check Nginx Error Log**
+
+```bash
+sudo tail -n 50 /var/log/nginx/error.log
+```
+- This will show the **exact reason** for the 500 error (e.g., file not found, permission denied, etc.).
+
+---
+
+### 5. **Reload Nginx**
+
+After any changes:
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+---
+
+## **What to do next:**
+
+1. **Run the above checks.**
+2. **Paste the output of:**
+   - `ls -l /opt/ER_Linux/frontend/build`
+   - `sudo tail -n 50 /var/log/nginx/error.log`
+3. **If you spot a permissions or missing file error, fix it and reload Nginx.**
+
+---
+
+**Once you provide the above outputs, I’ll help you resolve the 500 error!**
