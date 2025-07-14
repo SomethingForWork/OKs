@@ -1,44 +1,30 @@
-You confirmed: the resulting `.gpg` file is **empty**. That means the `dearmor` command failed silently due to corrupted input or path issue.
-
----
-
-## 🔥 Fix Now, No Guesswork
-
-You're getting the "overwrite" prompt because **GnuPG is trying to write to the wrong path (`tests/server-6.0.asc.gpg`)** due to how you're using `gpg`.
-
-You **must use this exact clean command**. No prompt, no garbage:
-
----
-
-### ✅ Proper Command (clean pipe, no overwrite prompts):
-
-```bash
-sudo gpg --dearmor < tests/server-6.0.asc > /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-
-This forces input redirection and controlled output. It avoids GPG's default behavior of interactive file creation.
-
----
-
-### 🔍 Then verify:
-
-```bash
-file /usr/share/keyrings/mongodb-server-6.0.gpg
-```
-
-Should now say:
-
-```
-/usr/share/keyrings/mongodb-server-6.0.gpg: GPG key public ring (v4) ...
-```
-
----
-
-### 🔁 Then continue as before:
-
-```bash
-sudo apt update
+root@DELRHDERS001U:~# sudo gpg --dearmor < tests/server-6.0.asc > /usr/share/keyrings/mongodb-server-6.0.gpg
+root@DELRHDERS001U:~# file /usr/share/keyrings/mongodb-server-6.0.gpg
+/usr/share/keyrings/mongodb-server-6.0.gpg: OpenPGP Public Key Version 4, Created Wed Feb 23 15:11:54 2022, RSA (Encrypt or Sign, 4096 bits); User ID; Signature; OpenPGP Certificate
+root@DELRHDERS001U:~# sudo apt update
 sudo apt install -y mongodb-org
-```
+Hit:1 https://deb.nodesource.com/node_18.x nodistro InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:3 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease [4,009 B]
+Err:3 https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease
+  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu jammy-security InRelease
+Reading package lists... Done
+W: GPG error: https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6A26B1AE64C3C388
+E: The repository 'https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+E: Unable to locate package mongodb-org
+root@DELRHDERS001U:~#
 
-This will work. You've been using a bad pipe. Redirects are mandatory.
+
+
+
+
+
+
