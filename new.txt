@@ -1,28 +1,45 @@
-Build Info: {
-    "version": "7.0.8",
-    "gitVersion": "c5d33e55ba38d98e2f48765ec4e55338d67a4a64",
-    "openSSLVersion": "OpenSSL 3.0.2 15 Mar 2022",
-    "modules": [],
-    "allocator": "tcmalloc",
-    "environment": {
-        "distmod": "ubuntu2204",
-        "distarch": "x86_64",
-        "target_arch": "x86_64"
-    }
-}
-root@DELRHDERS001U:~/mongo# sudo systemctl start mongod
-root@DELRHDERS001U:~/mongo# mongod --version
-db version v7.0.8
-Build Info: {
-    "version": "7.0.8",
-    "gitVersion": "c5d33e55ba38d98e2f48765ec4e55338d67a4a64",
-    "openSSLVersion": "OpenSSL 3.0.2 15 Mar 2022",
-    "modules": [],
-    "allocator": "tcmalloc",
-    "environment": {
-        "distmod": "ubuntu2204",
-        "distarch": "x86_64",
-        "target_arch": "x86_64"
-    }
-}
-root@DELRHDERS001U:~/mongo#
+Cloning into 'Cert'...
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Receiving objects: 100% (3/3), done.
+root@DELRHDERS001U:~# cd Cert
+root@DELRHDERS001U:~/Cert# ls
+religarecert.zip
+root@DELRHDERS001U:~/Cert# cd
+root@DELRHDERS001U:~# sudo apt install unzip -y
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+unzip is already the newest version (6.0-26ubuntu3.2).
+unzip set to manually installed.
+The following packages were automatically installed and are no longer required:
+  linux-headers-5.15.0-126 linux-headers-5.15.0-126-generic linux-image-5.15.0-126-generic linux-modules-5.15.0-126-generic linux-modules-extra-5.15.0-126-generic
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+root@DELRHDERS001U:~# cd Cert
+root@DELRHDERS001U:~/Cert# unzip religarecert.zip -d certs
+Archive:  religarecert.zip
+  inflating: certs/religarecert.cer
+root@DELRHDERS001U:~/Cert# ls
+certs  religarecert.zip
+root@DELRHDERS001U:~/Cert# cd certs
+root@DELRHDERS001U:~/Cert/certs# ls
+religarecert.cer
+root@DELRHDERS001U:~/Cert/certs# file ~/Cert/certs/religarecert.cer
+/root/Cert/certs/religarecert.cer: PEM certificate
+root@DELRHDERS001U:~/Cert/certs# mv ~/Cert/certs/religarecert.cer ~/Cert/certs/religare.in.crt
+root@DELRHDERS001U:~/Cert/certs# sudo mkdir -p etc/ssl/religare
+root@DELRHDERS001U:~/Cert/certs# sudo cp ~/Cert/certs/religare.in.crt /etc/ssl/religare
+root@DELRHDERS001U:~/Cert/certs# ls
+etc  religare.in.crt
+root@DELRHDERS001U:~/Cert/certs# cd etc
+root@DELRHDERS001U:~/Cert/certs/etc# ls
+ssl
+root@DELRHDERS001U:~/Cert/certs/etc# cd ssl
+root@DELRHDERS001U:~/Cert/certs/etc/ssl# ls
+religare
+root@DELRHDERS001U:~/Cert/certs/etc/ssl# cd religare
+root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare# ls
+root@DELRHDERS001U:~/Cert/certs/etc/ssl/religare#
