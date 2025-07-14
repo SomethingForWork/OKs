@@ -1,21 +1,2 @@
-root@DELRHDERS001U:/opt/ER_Linux/server# sudo netstat -tulnp | grep 443
-tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      1296/nginx: master
-root@DELRHDERS001U:/opt/ER_Linux/server# sudo netstat -tulnp | grep 3000
-tcp        0      0 0.0.0.0:3000            0.0.0.0:*               LISTEN      308605/node /opt/ER
-root@DELRHDERS001U:/opt/ER_Linux/server# ^C
-root@DELRHDERS001U:/opt/ER_Linux/server# sudo ufw status
-Status: active
-
-To                         Action      From
---                         ------      ----
-OpenSSH                    ALLOW       Anywhere
-443                        ALLOW       Anywhere
-OpenSSH (v6)               ALLOW       Anywhere (v6)
-443 (v6)                   ALLOW       Anywhere (v6)
-
-root@DELRHDERS001U:/opt/ER_Linux/server# sudo tail -n 50 /var/log/nginx/error.log
-2025/07/14 18:18:55 [emerg] 306718#306718: SSL_CTX_use_PrivateKey("/etc/ssl/religare/religare.in.key") failed (SSL: error:05800074:x509 certificate routines::key values mismatch)
-2025/07/14 18:27:06 [notice] 307202#307202: signal process started
-2025/07/14 18:33:05 [notice] 307608#307608: signal process started
-2025/07/14 18:36:42 [notice] 307829#307829: signal process started
-root@DELRHDERS001U:/opt/ER_Linux/server#
+openssl x509 -noout -modulus -in /etc/ssl/religare/religare.in.crt | openssl md5
+openssl rsa -noout -modulus -in /etc/ssl/religare/religare.in.key | openssl md5
