@@ -1,16 +1,5 @@
-root@DELRHDERS001U:~# cd /etc/nginx/site-available/
--bash: cd: /etc/nginx/site-available/: No such file or directory
-root@DELRHDERS001U:~# cd /etc/nginx/site-available
--bash: cd: /etc/nginx/site-available: No such file or directory
-root@DELRHDERS001U:~# ^C
-root@DELRHDERS001U:~# cd /etc/nginx/sites-available
-root@DELRHDERS001U:/etc/nginx/sites-available# ls
-default
-root@DELRHDERS001U:/etc/nginx/sites-available# sudo nano /etc/nginx/site-available/erapp
-root@DELRHDERS001U:/etc/nginx/sites-available# sudo nano /etc/nginx/sites-available/erapp
-root@DELRHDERS001U:/etc/nginx/sites-available# sudo nano /etc/nginx/sites-available/erapp
-root@DELRHDERS001U:/etc/nginx/sites-available# sudo ln -s /etc/nginx/sites-available/erapp /etc/nginx/sites-enabled/
-root@DELRHDERS001U:/etc/nginx/sites-available# sudo nginx -t
-nginx: [emerg] SSL_CTX_use_PrivateKey("/etc/ssl/religare/religare.in.key") failed (SSL: error:05800074:x509 certificate routines::key values mismatch)
-nginx: configuration file /etc/nginx/nginx.conf test failed
-root@DELRHDERS001U:/etc/nginx/sites-available#
+# Extract modulus from the certificate
+openssl x509 -noout -modulus -in /etc/ssl/religare/religare.in.crt | openssl md5
+
+# Extract modulus from the key
+openssl rsa -noout -modulus -in /etc/ssl/religare/religare.in.key | openssl md5
