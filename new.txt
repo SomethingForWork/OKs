@@ -1,30 +1,16 @@
-root@DELRHDERS001U:~# gpg --dearmor /usr/share/keyrings/mongodb-server-6.0.gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg
-usage: gpg [options] --dearmor [file]
-root@DELRHDERS001U:~# sudo apt update
-Hit:1 https://deb.nodesource.com/node_18.x nodistro InRelease
-Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
-Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
-Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
-Hit:5 http://archive.ubuntu.com/ubuntu jammy-security InRelease
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-All packages are up to date.
-root@DELRHDERS001U:~# ^[[200~sudo apt install -y mongodb-org
-sudo: command not found
-root@DELRHDERS001U:~# ~sudo apt install -y mongodb-org
-Command '~sudo' not found, did you mean:
-  command 'sudo' from deb sudo (1.9.9-1ubuntu2.4)
-  command 'sudo' from deb sudo-ldap (1.9.9-1ubuntu2.4)
-Try: apt install <deb name>
-root@DELRHDERS001U:~# sudo apt install -y mongodb-org
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-E: Unable to locate package mongodb-org
-root@DELRHDERS001U:~#
+# 1. Clone the repo
+git clone https://github.com/SomethingForWork/tests.git
 
+# 2. Convert ASCII key to binary format and move to system keyrings
+gpg --dearmor tests/server-6.0.asc | sudo tee /usr/share/keyrings/mongodb-server-6.0.gpg > /dev/null
 
+# 3. Register the MongoDB 6.0 repo
+echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
 
+# 4. Update packages and install MongoDB
+sudo apt update
+sudo apt install -y mongodb-org
 
-
+# 5. Enable and start the service
+sudo systemctl enable mongod
+sudo systemctl start mongod
