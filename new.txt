@@ -20,8 +20,9 @@ Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 E: Unable to locate package mongodb-org
+root@DELRHDERS001U:~# ^C
+root@DELRHDERS001U:~# ^C
 root@DELRHDERS001U:~#
-
 
 
 
