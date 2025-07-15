@@ -1,8 +1,29 @@
-const app = express()
-app.use(cors({
-  origin: function (origin, callback) {
-    callback(null, origin); // Dynamically allow the requesting origin
-  },
-  credentials: true
-}));
-app.use(express.json({ limit: '50mb' }));
+Application.js:146   PUT https://uat-ers.religare.in/api/apps/6876000299dbaf21324fd77f 401 (Unauthorized)
+(anonymous) @ xhr.js:195
+xhr @ xhr.js:15
+Ce @ dispatchRequest.js:51
+_request @ Axios.js:178
+request @ Axios.js:40
+(anonymous) @ Axios.js:217
+(anonymous) @ bind.js:5
+onSubmit @ Application.js:146
+wu @ react-dom-client.production.js:11700
+(anonymous) @ react-dom-client.production.js:12259
+Dt @ react-dom-client.production.js:1448
+xu @ react-dom-client.production.js:11845
+Bf @ react-dom-client.production.js:14486
+Mf @ react-dom-client.production.js:14454
+Application.js:156  Error updating application: a {message: 'Request failed with status code 401', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, request: XMLHttpRequest, …}
+onSubmit @ Application.js:156
+await in onSubmit
+wu @ react-dom-client.production.js:11700
+(anonymous) @ react-dom-client.production.js:12259
+Dt @ react-dom-client.production.js:1448
+xu @ react-dom-client.production.js:11845
+Bf @ react-dom-client.production.js:14486
+Mf @ react-dom-client.production.js:14454
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
