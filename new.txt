@@ -1,3 +1,3 @@
-curl -k -X POST https://10.91.41.16:3000/create-admin \
+curl -X POST http://10.91.41.16:3000/create-admin \
   -H "Content-Type: application/json" \
   -d '{"name": "Divyansh", "email": "iemaildivyansh@gmail.com", "password": "random"}'
