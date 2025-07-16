@@ -1,47 +1,29 @@
-const nodemailer = require("nodemailer");
-
-const SMTP_CONFIG = {
-  host: process.env.SMTP_HOST || "mail.religare.com",
-  port: parseInt(process.env.SMTP_PORT) || 25,
-  secure: process.env.SMTP_SECURE === "true"
-};
-
-if (process.env.EMAIL_USER) {
-  // Some SMTP servers may require the user field even without password
-  SMTP_CONFIG.auth = {
-    user: process.env.EMAIL_USER
-  };
+Saving manual audit with data: {
+  emp_id: '68774a186e1b1df8a6698641',
+  user_id: '68774a186e1b1df8a669863c',
+  application_id: '68774c256e1b1df8a66986f5',
+  initialRights: 'Allow Email Access on Mobile',
+  excelRightsData: { 'Allow Email Access on Mobile': 'qwertyuio' },
+  status: true,
+  audit_date: 2026-01-17T08:41:13.519Z,
+  frequency_id: [ new ObjectId('687746fc290ac11d3b6ee464') ]
+}
+Error sending email: Error: Missing credentials for "LOGIN"
+    at SMTPConnection._formatError (C:\Users\esltester2\Desktop\NewWork\project\server\node_modules\nodemailer\lib\smtp-connection\index.js:809:19)
+    at SMTPConnection.login (C:\Users\esltester2\Desktop\NewWork\project\server\node_modules\nodemailer\lib\smtp-connection\index.js:454:38)
+    at C:\Users\esltester2\Desktop\NewWork\project\server\node_modules\nodemailer\lib\smtp-transport\index.js:272:32
+    at SMTPConnection.<anonymous> (C:\Users\esltester2\Desktop\NewWork\project\server\node_modules\nodemailer\lib\smtp-connection\index.js:215:17)
+    at Object.onceWrapper (node:events:632:28)
+    at SMTPConnection.emit (node:events:518:28)
+    at SMTPConnection._actionEHLO (C:\Users\esltester2\Desktop\NewWork\project\server\node_modules\nodemailer\lib\smtp-connection\index.js:1371:14)
+    at SMTPConnection._processResponse (C:\Users\esltester2\Desktop\NewWork\project\server\node_modules\nodemailer\lib\smtp-connection\index.js:993:20)
+    at SMTPConnection._onData (C:\Users\esltester2\Desktop\NewWork\project\server\node_modules\nodemailer\lib\smtp-connection\index.js:774:14)
+    at SMTPConnection._onSocketData (C:\Users\esltester2\Desktop\NewWork\project\server\node_modules\nodemailer\lib\smtp-connection\index.js:195:44) {
+  code: 'EAUTH',
+  command: 'API'
 }
 
-const transporter = nodemailer.createTransport({
-  ...SMTP_CONFIG,
-  tls: {
-    rejectUnauthorized: false
-  },
-  connectionTimeout: 5 * 60 * 1000,
-  greetingTimeout: 5 * 60 * 1000,
-  socketTimeout: 5 * 60 * 1000
-});
 
-const sendEmail = async ({ to, subject, text, html }) => {
-  try {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to,
-      subject,
-      ...(text && { text }),
-      ...(html && { html })
-    };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully:", info.messageId);
-    return info;
-  } catch (error) {
-    console.error("Error sending email:", error);
-    throw new Error(`Failed to send email: ${error.message}`);
-  }
-};
-
-module.exports = {
-  sendEmail
-};
+env
+EMAIL_USER=esltester2@religare.com
