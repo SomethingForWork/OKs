@@ -1,2 +1,65 @@
-echo 'export NODE_OPTIONS=--openssl-legacy-provider' >> ~/.bashrc
-source ~/.bashrc
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  256.08 KB  build/static/js/2.0c1f9b74.chunk.js
+  29.98 KB   build/static/css/2.dbb74888.chunk.css
+  14.73 KB   build/static/js/main.b6f36e0a.chunk.js
+  1.6 KB     build/static/css/main.f36f01c9.chunk.css
+  1.17 KB    build/static/js/runtime-main.289427f1.js
+  423 B      build/static/js/3.196af675.chunk.js
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  bit.ly/CRA-deploy
+
+root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo systemctl reload nginx
+root@DELRHDERS001U:/opt/ER_Linux/frontend# pm2 logs
+[TAILING] Tailing last 15 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 15 lines:
+PM2        | 2025-07-17T19:35:20: PM2 log: App [er-backend:1] exited with code [1] via signal [SIGINT]
+PM2        | 2025-07-17T19:35:20: PM2 log: App [er-backend:1] starting in -fork mode-
+PM2        | 2025-07-17T19:35:20: PM2 log: App [er-backend:1] online
+PM2        | 2025-07-17T19:35:21: PM2 log: App [er-backend:1] exited with code [1] via signal [SIGINT]
+PM2        | 2025-07-17T19:35:21: PM2 log: App [er-backend:1] starting in -fork mode-
+PM2        | 2025-07-17T19:35:21: PM2 log: App [er-backend:1] online
+PM2        | 2025-07-17T19:35:22: PM2 log: App [er-backend:1] exited with code [1] via signal [SIGINT]
+PM2        | 2025-07-17T19:35:22: PM2 log: App [er-backend:1] starting in -fork mode-
+PM2        | 2025-07-17T19:35:22: PM2 log: App [er-backend:1] online
+PM2        | 2025-07-17T19:35:23: PM2 log: App [er-backend:1] exited with code [1] via signal [SIGINT]
+PM2        | 2025-07-17T19:35:23: PM2 log: App [er-backend:1] starting in -fork mode-
+PM2        | 2025-07-17T19:35:23: PM2 log: App [er-backend:1] online
+PM2        | 2025-07-17T19:35:23: PM2 log: Stopping app:er-backend id:1
+PM2        | 2025-07-17T19:35:23: PM2 log: App [er-backend:1] exited with code [0] via signal [SIGINT]
+PM2        | 2025-07-17T19:35:24: PM2 log: pid=604714 msg=process killed
+
+/root/.pm2/logs/-er-backend-error.log last 15 lines:
+0|-er-back | (node:602802) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|-er-back | (Use `node --trace-warnings ...` to show where the warning was created)
+0|-er-back | (node:602802) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+
+/root/.pm2/logs/-er-backend-out.log last 15 lines:
+0|-er-back | Connected to MongoDB
+0|-er-back | Server is running on port http://0.0.0.0:3000
+
+^Z
+[3]+  Stopped                 pm2 logs
+root@DELRHDERS001U:/opt/ER_Linux/frontend# pm2 logs er-backend
+[TAILING] Tailing last 15 lines for [er-backend] process (change the value with --lines option)
+^[[A^[[B^Z
+[4]+  Stopped                 pm2 logs er-backend
+root@DELRHDERS001U:/opt/ER_Linux/frontend# pm2 logs -er-backend
+[TAILING] Tailing last 15 lines for [-b] process (change the value with --lines option)
+-b
