@@ -1,2 +1,1 @@
-sudo chown -R www-data:www-data /opt/ER_Linux/frontend/build
-sudo chmod -R 755 /opt/ER_Linux/frontend/build
+NODE_OPTIONS=--openssl-legacy-provider npm run build
