@@ -1,7 +1,105 @@
-10.91.41.16/:1   GET https://10.91.41.16/ 500 (Internal Server Error)
-[NEW] Explain Console errors by using Copilot in Edge: click
-         
-         to explain an error. 
-        Learn more
-        Don't show again
-favicon.ico:1   GET https://10.91.41.16/favicon.ico 500 (Internal Server Error)
+You are getting a `500 (Internal Server Error)` when accessing `https://10.91.41.16/` and `favicon.ico`. This means Nginx is running, but something is wrong with how it’s serving your frontend files.
+
+Let’s troubleshoot step by step:
+
+---
+
+## 1. **Check Nginx Error Logs**
+
+Run this command to see the latest errors:
+```sh
+sudo tail -n 50 /var/log/nginx/error.log
+```
+**Paste the output here if you want help interpreting it.**
+
+---
+
+## 2. **Common Causes**
+
+### a. **File Permissions**
+Nginx must be able to read your React build files.  
+Run:
+```sh
+sudo chmod -R o+r /opt/ER_Linux/frontend/build
+sudo find /opt/ER_Linux/frontend/build -type d -exec chmod o+x {} \;
+```
+Then reload Nginx:
+```sh
+sudo systemctl reload nginx
+```
+
+### b. **Wrong `root` Path**
+Your Nginx config should have:
+```
+root /opt/ER_Linux/frontend/build;
+```
+Make sure this path exists and contains `index.html`.
+
+### c. **SSL Certificate Issues**
+If your SSL certificate is missing or misconfigured, Nginx may fail to start or serve files.  
+Check your certificate paths in the config.
+
+### d. **Nginx Config Syntax**
+Test your config:
+```sh
+sudo nginx -t
+```
+Fix any errors it reports.
+
+---
+
+## 3. **Check File Existence**
+
+- Does `/opt/ER_Linux/frontend/build/index.html` exist?
+- Does `/opt/ER_Linux/frontend/build/favicon.ico` exist?
+
+If not, rebuild your frontend:
+```sh
+cd /opt/ER_Linux/frontend
+NODE_OPTIONS=--openssl-legacy-provider npm run build
+```
+
+---
+
+## 4. **Sample Nginx Config Block**
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name 10.91.41.16;
+
+    ssl_certificate     /etc/nginx/ssl/your_cert.crt;
+    ssl_certificate_key /etc/nginx/ssl/your_cert.key;
+
+    root /opt/ER_Linux/frontend/build;
+    index index.html;
+
+    location / {
+        try_files $uri /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://localhost:3000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+---
+
+## 5. **Summary Checklist**
+
+- [ ] Nginx config points to the correct `root`
+- [ ] Build files exist and are readable
+- [ ] SSL cert/key paths are correct
+- [ ] Nginx config passes `nginx -t`
+- [ ] Nginx error log checked for details
+
+---
+
+**Next Step:**  
+Check the Nginx error log and file permissions.  
+If you’re still stuck, paste your Nginx config and the error log output here for a detailed review!
