@@ -1,1 +1,44 @@
-https://github.com/SomethingForWork/project.git
+root@DELRHDERS001U:/opt/ER_Linux/frontend# npm run build
+
+> fweb@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Error: error:0308010C:digital envelope routines::unsupported
+    at new Hash (node:internal/crypto/hash:69:19)
+    at Object.createHash (node:crypto:133:10)
+    at module.exports (/opt/ER_Linux/frontend/node_modules/webpack/lib/util/createHash.js:135:53)
+    at NormalModule._initBuildHash (/opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:417:16)
+    at handleParseError (/opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:471:10)
+    at /opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:503:5
+    at /opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:358:12
+    at /opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:373:3
+    at iterateNormalLoaders (/opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:214:10)
+    at iterateNormalLoaders (/opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:221:10)
+Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+/opt/ER_Linux/frontend/node_modules/react-scripts/scripts/build.js:19
+  throw err;
+  ^
+
+Error: error:0308010C:digital envelope routines::unsupported
+    at new Hash (node:internal/crypto/hash:69:19)
+    at Object.createHash (node:crypto:133:10)
+    at module.exports (/opt/ER_Linux/frontend/node_modules/webpack/lib/util/createHash.js:135:53)
+    at NormalModule._initBuildHash (/opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:417:16)
+    at /opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:452:10
+    at /opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:323:13
+    at /opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:367:11
+    at /opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:233:18
+    at context.callback (/opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:111:13)
+    at /opt/ER_Linux/frontend/node_modules/babel-loader/lib/index.js:59:103
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  opensslErrorStack: [ 'error:03000086:digital envelope routines::initialization error' ],
+  library: 'digital envelope routines',
+  reason: 'unsupported',
+  code: 'ERR_OSSL_EVP_UNSUPPORTED'
+}
+
+Node.js v18.20.6
+root@DELRHDERS001U:/opt/ER_Linux/frontend#
