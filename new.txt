@@ -1,20 +1,7 @@
-Fix it:
-Give read permission to all users:
-
-bash
-Copy
-Edit
-sudo chmod -R o+r /opt/ER_Linux/frontend/build
-If directories are blocked, fix directory traversal too:
-
-bash
-Copy
-Edit
-sudo find /opt/ER_Linux/frontend/build -type d -exec chmod o+x {} \;
-This allows nginx (runs as www-data) to read static files and traverse directories.
-
-Then reload Nginx:
-bash
-Copy
-Edit
-sudo systemctl reload nginx
+10.91.41.16/:1   GET https://10.91.41.16/ 500 (Internal Server Error)
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+favicon.ico:1   GET https://10.91.41.16/favicon.ico 500 (Internal Server Error)
