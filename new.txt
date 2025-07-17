@@ -1,2 +1,285 @@
-echo 'export NODE_OPTIONS=--openssl-legacy-provider' >> ~/.bashrc
+
+158 packages are looking for funding
+  run `npm fund` for details
+
+159 vulnerabilities (1 low, 124 moderate, 31 high, 3 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+root@DELRHDERS001U:/opt/ER_Linux/frontend# npm run build
+
+> fweb@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Error: error:0308010C:digital envelope routines::unsupported
+    at new Hash (node:internal/crypto/hash:69:19)
+    at Object.createHash (node:crypto:133:10)
+    at module.exports (/opt/ER_Linux/frontend/node_modules/webpack/lib/util/createHash.js:135:53)
+    at NormalModule._initBuildHash (/opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:417:16)
+    at handleParseError (/opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:471:10)
+    at /opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:503:5
+    at /opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:358:12
+    at /opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:373:3
+    at iterateNormalLoaders (/opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:214:10)
+    at iterateNormalLoaders (/opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:221:10)
+Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+/opt/ER_Linux/frontend/node_modules/react-scripts/scripts/build.js:19
+  throw err;
+  ^
+
+Error: error:0308010C:digital envelope routines::unsupported
+    at new Hash (node:internal/crypto/hash:69:19)
+    at Object.createHash (node:crypto:133:10)
+    at module.exports (/opt/ER_Linux/frontend/node_modules/webpack/lib/util/createHash.js:135:53)
+    at NormalModule._initBuildHash (/opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:417:16)
+    at /opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:452:10
+    at /opt/ER_Linux/frontend/node_modules/webpack/lib/NormalModule.js:323:13
+    at /opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:367:11
+    at /opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:233:18
+    at context.callback (/opt/ER_Linux/frontend/node_modules/loader-runner/lib/LoaderRunner.js:111:13)
+    at /opt/ER_Linux/frontend/node_modules/babel-loader/lib/index.js:59:103
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  opensslErrorStack: [ 'error:03000086:digital envelope routines::initialization error' ],
+  library: 'digital envelope routines',
+  reason: 'unsupported',
+  code: 'ERR_OSSL_EVP_UNSUPPORTED'
+}
+
+Node.js v18.20.6
+root@DELRHDERS001U:/opt/ER_Linux/frontend# ^C
+root@DELRHDERS001U:/opt/ER_Linux/frontend# echo 'export NODE_OPTIONS=--openssl-legacy-provider' >> ~/.bashrc
 source ~/.bashrc
+root@DELRHDERS001U:/opt/ER_Linux/frontend# npm run build
+
+> fweb@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Compiled with warnings.
+
+./src/employee/CreateEmployee.js
+  Line 10:10:  'isLoading' is assigned a value but never used   no-unused-vars
+  Line 14:19:  'setSuccess' is assigned a value but never used  no-unused-vars
+  Line 56:13:  'response' is assigned a value but never used    no-unused-vars
+
+./src/excel/UploadExcel.js
+  Line 10:12:   'selectedFile' is assigned a value but never used  no-unused-vars
+  Line 170:19:  'excelHeaders' is assigned a value but never used  no-unused-vars
+
+./src/user/createUser.js
+  Line 12:23:  'setCompanyName' is assigned a value but never used  no-unused-vars
+  Line 13:16:  'setRole' is assigned a value but never used         no-unused-vars
+  Line 15:19:  'setSuccess' is assigned a value but never used      no-unused-vars
+  Line 16:10:  'isLoading' is assigned a value but never used       no-unused-vars
+  Line 17:9:   'navigate' is assigned a value but never used        no-unused-vars
+  Line 31:13:  'response' is assigned a value but never used        no-unused-vars
+
+./src/reviewer_dashboard/changepass.js
+  Line 15:12:  'isLoading' is assigned a value but never used  no-unused-vars
+  Line 16:12:  'error' is assigned a value but never used      no-unused-vars
+  Line 28:19:  'response' is assigned a value but never used   no-unused-vars
+
+./src/audit/AuditList.js
+  Line 16:10:   'editingAuditId' is assigned a value but never used      no-unused-vars
+  Line 18:10:   'isSaving' is assigned a value but never used            no-unused-vars
+  Line 30:9:    'handleRightsChange' is assigned a value but never used  no-unused-vars
+  Line 38:9:    'handleSave' is assigned a value but never used          no-unused-vars
+  Line 91:9:    'handleCancel' is assigned a value but never used        no-unused-vars
+  Line 132:11:  'rightsDetails' is assigned a value but never used       no-unused-vars
+
+./src/components/SessionManager.js
+  Line 1:8:   'React' is defined but never used      no-unused-vars
+  Line 1:17:  'useEffect' is defined but never used  no-unused-vars
+  Line 1:28:  'useRef' is defined but never used     no-unused-vars
+  Line 1:36:  'useState' is defined but never used   no-unused-vars
+  Line 2:8:   'axios' is defined but never used      no-unused-vars
+  Line 3:8:   'Toast' is defined but never used      no-unused-vars
+  Line 4:10:  'useAuth' is defined but never used    no-unused-vars
+
+./src/user/CreateAdmin.js
+  Line 28:13:  'response' is assigned a value but never used  no-unused-vars
+
+./src/applications/Application.js
+  Line 2:10:    'Link' is defined but never used                   no-unused-vars
+  Line 41:9:    'handleDelete' is assigned a value but never used  no-unused-vars
+  Line 146:13:  'response' is assigned a value but never used      no-unused-vars
+
+./src/auth/AuthContext.js
+  Line 2:17:   'Component' is defined but never used  no-unused-vars
+  Line 16:37:  Expected '!==' and instead saw '!='    eqeqeq
+
+./src/pages/RoleBasedDashboard.js
+  Line 2:8:  'Dashboard' is defined but never used  no-unused-vars
+
+./src/pages/ApplicationAdminDashboard.js
+  Line 34:10:  'appIds' is assigned a value but never used  no-unused-vars
+
+./src/pages/Login.js
+  Line 3:10:  'Link' is defined but never used       no-unused-vars
+  Line 4:17:  'Component' is defined but never used  no-unused-vars
+
+./src/pages/Signup.js
+  Line 3:17:  'Component' is defined but never used  no-unused-vars
+
+./src/hod/HodIndex.js
+  Line 45:9:  'handleEmployeeAssignmentChange' is assigned a value but never used  no-unused-vars
+
+./src/pages/Logout.js
+  Line 4:17:  'Component' is defined but never used  no-unused-vars
+
+./src/App.js
+  Line 4:49:   'Navigate' is defined but never used   no-unused-vars
+  Line 20:8:   'Dashboard' is defined but never used  no-unused-vars
+  Line 31:8:   'Reviewer' is defined but never used   no-unused-vars
+  Line 37:10:  'useAuth' is defined but never used    no-unused-vars
+  Line 49:8:   'Toast' is defined but never used      no-unused-vars
+  Line 50:8:   'axios' is defined but never used      no-unused-vars
+
+./src/pages/ExportCompletedReviews.js
+  Line 50:10:  'error' is assigned a value but never used  no-unused-vars
+  Line 51:11:  'user' is assigned a value but never used   no-unused-vars
+
+./src/applications/CreateApp.js
+  Line 5:10:   'Navigate' is defined but never used                   no-unused-vars
+  Line 5:20:   'useNavigate' is defined but never used                no-unused-vars
+  Line 12:17:  'setRoles' is assigned a value but never used          no-unused-vars
+  Line 14:10:  'last_audit_date' is assigned a value but never used   no-unused-vars
+  Line 14:27:  'setLastAuditDate' is assigned a value but never used  no-unused-vars
+  Line 16:10:  'desc' is assigned a value but never used              no-unused-vars
+  Line 16:16:  'setDesc' is assigned a value but never used           no-unused-vars
+  Line 20:19:  'setSuccess' is assigned a value but never used        no-unused-vars
+  Line 73:13:  'response' is assigned a value but never used          no-unused-vars
+
+./src/frequency/Create_freq.js
+  Line 5:8:  'Swal' is defined but never used  no-unused-vars
+
+./src/pages/Dashboard.js
+  Line 7:10:   'totalUsers' is assigned a value but never used   no-unused-vars
+  Line 8:10:   'totalEmp' is assigned a value but never used     no-unused-vars
+  Line 9:10:   'totalFreq' is assigned a value but never used    no-unused-vars
+  Line 10:10:  'totalReview' is assigned a value but never used  no-unused-vars
+
+./src/reviewer_dashboard/Dashboard.js
+  Line 8:13:   'XLSX' is defined but never used                       no-unused-vars
+  Line 54:11:  'user' is assigned a value but never used              no-unused-vars
+  Line 108:9:  'rightsCategories' is assigned a value but never used  no-unused-vars
+
+./src/employee/IndexEmoloyee.js
+  Line 95:13:   'response' is assigned a value but never used  no-unused-vars
+  Line 113:13:  'response' is assigned a value but never used  no-unused-vars
+
+./src/audit/create_audit.js
+  Line 9:10:    'selectedemp' is assigned a value but never used               no-unused-vars
+  Line 9:23:    'setSelectedEmp' is assigned a value but never used            no-unused-vars
+  Line 11:10:   'frequencyId' is assigned a value but never used               no-unused-vars
+  Line 11:23:   'setFrequencyId' is assigned a value but never used            no-unused-vars
+  Line 12:10:   'selectedFrequency' is assigned a value but never used         no-unused-vars
+  Line 12:29:   'setSelectedFrequency' is assigned a value but never used      no-unused-vars
+  Line 14:10:   'selectedUserId' is assigned a value but never used            no-unused-vars
+  Line 14:26:   'setSelectedUserId' is assigned a value but never used         no-unused-vars
+  Line 16:10:   'selectedApplicationId' is assigned a value but never used     no-unused-vars
+  Line 16:33:   'setSelectedApplicationId' is assigned a value but never used  no-unused-vars
+  Line 18:10:   'auditDate' is assigned a value but never used                 no-unused-vars
+  Line 18:21:   'setAuditDate' is assigned a value but never used              no-unused-vars
+  Line 19:10:   'inactive' is assigned a value but never used                  no-unused-vars
+  Line 19:20:   'setInactive' is assigned a value but never used               no-unused-vars
+  Line 20:10:   'rights' is assigned a value but never used                    no-unused-vars
+  Line 20:18:   'setRights' is assigned a value but never used                 no-unused-vars
+  Line 21:10:   'reviewerRemarks' is assigned a value but never used           no-unused-vars
+  Line 21:27:   'setReviewerRemarks' is assigned a value but never used        no-unused-vars
+  Line 23:19:   'setSuccess' is assigned a value but never used                no-unused-vars
+  Line 25:10:   'frequencies' is assigned a value but never used               no-unused-vars
+  Line 114:13:  'response' is assigned a value but never used                  no-unused-vars
+
+./src/pages/MyEmployees.js
+  Line 9:10:  'myAppNames' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  256.08 KB  build/static/js/2.0c1f9b74.chunk.js
+  29.98 KB   build/static/css/2.dbb74888.chunk.css
+  14.81 KB   build/static/js/main.3b6139a7.chunk.js
+  1.6 KB     build/static/css/main.f36f01c9.chunk.css
+  1.17 KB    build/static/js/runtime-main.289427f1.js
+  423 B      build/static/js/3.196af675.chunk.js
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  bit.ly/CRA-deploy
+
+root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo nano /etc/nginx/sites-available/erapp
+root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo systemctl reload nginx
+root@DELRHDERS001U:/opt/ER_Linux/frontend# pm2 list
+┌────┬───────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name          │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ er-backend    │ default     │ 1.0.0   │ fork    │ 618760   │ 5m     │ 0    │ online    │ 0%       │ 83.3mb   │ root     │ disabled │
+└────┴───────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@DELRHDERS001U:/opt/ER_Linux/frontend# pm2 logs er-backend
+[TAILING] Tailing last 15 lines for [er-backend] process (change the value with --lines option)
+/root/.pm2/logs/er-backend-error.log last 15 lines:
+0|er-backe | node: bad option: --openssl-legacy-procider
+0|er-backe | node: bad option: --openssl-legacy-procider
+0|er-backe | node: bad option: --openssl-legacy-procider
+0|er-backe | node: bad option: --openssl-legacy-procider
+0|er-backe | node: bad option: --openssl-legacy-procider
+0|er-backe | node: bad option: --openssl-legacy-procider
+0|er-backe | node: bad option: --openssl-legacy-procider
+0|er-backe | node: bad option: --openssl-legacy-procider
+0|er-backe | node: bad option: --openssl-legacy-procider
+0|er-backe | (node:605376) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er-backe | (node:605376) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (node:618760) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er-backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er-backe | (node:618760) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+
+/root/.pm2/logs/er-backend-out.log last 15 lines:
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Connected to MongoDB
+0|er-backe | Server is running on port http://0.0.0.0:3000
+0|er-backe | Connected to MongoDB
+0|er-backe | Server is running on port http://0.0.0.0:3000
+
+^Z
+[1]+  Stopped                 pm2 logs er-backend
+root@DELRHDERS001U:/opt/ER_Linux/frontend#
