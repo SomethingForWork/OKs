@@ -1,16 +1,21 @@
-curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg
-
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" > /etc/apt/sources.list.d/mongodb-org-6.0.list
-
-apt update
-apt install -y mongodb-org
-systemctl enable mongod
-systemctl start mongod
-
-
-
-rm -f /usr/share/keyrings/mongodb-server-6.0.gpg
-curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg
-
-
-curl -I https://www.mongodb.org/static/pgp/server-6.0.asc
+Login.js:18   POST https://10.91.41.16/10.91.41.16/login 405 (Not Allowed)
+(anonymous) @ xhr.js:195
+xhr @ xhr.js:15
+Ce @ dispatchRequest.js:51
+_request @ Axios.js:187
+request @ Axios.js:40
+(anonymous) @ Axios.js:226
+(anonymous) @ bind.js:5
+onSubmit @ Login.js:18
+wu @ react-dom-client.production.js:11700
+(anonymous) @ react-dom-client.production.js:12259
+Dt @ react-dom-client.production.js:1448
+xu @ react-dom-client.production.js:11845
+Bf @ react-dom-client.production.js:14486
+Mf @ react-dom-client.production.js:14454
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+Login.js:29 a {message: 'Request failed with status code 405', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, request: XMLHttpRequest, …}
