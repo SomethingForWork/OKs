@@ -15,30 +15,22 @@ server {
         add_header Cache-Control "public, max-age=2592000";
     }
 
-    # Whitelist all backend endpoints (add every backend route here)
-    location = /login { proxy_pass http://localhost:3000/login; }
-    location = /register { proxy_pass http://localhost:3000/register; }
-    location = /employee { proxy_pass http://localhost:3000/employee; }
-    location = /frequency { proxy_pass http://localhost:3000/frequency; }
-    location = /applicationcreate { proxy_pass http://localhost:3000/applicationcreate; }
-    location = /hodcreate { proxy_pass http://localhost:3000/hodcreate; }
-    location = /submitReview { proxy_pass http://localhost:3000/submitReview; }
-    location = /creating { proxy_pass http://localhost:3000/creating; }
-    location = /apps { proxy_pass http://localhost:3000/apps; }
-    location = /audits { proxy_pass http://localhost:3000/audits; }
-    location = /changelogs { proxy_pass http://localhost:3000/changelogs; }
-    location = /completedreviews { proxy_pass http://localhost:3000/completedreviews; }
-    location = /employeeelogs { proxy_pass http://localhost:3000/employeeelogs; }
-    location = /frequencies { proxy_pass http://localhost:3000/frequencies; }
-    location = /frequencylogs { proxy_pass http://localhost:3000/frequencylogs; }
-    location = /oldadminnorights { proxy_pass http://localhost:3000/oldadminnorights; }
-    location = /sessions { proxy_pass http://localhost:3000/sessions; }
-    location = /users { proxy_pass http://localhost:3000/users; }
-    # ...add every backend endpoint you have
+    # Serve other assets (optional, for fonts, media, etc.)
+    location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|eot|otf|json)$ {
+        root /opt/ER_Linux/frontend/build;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+        try_files $uri =404;
+    }
 
-    # All other requests go to React (for client-side routing)
+    # Proxy everything else to backend
     location / {
-        try_files $uri /index.html;
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
     }
 }
 
