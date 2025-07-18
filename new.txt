@@ -1,30 +1,3 @@
-0|er_backe |   name: 'Dushyant Yadav',
-0|er_backe |   interval_days: '30',
-0|er_backe |   trigger_days: '1',
-0|er_backe |   deleted_at: null,
-0|er_backe |   _id: new ObjectId('687a1a592e9438c62ca2ec0f'),
-0|er_backe |   created_at: 2025-07-18T09:56:41.120Z,
-0|er_backe |   updated_at: 2025-07-18T09:56:41.120Z,
-0|er_backe |   __v: 0
-0|er_backe | }
-0|er_backe | Login attempt for: imaildivyanshsingh@gmail.com
-0|er_backe | MongoDB authentication successful
-
-/root/.pm2/logs/er-backend-error.log last 15 lines:
-0|er_backe | /opt/ER_Linux/server/index.js:1858
-0|er_backe | app.use((req,res, next))=> {
-0|er_backe |     ^^^^^^^^^^^^^^^^^^^
-0|er_backe |
-0|er_backe | SyntaxError: Malformed arrow function parameter list
-0|er_backe |     at internalCompileFunction (node:internal/vm:76:18)
-0|er_backe |     at wrapSafe (node:internal/modules/cjs/loader:1283:20)
-0|er_backe |     at Module._compile (node:internal/modules/cjs/loader:1328:27)
-0|er_backe |     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
-0|er_backe |     at Module.load (node:internal/modules/cjs/loader:1203:32)
-0|er_backe |     at Module._load (node:internal/modules/cjs/loader:1019:12)
-0|er_backe |     at Object.<anonymous> (/usr/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
-0|er_backe |     at Module._compile (node:internal/modules/cjs/loader:1364:14)
-0|er_backe |     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
-0|er_backe |     at Module.load (node:internal/modules/cjs/loader:1203:32)
-
-^A
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+});
