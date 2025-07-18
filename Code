@@ -63,7 +63,7 @@ sudo systemctl reload nginx
 ### 5. **Test Backend Directly**
 From your server, run:
 ```bash
-curl -X POST http://localhost:3000/login -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test"}'
+curl -X POST http://localhost:3000/login -H "Content-Type: application/json" -d '{"email":"iemaildivyansh@gmail.com","password":"random"}'
 ```
 - If this works (returns 200 or 401), your backend is fine.
 - If this fails, the problem is in your backend.
