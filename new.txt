@@ -1,4 +1,37 @@
-sudo chown -R www-data:www-data /opt/ER_Linux/frontend/build
-sudo chmod -R 755 /opt/ER_Linux/frontend/build
-sudo chmod 755 /opt/ER_Linux/frontend
-sudo chmod 755 /opt/ER_Linux
+server {
+    listen 443 ssl;
+    server_name 10.91.41.16;
+
+    ssl_certificate /etc/ssl/religare/religare.in.crt;
+    ssl_certificate_key /etc/ssl/religare/religare.in.key;
+
+    root /opt/ER_Linux/frontend/build;
+    index index.html;
+
+    # Serve static files directly
+    location /static/ {
+        alias /opt/ER_Linux/frontend/build/static/;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
+
+    # Proxy backend endpoints (add more as needed)
+    location = /login { proxy_pass http://localhost:3000/login; }
+    location = /register { proxy_pass http://localhost:3000/register; }
+    location = /employee { proxy_pass http://localhost:3000/employee; }
+    location = /frequency { proxy_pass http://localhost:3000/frequency; }
+    location = /applicationcreate { proxy_pass http://localhost:3000/applicationcreate; }
+    location = /hodcreate { proxy_pass http://localhost:3000/hodcreate; }
+
+    # All other requests go to React (for client-side routing)
+    location / {
+        try_files $uri /index.html;
+    }
+}
+
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name 10.91.41.16;
+    return 301 https://$host$request_uri;
+}
