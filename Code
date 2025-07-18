@@ -1,107 +1,63 @@
-Using username "clouduser".
-Pre-authentication banner message from server:
-| Authorized users only. All activity may be monitored and reported.
-End of banner message from server
-Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-143-generic x86_64)
+You are using **MongoDB 7+**, which comes with the new shell command `mongosh` (not `mongo`).  
+You cannot run `mongo ...` commands inside the `mongosh` prompt.  
+You must run `mongosh` with authentication **from your Linux shell**, not from inside the Mongo shell.
 
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/pro
+---
 
- System information as of Fri Jul 18 12:59:19 PM IST 2025
+## **How to Authenticate and Delete Data with `mongosh`**
 
-  System load:  0.1                Processes:               329
-  Usage of /:   30.3% of 24.44GB   Users logged in:         1
-  Memory usage: 46%                IPv4 address for ens160: 10.91.41.16
-  Swap usage:   18%                IPv6 address for ens160: fc00:0:0:1::1e
+### **1. Exit the current `mongosh` prompt**
+Type:
+```
+.exit
+```
+or press `Ctrl+D`.
 
+---
 
-Expanded Security Maintenance for Applications is not enabled.
+### **2. Connect with authentication from your Linux shell:**
 
-0 updates can be applied immediately.
+```bash
+mongosh -u restrict_user -p random --authenticationDatabase restrict_app
+```
 
-Enable ESM Apps to receive additional future security updates.
-See https://ubuntu.com/esm or run: sudo pro status
+---
 
+### **3. Once connected, switch to your database (if not already):**
 
-Last login: Fri Jul 18 10:55:41 2025 from 10.91.55.7
-$ sudo su - root
-root@DELRHDERS001U:~# cd
-root@DELRHDERS001U:~# sudo nano /etc/nginx/sites-available/erapp
-root@DELRHDERS001U:~# sudo nginx -t
-nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /etc/nginx/nginx.conf test is successful
-root@DELRHDERS001U:~# sudo systemctl reload nginx
-timed out waiting for input: auto-logout
-root@DELRHDERS001U:~# mongo
-Command 'mongo' not found, did you mean:
-  command 'mono' from deb mono-runtime (6.8.0.105+dfsg-3.2)
-Try: apt install <deb name>
-root@DELRHDERS001U:~# mongosh
-Current Mongosh Log ID: 6879fc165df918fd98c934dc
-Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.4
-Using MongoDB:          7.0.8
-Using Mongosh:          2.2.4
+```js
+use restrict_app
+```
 
-For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+---
 
-test> use restrict_app
-switched to db restrict_app
-restrict_app> db.applicationlogs.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.applogs.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.apps.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.auditlogs.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.audits.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.changelogs.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.completedreviews.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.employeeelogs.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.employees.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.frequencies.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.frequencylogs.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.oldadminnorights.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> db.sessions.deleteMany({})
-MongoServerError[Unauthorized]: Command delete requires authentication
-restrict_app> mongo -u restrict_user -p random --authenticationDatabase restrict_app
-Uncaught:
-SyntaxError: Missing semicolon. (1:8)
+### **4. Now run your delete commands (with semicolons):**
 
-> 1 | mongo -u restrict_user -p random --authenticationDatabase restrict_app
-    |         ^
-  2 |
+```js
+db.applicationlogs.deleteMany({});
+db.applogs.deleteMany({});
+db.apps.deleteMany({});
+db.auditlogs.deleteMany({});
+db.audits.deleteMany({});
+db.changelogs.deleteMany({});
+db.completedreviews.deleteMany({});
+db.employeeelogs.deleteMany({});
+db.employees.deleteMany({});
+db.frequencies.deleteMany({});
+db.frequencylogs.deleteMany({});
+db.oldadminnorights.deleteMany({});
+db.sessions.deleteMany({});
+db.users.deleteMany({});
+```
 
-restrict_app>
-[1]+  Stopped                 mongosh
-root@DELRHDERS001U:~# mongosh
-Current Mongosh Log ID: 6879fcaec48d18f89dc934dc
-Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.4
-Using MongoDB:          7.0.8
-Using Mongosh:          2.2.4
+---
 
-For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+## **Summary**
 
-test> mongo -u restrict_user -p random --authenticationDatabase restrict_app
-Uncaught:
-SyntaxError: Missing semicolon. (1:8)
+- **Do not** run `mongosh` commands inside the `mongosh` prompt.
+- **Do** run `mongosh -u restrict_user -p random --authenticationDatabase restrict_app` from your Linux shell.
+- Then run your delete commands in the authenticated shell.
 
-> 1 | mongo -u restrict_user -p random --authenticationDatabase restrict_app
-    |         ^
-  2 |
+---
 
-test>
-[2]+  Stopped                 mongosh
-root@DELRHDERS001U:~# mongo -u restrict_user -p random --authenticationDatabase restrict_app
-Command 'mongo' not found, did you mean:
-  command 'mono' from deb mono-runtime (6.8.0.105+dfsg-3.2)
-Try: apt install <deb name>
+**Let me know if you get any errors after this, or if you want a one-liner to do it all at once!**
