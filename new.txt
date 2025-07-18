@@ -1,3 +1,32 @@
-   sudo ln -sf /etc/nginx/sites-available/erapp /etc/nginx/sites-enabled/erapp
-   sudo nginx -t
-   sudo systemctl reload nginx
+server {
+    listen 443 ssl;
+    server_name 10.91.41.16;
+
+    ssl_certificate /etc/ssl/religare/religare.in.crt;
+    ssl_certificate_key /etc/ssl/religare/religare.in.key;
+
+    root /opt/ER_Linux/frontend/build;
+    index index.html;
+
+    # Proxy backend/API requests to Node.js
+    location ~ ^/(login|register|employee|hods|frequency|creating|apps|audit|submitReview|uploadEmployees|uploadHods|pendingAudits|pastAudits|excelUpload|change-password|create-admin|updateAuditRights|completedReviews|convertToReviewer|pendingAuditsForAdmin|session-time-left|appLogs|.*\\.json)$ {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Serve static files and React app for all other routes
+    location / {
+        try_files $uri /index.html;
+    }
+}
+
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name 10.91.41.16;
+    return 301 https://$host$request_uri;
+}
