@@ -1,43 +1,44 @@
-The error  
-```
-stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied)
-```
-means **Nginx does not have permission to read your React build files**.
-
----
-
-## How to Fix
-
-### 1. **Set Correct Permissions**
-
-Give Nginx (usually runs as user `www-data`) permission to read the build directory and its files:
-
-```bash
-sudo chown -R www-data:www-data /opt/ER_Linux/frontend/build
-sudo chmod -R 755 /opt/ER_Linux/frontend/build
-```
-
----
-
-### 2. **Reload Nginx**
-
-```bash
-sudo systemctl reload nginx
-```
-
----
-
-### 3. **Test Again**
-
-- Visit https://10.91.41.16 in your browser.
-- The error should be gone and your React app should load.
-
----
-
-## Why This Happens
-
-- When you copy or build files as `root` or another user, Nginx (running as `www-data`) cannot access them unless permissions are set correctly.
-
----
-
-**If you still see errors after this, let me know and we’ll check further!**
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [error] 743331#743331: *11 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+root@DELRHDERS001U:~# ^C
+root@DELRHDERS001U:~# sudo chown -R www-data:www-data /opt/ER_Linux/frontend/build
+root@DELRHDERS001U:~# sudo chmod -R 755 /opt/ER_Linux/frontend/build
+root@DELRHDERS001U:~# sudo systemctl reload nginx
+root@DELRHDERS001U:~# sudo tail -n 30 /var/log/nginx/error.log
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [crit] 743331#743331: *11 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:28:22 [error] 743331#743331: *11 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:18 [notice] 743732#743732: signal process started
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *22 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [error] 743733#743733: *22 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.25.137.111, server: 10.91.41.16, request: "GET / HTTP/1.1", host: "10.91.41.16"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/favicon.ico" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [crit] 743733#743733: *24 stat() "/opt/ER_Linux/frontend/build/index.html" failed (13: Permission denied), client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+2025/07/18 11:33:24 [error] 743733#743733: *24 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.25.137.111, server: 10.91.41.16, request: "GET /favicon.ico HTTP/1.1", host: "10.91.41.16", referrer: "https://10.91.41.16/"
+root@DELRHDERS001U:~#
