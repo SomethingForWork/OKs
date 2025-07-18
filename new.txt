@@ -1,51 +1,46 @@
-create_audit.js:160  Failed to fetch application data for review: TypeError: Cannot read properties of undefined (reading 'app_rights')
-    at onChange (create_audit.js:142:54)
-onChange @ create_audit.js:160
-await in onChange
-wu @ react-dom-client.production.js:11700
-(anonymous) @ react-dom-client.production.js:12259
-Dt @ react-dom-client.production.js:1448
-xu @ react-dom-client.production.js:11845
-Bf @ react-dom-client.production.js:14486
-Mf @ react-dom-client.production.js:14454
-handleMouseUp_ @ unknown
-[NEW] Explain Console errors by using Copilot in Edge: click
-         
-         to explain an error. 
-        Learn more
-        Don't show again
-create_audit.js:114   POST https://10.91.41.16/audit 500 (Internal Server Error)
-(anonymous) @ xhr.js:195
-xhr @ xhr.js:15
-Ce @ dispatchRequest.js:51
-_request @ Axios.js:187
-request @ Axios.js:40
-(anonymous) @ Axios.js:226
-(anonymous) @ bind.js:5
-onSubmit @ create_audit.js:114
-wu @ react-dom-client.production.js:11700
-(anonymous) @ react-dom-client.production.js:12259
-Dt @ react-dom-client.production.js:1448
-xu @ react-dom-client.production.js:11845
-Bf @ react-dom-client.production.js:14486
-Mf @ react-dom-client.production.js:14454
-create_audit.js:125  a {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
-onSubmit @ create_audit.js:125
-await in onSubmit
-wu @ react-dom-client.production.js:11700
-(anonymous) @ react-dom-client.production.js:12259
-Dt @ react-dom-client.production.js:1448
-xu @ react-dom-client.production.js:11845
-Bf @ react-dom-client.production.js:14486
-Mf @ react-dom-client.production.js:14454
-create_audit.js:160  Failed to fetch application data for review: TypeError: Cannot read properties of undefined (reading 'app_rights')
-    at onChange (create_audit.js:142:54)
-onChange @ create_audit.js:160
-await in onChange
-wu @ react-dom-client.production.js:11700
-(anonymous) @ react-dom-client.production.js:12259
-Dt @ react-dom-client.production.js:1448
-xu @ react-dom-client.production.js:11845
-Bf @ react-dom-client.production.js:14486
-Mf @ react-dom-client.production.js:14454
-handleMouseUp_ @ unknown
+0|er_backend  |       responseCode: 550,
+0|er_backend  |       command: 'RCPT TO',
+0|er_backend  |       recipient: 'diV@gmail.com'
+0|er_backend  |     }
+0|er_backend  |   ]
+0|er_backend  | }
+^X^Z
+[1]+  Stopped                 pm2 logs er_backend
+root@DELRHDERS001U:/opt/ER_Linux/server# pm2 logs er_backend
+[TAILING] Tailing last 15 lines for [er_backend] process (change the value with --lines option)
+/root/.pm2/logs/er-backend-out.log last 15 lines:
+0|er_backe |     status: true,
+0|er_backe |     created_at: 2025-07-18T10:28:39.792Z,
+0|er_backe |     __v: 0
+0|er_backe |   }
+0|er_backe | ]
+0|er_backe | Saving manual audit with data: {
+0|er_backe |   emp_id: '687a205abd070b8d20e25de0',
+0|er_backe |   user_id: '687a131fb7c2b2119a853ae1',
+0|er_backe |   application_id: '687a21c6bd070b8d20e25e0e',
+0|er_backe |   initialRights: '',
+0|er_backe |   excelRightsData: {},
+0|er_backe |   status: true,
+0|er_backe |   audit_date: 2025-08-01T10:34:24.058Z,
+0|er_backe |   frequency_id: [ new ObjectId('687a1a592e9438c62ca2ec0f') ]
+0|er_backe | }
+
+/root/.pm2/logs/er-backend-error.log last 15 lines:
+0|er_backe |         at SMTPConnection._processResponse (/opt/ER_Linux/server/node_modules/nodemailer/lib/smtp-connection/index.js:993:20)
+0|er_backe |         at SMTPConnection._onData (/opt/ER_Linux/server/node_modules/nodemailer/lib/smtp-connection/index.js:774:14)
+0|er_backe |         at SMTPConnection._onSocketData (/opt/ER_Linux/server/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
+0|er_backe |         at TLSSocket.emit (node:events:517:28)
+0|er_backe |         at addChunk (node:internal/streams/readable:368:12)
+0|er_backe |         at readableAddChunk (node:internal/streams/readable:341:9)
+0|er_backe |         at Readable.push (node:internal/streams/readable:278:10) {
+0|er_backe |       code: 'EENVELOPE',
+0|er_backe |       response: '550 5.7.54 SMTP; Unable to relay recipient in non-accepted domain',
+0|er_backe |       responseCode: 550,
+0|er_backe |       command: 'RCPT TO',
+0|er_backe |       recipient: 'diV@gmail.com'
+0|er_backe |     }
+0|er_backe |   ]
+0|er_backe | }
+
+^C
+root@DELRHDERS001U:/opt/ER_Linux/server#
