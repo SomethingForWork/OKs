@@ -1,1 +1,38 @@
-create_frequency:1  GET https://10.91.41.16/create_frequency 404 (Not Found)
+server {
+    listen 443 ssl;
+    server_name 10.91.41.16;
+
+    ssl_certificate /etc/ssl/religare/religare.in.crt;
+    ssl_certificate_key /etc/ssl/religare/religare.in.key;
+
+    root /opt/ER_Linux/frontend/build;
+    index index.html;
+
+    # Serve static files directly (JS, CSS, images, etc.)
+    location /static/ {
+        alias /opt/ER_Linux/frontend/build/static/;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
+
+    # Proxy all requests that are NOT static files to the backend
+    location / {
+        try_files $uri $uri/ @backend;
+    }
+
+    location @backend {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name 10.91.41.16;
+    return 301 https://$host$request_uri;
+}
