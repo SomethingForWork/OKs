@@ -13,3 +13,6 @@ db.frequencylogs.deleteMany({})
 db.oldadminnorights.deleteMany({})
 db.sessions.deleteMany({})
 db.users.deleteMany({})
+
+
+mongo -u restrict_user -p random --authenticationDatabase restrict_app
