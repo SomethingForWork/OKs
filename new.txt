@@ -1,46 +1,41 @@
-0|er_backend  |       responseCode: 550,
-0|er_backend  |       command: 'RCPT TO',
-0|er_backend  |       recipient: 'diV@gmail.com'
-0|er_backend  |     }
-0|er_backend  |   ]
-0|er_backend  | }
-^X^Z
-[1]+  Stopped                 pm2 logs er_backend
-root@DELRHDERS001U:/opt/ER_Linux/server# pm2 logs er_backend
-[TAILING] Tailing last 15 lines for [er_backend] process (change the value with --lines option)
-/root/.pm2/logs/er-backend-out.log last 15 lines:
-0|er_backe |     status: true,
-0|er_backe |     created_at: 2025-07-18T10:28:39.792Z,
-0|er_backe |     __v: 0
-0|er_backe |   }
-0|er_backe | ]
-0|er_backe | Saving manual audit with data: {
-0|er_backe |   emp_id: '687a205abd070b8d20e25de0',
-0|er_backe |   user_id: '687a131fb7c2b2119a853ae1',
-0|er_backe |   application_id: '687a21c6bd070b8d20e25e0e',
-0|er_backe |   initialRights: '',
-0|er_backe |   excelRightsData: {},
-0|er_backe |   status: true,
-0|er_backe |   audit_date: 2025-08-01T10:34:24.058Z,
-0|er_backe |   frequency_id: [ new ObjectId('687a1a592e9438c62ca2ec0f') ]
-0|er_backe | }
+server {
+    listen 443 ssl;
+    server_name 10.91.41.16;
 
-/root/.pm2/logs/er-backend-error.log last 15 lines:
-0|er_backe |         at SMTPConnection._processResponse (/opt/ER_Linux/server/node_modules/nodemailer/lib/smtp-connection/index.js:993:20)
-0|er_backe |         at SMTPConnection._onData (/opt/ER_Linux/server/node_modules/nodemailer/lib/smtp-connection/index.js:774:14)
-0|er_backe |         at SMTPConnection._onSocketData (/opt/ER_Linux/server/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
-0|er_backe |         at TLSSocket.emit (node:events:517:28)
-0|er_backe |         at addChunk (node:internal/streams/readable:368:12)
-0|er_backe |         at readableAddChunk (node:internal/streams/readable:341:9)
-0|er_backe |         at Readable.push (node:internal/streams/readable:278:10) {
-0|er_backe |       code: 'EENVELOPE',
-0|er_backe |       response: '550 5.7.54 SMTP; Unable to relay recipient in non-accepted domain',
-0|er_backe |       responseCode: 550,
-0|er_backe |       command: 'RCPT TO',
-0|er_backe |       recipient: 'diV@gmail.com'
-0|er_backe |     }
-0|er_backe |   ]
-0|er_backe | }
+    ssl_certificate /etc/ssl/religare/religare.in.crt;
+    ssl_certificate_key /etc/ssl/religare/religare.in.key;
 
-^C
-root@DELRHDERS001U:/opt/ER_Linux/server#
+    root /opt/ER_Linux/frontend/build;
+    index index.html;
+
+    # Serve static files directly
+    location /static/ {
+        alias /opt/ER_Linux/frontend/build/static/;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
+
+    # Serve other assets (fonts, images, etc.)
+    location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|eot|otf|json)$ {
+        root /opt/ER_Linux/frontend/build;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+        try_files $uri =404;
+    }
+
+    # Proxy EVERYTHING else to backend
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+server {
+    listen 80;
+    server_name 10.91.41.16;
+    return 301 https://$host$request_uri;
+}
