@@ -1,41 +1,46 @@
-server {
-    listen 443 ssl;
-    server_name 10.91.41.16;
+will be removed in the next major version
 
-    ssl_certificate /etc/ssl/religare/religare.in.crt;
-    ssl_certificate_key /etc/ssl/religare/religare.in.key;
+/root/.pm2/logs/er-backend-out.log last 15 lines:
+0|er_backe |     __v: 0
+0|er_backe |   }
+0|er_backe | ]
+0|er_backe | Saving manual audit with data: {
+0|er_backe |   emp_id: '687a205abd070b8d20e25de0',
+0|er_backe |   user_id: '687a131fb7c2b2119a853ae1',
+0|er_backe |   application_id: '687a21c6bd070b8d20e25e0e',
+0|er_backe |   initialRights: '',
+0|er_backe |   excelRightsData: {},
+0|er_backe |   status: true,
+0|er_backe |   audit_date: 2025-08-01T10:34:24.058Z,
+0|er_backe |   frequency_id: [ new ObjectId('687a1a592e9438c62ca2ec0f') ]
+0|er_backe | }
+0|er_backe | Connected to MongoDB
+0|er_backe | Server is running on port http://0.0.0.0:3000
 
-    root /opt/ER_Linux/frontend/build;
-    index index.html;
+^X^C
+root@DELRHDERS001U:/opt/ER_Linux/frontend# ls -l ../frontend/build/index.html
+-rwxr-xr-x 1 www-data www-data 3090 Jul 18 16:16 ../frontend/build/index.html
+root@DELRHDERS001U:/opt/ER_Linux/frontend# curl -i http://localhost:3000
+HTTP/1.1 404 Not Found
+X-Powered-By: Express
+Vary: Origin
+Access-Control-Allow-Credentials: true
+Content-Security-Policy: default-src 'none'
+X-Content-Type-Options: nosniff
+Content-Type: text/html; charset=utf-8
+Content-Length: 139
+Date: Fri, 18 Jul 2025 10:54:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
 
-    # Serve static files directly
-    location /static/ {
-        alias /opt/ER_Linux/frontend/build/static/;
-        expires 30d;
-        add_header Cache-Control "public, max-age=2592000";
-    }
-
-    # Serve other assets (fonts, images, etc.)
-    location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|eot|otf|json)$ {
-        root /opt/ER_Linux/frontend/build;
-        expires 30d;
-        add_header Cache-Control "public, max-age=2592000";
-        try_files $uri =404;
-    }
-
-    # Proxy EVERYTHING else to backend
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-
-server {
-    listen 80;
-    server_name 10.91.41.16;
-    return 301 https://$host$request_uri;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /</pre>
+</body>
+</html>
+root@DELRHDERS001U:/opt/ER_Linux/frontend#
