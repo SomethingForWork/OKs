@@ -1,69 +1,46 @@
-Your directory permissions and ownership look **correct** for Nginx to read your React build files:
+server {
+    listen 443 ssl;
+    server_name 10.91.41.16;
 
-```
-drwxr-xr-x 5 root     root     4096 Jul 18 11:05 /opt
-drwxr-xr-x 5 www-data www-data 4096 Jul 18 11:06 /opt/ER_Linux
-drwxr-xr-x 6 www-data www-data 4096 Jul 18 12:22 /opt/ER_Linux/frontend
-drwxr-xr-x 3 www-data www-data 4096 Jul 18 12:23 /opt/ER_Linux/frontend/build
-```
+    ssl_certificate /etc/ssl/religare/religare.in.crt;
+    ssl_certificate_key /etc/ssl/religare/religare.in.key;
 
-**If you are still seeing "Permission denied" errors:**
+    root /opt/ER_Linux/frontend/build;
+    index index.html;
 
----
+    # Serve static files directly (JS, CSS, images, etc.)
+    location /static/ {
+        alias /opt/ER_Linux/frontend/build/static/;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
 
-## 1. **Check File Permissions Inside the Build Directory**
+    # Serve other assets (optional, for fonts, media, etc.)
+    location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|eot|otf|json)$ {
+        root /opt/ER_Linux/frontend/build;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+        try_files $uri =404;
+    }
 
-Run:
-```bash
-ls -l /opt/ER_Linux/frontend/build
-```
-and
-```bash
-ls -l /opt/ER_Linux/frontend/build/index.html
-```
-- Make sure all files (especially `index.html`) are owned by `www-data` and have at least `-rw-r--r--` permissions.
+    # Proxy all other requests to backend
+    location / {
+        try_files $uri $uri/ @backend;
+    }
 
----
+    location @backend {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
 
-## 2. **Check SELinux/AppArmor (if enabled)**
-
-If you are on a hardened system, SELinux or AppArmor may block access even if Unix permissions are correct.
-
-- To check if SELinux is enforcing:
-  ```bash
-  getenforce
-  ```
-  If it says `Enforcing`, try:
-  ```bash
-  setenforce 0
-  ```
-  (for testing only; if this fixes it, you need to adjust SELinux policies.)
-
----
-
-## 3. **Restart Nginx**
-
-Sometimes, after changing permissions, a full restart helps:
-```bash
-sudo systemctl restart nginx
-```
-
----
-
-## 4. **Check for Symlinks**
-
-If any directory in the path is a symlink, make sure Nginx is allowed to follow symlinks (default is yes, but check).
-
----
-
-## 5. **Final Test**
-
-- After all the above, try accessing your site again.
-- If you still get permission denied, paste the output of:
-  ```bash
-  ls -l /opt/ER_Linux/frontend/build/index.html
-  ```
-
----
-
-**You are very close! If you follow these steps, the permission issue will be resolved. Let me know the output if you’re still stuck!**
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name 10.91.41.16;
+    return 301 https://$host$request_uri;
+}
