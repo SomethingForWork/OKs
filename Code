@@ -1,21 +1,84 @@
-Login.js:18   POST https://10.91.41.16/login 500 (Internal Server Error)
-(anonymous) @ xhr.js:195
-xhr @ xhr.js:15
-Ce @ dispatchRequest.js:51
-_request @ Axios.js:187
-request @ Axios.js:40
-(anonymous) @ Axios.js:226
-(anonymous) @ bind.js:5
-onSubmit @ Login.js:18
-wu @ react-dom-client.production.js:11700
-(anonymous) @ react-dom-client.production.js:12259
-Dt @ react-dom-client.production.js:1448
-xu @ react-dom-client.production.js:11845
-Bf @ react-dom-client.production.js:14486
-Mf @ react-dom-client.production.js:14454
-[NEW] Explain Console errors by using Copilot in Edge: click
-         
-         to explain an error. 
-        Learn more
-        Don't show again
-Login.js:29 a {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+
+/root/.pm2/logs/er-backend-error.log last 15 lines:
+0|er_backe | (node:618760) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er_backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er_backe | (node:618760) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er_backe | (node:648294) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er_backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er_backe | (node:648294) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er_backe | (node:742450) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er_backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er_backe | (node:742450) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er_backe | (node:745362) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er_backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er_backe | (node:745362) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er_backe | (node:747340) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+0|er_backe | (Use `node --trace-warnings ...` to show where the warning was created)
+0|er_backe | (node:747340) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+
+/root/.pm2/logs/er-backend-out.log last 15 lines:
+0|er_backe | Connected to MongoDB
+0|er_backe | Connected to MongoDB
+0|er_backe | Connected to MongoDB
+0|er_backe | Connected to MongoDB
+0|er_backe | Server is running on port http://0.0.0.0:3000
+0|er_backe | Connected to MongoDB
+0|er_backe | Server is running on port http://0.0.0.0:3000
+0|er_backe | Connected to MongoDB
+0|er_backe | Server is running on port http://0.0.0.0:3000
+0|er_backe | Connected to MongoDB
+0|er_backe | Server is running on port http://0.0.0.0:3000
+0|er_backe | Connected to MongoDB
+0|er_backe | Server is running on port http://0.0.0.0:3000
+0|er_backe | Connected to MongoDB
+0|er_backe | Server is running on port http://0.0.0.0:3000
+
+^Z
+[4]+  Stopped                 pm2 logs
+root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo systemctl reload nginx
+root@DELRHDERS001U:/opt/ER_Linux/frontend# curl -X POST http://localhost:3000/login -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test"}'
+{"success":false,"message":"Invalid email ocurl -X POST https://10.91.41.16/login -k -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test"}'on" -d '{"email":"test@example.com","password":"test"}'
+root@DELRHDERS001U:/opt/ER_Linux/frontend# cd ..
+root@DELRHDERS001U:/opt/ER_Linux# cd server
+root@DELRHDERS001U:/opt/ER_Linux/server# curl -X POST https://10.91.41.16/login -k -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test"}'
+{"success":false,"message":"Invalid emailcurl -X POST https://10.91.41.16/login -k -H "Content-Type: application/json" -d '{"email":"iemaildivyansh@gmail.com","password":"test"}'{"email":"iemaildivyansh@gmail.com","password":"test"}'
+{"success":false,"message":"Invalid email or password"}root@DELRHDERS001U:/opt/ER_Linux/server# ^C
+root@DELRHDERS001U:/opt/ER_Linux/server# pm2 logs er_backend
+[TAILING] Tailing last 15 lines for [er_backend] process (change the value with --lines option)
+/root/.pm2/logs/er-backend-out.log last 15 lines:
+0|er_backe | Attempting LDAP connection to: ldap://10.91.50.11:389
+0|er_backe | Attempting LDAP bind with: test@example.com
+0|er_backe | Login attempt for: test@example.com
+0|er_backe | Attempting LDAP authentication for new user
+0|er_backe | Testing LDAP connection to: ldap://10.91.50.11:389
+0|er_backe | LDAP connection test successful for URL: ldap://10.91.50.11:389
+0|er_backe | Attempting LDAP connection to: ldap://10.91.50.11:389
+0|er_backe | Attempting LDAP bind with: test@example.com
+0|er_backe | Login attempt for: test@example.com
+0|er_backe | Attempting LDAP authentication for new user
+0|er_backe | Testing LDAP connection to: ldap://10.91.50.11:389
+0|er_backe | LDAP connection test successful for URL: ldap://10.91.50.11:389
+0|er_backe | Attempting LDAP connection to: ldap://10.91.50.11:389
+0|er_backe | Attempting LDAP bind with: test@example.com
+0|er_backe | Login attempt for: iemaildivyansh@gmail.com
+
+/root/.pm2/logs/er-backend-error.log last 15 lines:
+0|er_backe |     at TCP.onStreamRead (node:internal/stream_base_commons:190:23) {
+0|er_backe |   lde_message: 'Invalid Credentials',
+0|er_backe |   lde_dn: null
+0|er_backe | }
+0|er_backe | General Backend Error: Error: Not allowed by CORS
+0|er_backe |     at origin (/opt/ER_Linux/server/index.js:54:16)
+0|er_backe |     at /opt/ER_Linux/server/node_modules/cors/lib/index.js:219:13
+0|er_backe |     at optionsCallback (/opt/ER_Linux/server/node_modules/cors/lib/index.js:199:9)
+0|er_backe |     at corsMiddleware (/opt/ER_Linux/server/node_modules/cors/lib/index.js:204:7)
+0|er_backe |     at Layer.handle [as handle_request] (/opt/ER_Linux/server/node_modules/express/lib/router/layer.js:95:5)
+0|er_backe |     at trim_prefix (/opt/ER_Linux/server/node_modules/express/lib/router/index.js:328:13)
+0|er_backe |     at /opt/ER_Linux/server/node_modules/express/lib/router/index.js:286:9
+0|er_backe |     at Function.process_params (/opt/ER_Linux/server/node_modules/express/lib/router/index.js:346:12)
+0|er_backe |     at next (/opt/ER_Linux/server/node_modules/express/lib/router/index.js:280:10)
+0|er_backe |     at expressInit (/opt/ER_Linux/server/node_modules/express/lib/middleware/init.js:40:5)
+
