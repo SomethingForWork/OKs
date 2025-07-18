@@ -1,4 +1,71 @@
-const path = require('path');
-app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
-});
+server {
+    listen 443 ssl;
+    server_name 10.91.41.16;
+
+    ssl_certificate /etc/ssl/religare/religare.in.crt;
+    ssl_certificate_key /etc/ssl/religare/religare.in.key;
+
+    root /opt/ER_Linux/frontend/build;
+    index index.html;
+
+    # Serve static files directly
+    location /static/ {
+        alias /opt/ER_Linux/frontend/build/static/;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
+
+    # Serve other assets (fonts, images, etc.)
+    location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|eot|otf|json)$ {
+        root /opt/ER_Linux/frontend/build;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+        try_files $uri =404;
+    }
+
+    # Proxy backend endpoints (add all backend endpoints here)
+    location = /login { proxy_pass http://localhost:3000/login; }
+    location = /register { proxy_pass http://localhost:3000/register; }
+    location = /employee { proxy_pass http://localhost:3000/employee; }
+    location = /frequency { proxy_pass http://localhost:3000/frequency; }
+    location = /createApplication { proxy_pass http://localhost:3000/createApplication; }
+    location = /hodcreate { proxy_pass http://localhost:3000/hodcreate; }
+    location = /submitReview { proxy_pass http://localhost:3000/submitReview; }
+    location = /creating { proxy_pass http://localhost:3000/creating; }
+    location = /apps { proxy_pass http://localhost:3000/apps; }
+    location = /audits { proxy_pass http://localhost:3000/audits; }
+    location = /changelogs { proxy_pass http://localhost:3000/changelogs; }
+    location = /completedreviews { proxy_pass http://localhost:3000/completedreviews; }
+    location = /employeeelogs { proxy_pass http://localhost:3000/employeeelogs; }
+    location = /frequencies { proxy_pass http://localhost:3000/frequencies; }
+    location = /frequencylogs { proxy_pass http://localhost:3000/frequencylogs; }
+    location = /oldadminnorights { proxy_pass http://localhost:3000/oldadminnorights; }
+    location = /sessions { proxy_pass http://localhost:3000/sessions; }
+    location = /users { proxy_pass http://localhost:3000/users; }
+    location = /updateAuditRights { proxy_pass http://localhost:3000/updateAuditRights; }
+    location = /change-password { proxy_pass http://localhost:3000/change-password; }
+    location = /create-admin { proxy_pass http://localhost:3000/create-admin; }
+    location = /appLogs { proxy_pass http://localhost:3000/appLogs; }
+    location = /completedReviews { proxy_pass http://localhost:3000/completedReviews; }
+    location = /convertToReviewer { proxy_pass http://localhost:3000/convertToReviewer; }
+    location = /pendingAuditsForAdmin { proxy_pass http://localhost:3000/pendingAuditsForAdmin; }
+    location = /session-time-left { proxy_pass http://localhost:3000/session-time-left; }
+    location = /uploadEmployees { proxy_pass http://localhost:3000/uploadEmployees; }
+    location = /uploadHods { proxy_pass http://localhost:3000/uploadHods; }
+    location = /audit { proxy_pass http://localhost:3000/audit; }
+    location = /pastAudits { proxy_pass http://localhost:3000/pastAudits; }
+    location = /pendingAudits { proxy_pass http://localhost:3000/pendingAudits; }
+    location = /excelUpload { proxy_pass http://localhost:3000/excelUpload; }
+    # Add any other backend endpoints you have
+
+    # All other requests go to React (for client-side routing)
+    location / {
+        try_files $uri /index.html;
+    }
+}
+
+server {
+    listen 80;
+    server_name 10.91.41.16;
+    return 301 https://$host$request_uri;
+}
