@@ -1,14 +1,21 @@
-
-^Z
-[4]+  Stopped                 pm2 logs
-root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo nginx -t
-nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /etc/nginx/nginx.conf test is successful
-root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo systemctl reload nginx
-root@DELRHDERS001U:/opt/ER_Linux/frontend# curl -X POST http://localhost:3000/login -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test"}'
-{"success":false,"message":"Invalid email ocurl -X POST https://10.91.41.16/login -k -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test"}'on" -d '{"email":"test@example.com","password":"test"}'
-root@DELRHDERS001U:/opt/ER_Linux/frontend# cd ..
-root@DELRHDERS001U:/opt/ER_Linux# cd server
-root@DELRHDERS001U:/opt/ER_Linux/server# curl -X POST https://10.91.41.16/login -k -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test"}'
-{"success":false,"message":"Invalid emailcurl -X POST https://10.91.41.16/login -k -H "Content-Type: application/json" -d '{"email":"iemaildivyansh@gmail.com","password":"test"}'{"email":"iemaildivyansh@gmail.com","password":"test"}'
-{"success":false,"message":"Invalid email or password"}root@DELRHDERS001U:/opt/ER_Linux/server#
+Login.js:18   POST https://10.91.41.16/login 500 (Internal Server Error)
+(anonymous) @ xhr.js:195
+xhr @ xhr.js:15
+Ce @ dispatchRequest.js:51
+_request @ Axios.js:187
+request @ Axios.js:40
+(anonymous) @ Axios.js:226
+(anonymous) @ bind.js:5
+onSubmit @ Login.js:18
+wu @ react-dom-client.production.js:11700
+(anonymous) @ react-dom-client.production.js:12259
+Dt @ react-dom-client.production.js:1448
+xu @ react-dom-client.production.js:11845
+Bf @ react-dom-client.production.js:14486
+Mf @ react-dom-client.production.js:14454
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+Login.js:29 a {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
