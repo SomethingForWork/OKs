@@ -1,4 +1,1 @@
-sudo chown -R www-data:www-data /opt/ER_Linux/frontend/build
-sudo chmod -R 755 /opt/ER_Linux/frontend/build
-sudo chmod 755 /opt/ER_Linux/frontend
-sudo chmod 755 /opt/ER_Linux
+ls -ld /opt /opt/ER_Linux /opt/ER_Linux/frontend /opt/ER_Linux/frontend/build
