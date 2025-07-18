@@ -73,7 +73,7 @@ curl -X POST http://localhost:3000/login -H "Content-Type: application/json" -d 
 ### 6. **Test Through Nginx**
 From another machine:
 ```bash
-curl -X POST https://10.91.41.16/login -k -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test"}'
+curl -X POST https://10.91.41.16/login -k -H "Content-Type: application/json" -d '{"email":"iemaildivyansh@gmail.com","password":"test"}'
 ```
 - If this fails with 405, the problem is in Nginx config.
 
