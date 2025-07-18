@@ -1,1 +1,17 @@
-curl -X POST http://10.91.41.16/api/register -H "Content-Type: application/json" -d '{"name": "Admin Name", "email": "admin@example.com", "password": "yourpassword", "role": "admin"}'
+0|er_backe | Server is running on port http://0.0.0.0:3000
+0|er_backe | Connected to MongoDB
+0|er_backe | Server is running on port http://0.0.0.0:3000
+
+^C
+root@DELRHDERS001U:~# cd /opt
+root@DELRHDERS001U:/opt# cd ER_Linux
+root@DELRHDERS001U:/opt/ER_Linux# cd server
+root@DELRHDERS001U:/opt/ER_Linux/server# curl -X POST http://10.91.41.16/api/register -H "Content-Type: application/json" -d '{"name": "Admin Name", "email": "admin@example.com", "password": "yourpassword", "role": "admin"}'
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+root@DELRHDERS001U:/opt/ER_Linux/server#
