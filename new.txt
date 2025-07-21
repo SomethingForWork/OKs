@@ -1,64 +1,14 @@
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/pro
-
- System information as of Fri Jul 18 05:12:56 PM IST 2025
-
-  System load:  1.24               Processes:               327
-  Usage of /:   30.6% of 24.44GB   Users logged in:         1
-  Memory usage: 45%                IPv4 address for ens160: 10.91.41.16
-  Swap usage:   18%                IPv6 address for ens160: fc00:0:0:1::1e
-
-
-Expanded Security Maintenance for Applications is not enabled.
-
-0 updates can be applied immediately.
-
-Enable ESM Apps to receive additional future security updates.
-See https://ubuntu.com/esm or run: sudo pro status
-
-Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
-
-
-Last login: Fri Jul 18 14:50:31 2025 from 10.91.55.7
-$ sudo su - root
-root@DELRHDERS001U:~# pm2 status
-┌────┬───────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
-│ id │ name          │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
-├────┼───────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 0  │ er_backend    │ default     │ 1.0.0   │ fork    │ 0        │ 0      │ 16   │ errored   │ 0%       │ 0b       │ root     │ disabled │
-└────┴───────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-root@DELRHDERS001U:~# pm2 logs er_backend
-[TAILING] Tailing last 15 lines for [er_backend] process (change the value with --lines option)
-/root/.pm2/logs/er-backend-out.log last 15 lines:
-0|er_backe |     __v: 0
-0|er_backe |   }
-0|er_backe | ]
-0|er_backe | Saving manual audit with data: {
-0|er_backe |   emp_id: '687a205abd070b8d20e25de0',
-0|er_backe |   user_id: '687a131fb7c2b2119a853ae1',
-0|er_backe |   application_id: '687a21c6bd070b8d20e25e0e',
-0|er_backe |   initialRights: '',
-0|er_backe |   excelRightsData: {},
-0|er_backe |   status: true,
-0|er_backe |   audit_date: 2025-08-01T10:34:24.058Z,
-0|er_backe |   frequency_id: [ new ObjectId('687a1a592e9438c62ca2ec0f') ]
-0|er_backe | }
-0|er_backe | Connected to MongoDB
-0|er_backe | Server is running on port http://0.0.0.0:3000
-
-/root/.pm2/logs/er-backend-error.log last 15 lines:
-0|er_backe | /opt/ER_Linux/server/index.js:1860
-0|er_backe |
-0|er_backe |
-0|er_backe |
-0|er_backe | SyntaxError: Unexpected end of input
-0|er_backe |     at internalCompileFunction (node:internal/vm:76:18)
-0|er_backe |     at wrapSafe (node:internal/modules/cjs/loader:1283:20)
-0|er_backe |     at Module._compile (node:internal/modules/cjs/loader:1328:27)
-0|er_backe |     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
-0|er_backe |     at Module.load (node:internal/modules/cjs/loader:1203:32)
-0|er_backe |     at Module._load (node:internal/modules/cjs/loader:1019:12)
-0|er_backe |     at Object.<anonymous> (/usr/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
-0|er_backe |     at Module._compile (node:internal/modules/cjs/loader:1364:14)
-0|er_backe |     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+   db.applicationlogs.deleteMany({});
+   db.applogs.deleteMany({});
+   db.apps.deleteMany({});
+   db.auditlogs.deleteMany({});
+   db.audits.deleteMany({});
+   db.changelogs.deleteMany({});
+   db.completedreviews.deleteMany({});
+   db.employeeelogs.deleteMany({});
+   db.employees.deleteMany({});
+   db.frequencies.deleteMany({});
+   db.frequencylogs.deleteMany({});
+   db.oldadminnorights.deleteMany({});
+   db.sessions.deleteMany({});
+   db.users.deleteMany({});
