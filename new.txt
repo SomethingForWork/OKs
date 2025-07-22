@@ -1,108 +1,37 @@
-Perfect plan! Here’s a **step-by-step, foolproof guide** to completely clean up and redeploy your app from scratch, ensuring no old permissions or config issues remain.
+server {
+    listen 443 ssl;
+    server_name 10.91.41.16;
 
----
+    ssl_certificate /etc/ssl/religare/religare.in.crt;
+    ssl_certificate_key /etc/ssl/religare/religare.in.key;
 
-## **1. Stop All Running Services**
+    root /opt/ER_Linux/frontend/build;
+    index index.html;
 
-If you’re using pm2:
-```bash
-pm2 stop er_server
-pm2 delete er_server
-```
-Or kill any running Node.js processes related to your app.
+    # Serve static files directly
+    location /static/ {
+        alias /opt/ER_Linux/frontend/build/static/;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
 
----
+    # Serve other assets (fonts, images, etc.)
+    location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|eot|otf|json)$ {
+        root /opt/ER_Linux/frontend/build;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+        try_files $uri =404;
+    }
 
-## **2. Delete the Old Deployment**
+    # Proxy EVERYTHING else to backend
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+    }
+}
 
-**WARNING:** This will remove all your app files in `/opt/ER_Linux`!
-```bash
-sudo rm -rf /opt/ER_Linux
-```
-
----
-
-## **3. Re-Clone the Repository**
-
-```bash
-cd /opt
-sudo git clone https://github.com/vandralcapital/erapp.git ER_Linux
-sudo chown -R $USER:$USER /opt/ER_Linux
-```
-
----
-
-## **4. Install Backend Dependencies**
-
-```bash
-cd /opt/ER_Linux/server
-npm install
-```
-
----
-
-## **5. Install Frontend Dependencies and Build**
-
-```bash
-cd /opt/ER_Linux/frontend
-npm install
-npm run build
-```
-
----
-
-## **6. Set Permissions (Critical Step!)**
-
-```bash
-sudo chmod -R o+r /opt/ER_Linux/frontend/build
-sudo find /opt/ER_Linux/frontend/build -type d -exec chmod o+x {} \;
-sudo chmod o+x /opt /opt/ER_Linux /opt/ER_Linux/frontend
-```
-
----
-
-## **7. Restore Your Old Working Nginx Config**
-
-- Replace your current Nginx config with the old, working one.
-- Make sure the `alias` and `root` paths match your new deployment.
-- Test and reload Nginx:
-  ```bash
-  sudo nginx -t
-  sudo systemctl reload nginx
-  ```
-
----
-
-## **8. Start the Backend**
-
-```bash
-cd /opt/ER_Linux/server
-pm2 start index.js --name er_server
-# or
-node index.js
-```
-
----
-
-## **9. Test Everything**
-
-- Visit your site in the browser.
-- Check static files, API, and login.
-- If you see any errors, check Nginx and Node logs.
-
----
-
-## **10. (Optional) Automate Permissions After Every Build**
-
-Add this to your deployment script or CI/CD:
-```bash
-sudo chmod -R o+r /opt/ER_Linux/frontend/build
-sudo find /opt/ER_Linux/frontend/build -type d -exec chmod o+x {} \;
-sudo chmod o+x /opt /opt/ER_Linux /opt/ER_Linux/frontend
-```
-
----
-
-**You will now have a clean, working deployment with no leftover issues!**
-
-Let me know if you want a ready-to-paste Nginx config, or if you hit any error during these steps.
+server {
+    listen 80;
+    server_name 10.91.41.16;
+    return 301 https://$host$request_uri;
+}
