@@ -1,52 +1,41 @@
-**You are extremely close!**  
-The error is now crystal clear from your Nginx error log:
-
-```
-stat() "/opt/ER_Linux/frontend/build/static/css/main.f36f01c9.chunk.css" failed (13: Permission denied)
-```
-
-This means **Nginx does not have permission to traverse one of the parent directories** of your static files, even though the files themselves are readable.
-
----
-
-## **How to Fix: Directory Traversal Permissions**
-
-Nginx (running as `www-data`) must have **execute (`x`) permission on every parent directory** in the path `/opt/ER_Linux/frontend/build/static/css/`.
-
-### **Run these commands:**
-
-```bash
-sudo chmod o+x /opt
-sudo chmod o+x /opt/ER_Linux
-sudo chmod o+x /opt/ER_Linux/frontend
-sudo chmod o+x /opt/ER_Linux/frontend/build
-sudo chmod o+x /opt/ER_Linux/frontend/build/static
-sudo chmod o+x /opt/ER_Linux/frontend/build/static/css
-sudo chmod o+x /opt/ER_Linux/frontend/build/static/js
-```
-
-- The `o+x` means "others can enter/traverse this directory".
-- This does **not** make files world-readable (they already are), it just allows Nginx to walk the directory tree.
-
----
-
-## **After Running the Above**
-
-1. **No need to reload Nginx** (permissions are checked at runtime).
-2. Refresh your browser and your static files should now load **without 404s**.
-
----
-
-## **Summary**
-
-- The files exist and are readable.
-- The error is due to missing `x` (traverse) permission on one or more parent directories.
-- The above commands will fix it.
-
----
-
-**Let me know if this solves it! If you still have issues, paste the output of:**
-```bash
-namei -l /opt/ER_Linux/frontend/build/static/css/main.f36f01c9.chunk.css
-```
-This will show permissions for every directory in the path.
+history.ts:494  Uncaught Error
+    at l (history.ts:494:11)
+    at hooks.tsx:190:3
+    at g (hooks.tsx:186:46)
+    at G (SessionManager.js:8:20)
+    at lo (react-dom-client.production.js:3681:21)
+    at qi (react-dom-client.production.js:5637:15)
+    at fs (react-dom-client.production.js:6666:14)
+    at Bc (react-dom-client.production.js:10860:14)
+    at Mc (react-dom-client.production.js:10743:37)
+    at Fc (react-dom-client.production.js:10724:7)
+l @ history.ts:494
+(anonymous) @ hooks.tsx:190
+g @ hooks.tsx:186
+G @ SessionManager.js:8
+lo @ react-dom-client.production.js:3681
+qi @ react-dom-client.production.js:5637
+fs @ react-dom-client.production.js:6666
+Bc @ react-dom-client.production.js:10860
+Mc @ react-dom-client.production.js:10743
+Fc @ react-dom-client.production.js:10724
+Tc @ react-dom-client.production.js:10332
+uu @ react-dom-client.production.js:11471
+C @ scheduler.production.js:143
+(anonymous) @ setImmediate.js:40
+u @ setImmediate.js:69
+r @ setImmediate.js:109
+postMessage
+n @ setImmediate.js:120
+l.setImmediate @ setImmediate.js:27
+E @ scheduler.production.js:187
+P @ scheduler.production.js:202
+t.unstable_scheduleCallback @ scheduler.production.js:326
+cu @ react-dom-client.production.js:11451
+lu @ react-dom-client.production.js:11379
+(anonymous) @ react-dom-client.production.js:11485
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
