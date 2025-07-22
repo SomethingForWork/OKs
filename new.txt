@@ -1,51 +1,10 @@
-  Line 19:10:   'inactive' is assigned a value but never used                  no-unused-vars
-  Line 19:20:   'setInactive' is assigned a value but never used               no-unused-vars
-  Line 20:10:   'rights' is assigned a value but never used                    no-unused-vars
-  Line 20:18:   'setRights' is assigned a value but never used                 no-unused-vars
-  Line 21:10:   'reviewerRemarks' is assigned a value but never used           no-unused-vars
-  Line 21:27:   'setReviewerRemarks' is assigned a value but never used        no-unused-vars
-  Line 23:19:   'setSuccess' is assigned a value but never used                no-unused-vars
-  Line 25:10:   'frequencies' is assigned a value but never used               no-unused-vars
-  Line 114:13:  'response' is assigned a value but never used                  no-unused-vars
-
-./src/pages/MyEmployees.js
-  Line 9:10:  'myAppNames' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-File sizes after gzip:
-
-  256.08 KB  build/static/js/2.7126ab4f.chunk.js
-  29.98 KB   build/static/css/2.dbb74888.chunk.css
-  14.96 KB   build/static/js/main.acd6f444.chunk.js
-  1.6 KB     build/static/css/main.f36f01c9.chunk.css
-  1.17 KB    build/static/js/runtime-main.1a55048b.js
-  577 B      build/static/js/3.78c7d907.chunk.js
-
-The project was built assuming it is hosted at /.
-You can control this with the homepage field in your package.json.
-
-The build folder is ready to be deployed.
-You may serve it with a static server:
-
-  npm install -g serve
-  serve -s build
-
-Find out more about deployment here:
-
-  bit.ly/CRA-deploy
-
-root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo nginx -t
-nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /etc/nginx/nginx.conf test is successful
-root@DELRHDERS001U:/opt/ER_Linux/frontend# sudo systemctl reload nginx
-root@DELRHDERS001U:/opt/ER_Linux/frontend# npm ls history
-fweb@0.1.0 /opt/ER_Linux/frontend
-└── (empty)
-
-root@DELRHDERS001U:/opt/ER_Linux/frontend# npm ls react-router-dom
-fweb@0.1.0 /opt/ER_Linux/frontend
-└── react-router-dom@6.29.0
-
-root@DELRHDERS001U:/opt/ER_Linux/frontend#
+10.91.41.16/:1   GET https://10.91.41.16/static/css/2.dbb74888.chunk.css net::ERR_ABORTED 404 (Not Found)
+10.91.41.16/:1   GET https://10.91.41.16/static/css/main.f36f01c9.chunk.css net::ERR_ABORTED 404 (Not Found)
+10.91.41.16/:1   GET https://10.91.41.16/static/js/2.7126ab4f.chunk.js 404 (Not Found)
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+10.91.41.16/:1   GET https://10.91.41.16/static/js/main.acd6f444.chunk.js net::ERR_ABORTED 404 (Not Found)
+favicon.jpg:1   GET https://10.91.41.16/favicon.jpg 403 (Forbidden)
