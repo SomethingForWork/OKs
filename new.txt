@@ -1,4 +1,32 @@
+root@DELRHDERS001U:/opt/ER_Linux/server# sudo find /opt/ER_Linux/frontend/build -type f -exec chmod 644 {} \;
+root@DELRHDERS001U:/opt/ER_Linux/server# sudo find /opt/ER_Linux/frontend/build -type d -exec chmod 755 {} \;
+root@DELRHDERS001U:/opt/ER_Linux/server# sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@DELRHDERS001U:/opt/ER_Linux/server# sudo systemctl reload nginx
+root@DELRHDERS001U:/opt/ER_Linux/server# cd `/opt/ER_Linux/frontend
+> ^C
 root@DELRHDERS001U:/opt/ER_Linux/server# cd /opt/ER_Linux/frontend
 root@DELRHDERS001U:/opt/ER_Linux/frontend# ls
 build  node_modules  package.json  package-lock.json  public  README.md  src
+root@DELRHDERS001U:/opt/ER_Linux/frontend# ^C
+root@DELRHDERS001U:/opt/ER_Linux/frontend# ls -l /opt/ER_Linux/frontend/build/static/css/
+
+total 820
+-rw-r--r-- 1 www-data www-data 232649 Jul 22 14:20 2.dbb74888.chunk.css
+-rw-r--r-- 1 www-data www-data 582194 Jul 22 14:20 2.dbb74888.chunk.css.map
+-rw-r--r-- 1 www-data www-data   5351 Jul 22 14:20 main.f36f01c9.chunk.css
+-rw-r--r-- 1 www-data www-data  10612 Jul 22 14:20 main.f36f01c9.chunk.css.map
+root@DELRHDERS001U:/opt/ER_Linux/frontend# ls -l /opt/ER_Linux/frontend/build/static/js/
+
+total 6000
+-rw-r--r-- 1 www-data www-data  821900 Jul 22 14:20 2.7126ab4f.chunk.js
+-rw-r--r-- 1 www-data www-data    1994 Jul 22 14:20 2.7126ab4f.chunk.js.LICENSE.txt
+-rw-r--r-- 1 www-data www-data 4934747 Jul 22 14:20 2.7126ab4f.chunk.js.map
+-rw-r--r-- 1 www-data www-data     907 Jul 22 14:20 3.78c7d907.chunk.js
+-rw-r--r-- 1 www-data www-data    1998 Jul 22 14:20 3.78c7d907.chunk.js.map
+-rw-r--r-- 1 www-data www-data   88267 Jul 22 14:20 main.acd6f444.chunk.js
+-rw-r--r-- 1 www-data www-data  260361 Jul 22 14:20 main.acd6f444.chunk.js.map
+-rw-r--r-- 1 www-data www-data    2350 Jul 22 14:20 runtime-main.1a55048b.js
+-rw-r--r-- 1 www-data www-data   12469 Jul 22 14:20 runtime-main.1a55048b.js.map
 root@DELRHDERS001U:/opt/ER_Linux/frontend#
