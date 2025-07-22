@@ -1,9 +1,106 @@
-10.91.41.16/:1   GET https://10.91.41.16/static/css/2.dbb74888.chunk.css net::ERR_ABORTED 404 (Not Found)
-[NEW] Explain Console errors by using Copilot in Edge: click
-         
-         to explain an error. 
-        Learn more
-        Don't show again
-10.91.41.16/:1   GET https://10.91.41.16/static/css/main.f36f01c9.chunk.css 404 (Not Found)
-10.91.41.16/:1   GET https://10.91.41.16/static/js/2.7126ab4f.chunk.js net::ERR_ABORTED 404 (Not Found)
-10.91.41.16/:1   GET https://10.91.41.16/static/js/main.acd6f444.chunk.js net::ERR_ABORTED 404 (Not Found)
+These errors mean that Nginx is not able to find or serve your React build’s static files. This is a **static file serving issue** and is almost always due to one of the following:
+
+---
+
+## **Checklist to Fix 404s for React Static Files**
+
+### 1. **Check Build Directory Structure**
+
+After running `npm run build` in `/opt/ER_Linux/frontend`, you should have:
+
+```
+/opt/ER_Linux/frontend/build/
+    index.html
+    static/
+        css/
+        js/
+        media/
+    favicon.jpg
+    manifest.json
+    ...
+```
+
+**Check:**
+```bash
+ls -l /opt/ER_Linux/frontend/build/static/css/
+ls -l /opt/ER_Linux/frontend/build/static/js/
+```
+You should see files like `2.dbb74888.chunk.css`, `main.f36f01c9.chunk.css`, `2.7126ab4f.chunk.js`, etc.
+
+---
+
+### 2. **Check Nginx Config for Static Files**
+
+Your Nginx config should have:
+
+```nginx
+location /static/ {
+    alias /opt/ER_Linux/frontend/build/static/;
+    expires 30d;
+    add_header Cache-Control "public, max-age=2592000";
+}
+```
+
+**Important:**  
+- The `alias` directive must point to the `static` folder inside your build, not the build root.
+- There should be **no extra `/static` at the end of the alias path**.
+
+---
+
+### 3. **Check Permissions**
+
+Make sure Nginx can read the files:
+
+```bash
+sudo chown -R www-data:www-data /opt/ER_Linux/frontend/build
+sudo chmod -R 755 /opt/ER_Linux/frontend/build
+sudo find /opt/ER_Linux/frontend/build -type f -exec chmod 644 {} \;
+sudo find /opt/ER_Linux/frontend/build -type d -exec chmod 755 {} \;
+```
+
+---
+
+### 4. **Reload Nginx**
+
+After any config or file changes:
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+---
+
+### 5. **Test Direct File Access**
+
+Try to access a static file directly in your browser:
+```
+https://10.91.41.16/static/css/main.f36f01c9.chunk.css
+```
+If you get a 404, the file is missing or the alias is wrong.
+
+---
+
+## **Common Mistakes**
+
+- **Wrong alias path:**  
+  If you use `root` instead of `alias` in the `/static/` block, or if the alias path is incorrect, you’ll get 404s.
+- **Build not copied:**  
+  If you built the frontend elsewhere, make sure the `build` directory is present and up-to-date on the server.
+- **Nginx not reloaded:**  
+  Always reload Nginx after changes.
+
+---
+
+## **If You Still Get 404s**
+
+- Paste the output of:
+  ```bash
+  ls -l /opt/ER_Linux/frontend/build/static/css/
+  ls -l /opt/ER_Linux/frontend/build/static/js/
+  ```
+- Paste your current Nginx config for `/static/`.
+
+---
+
+**Let me know what you find, and I’ll help you fix it immediately!**
