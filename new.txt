@@ -8,16 +8,6 @@ server {
     root /opt/ER_Linux/frontend/build;
     index index.html;
 
-    # Proxy API requests to backend
-    location /api/ {
-        proxy_pass http://localhost:5000;  # Change to your backend port
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-
     # Serve static files directly
     location /static/ {
         alias /opt/ER_Linux/frontend/build/static/;
@@ -32,9 +22,14 @@ server {
         add_header Cache-Control "public, max-age=2592000";
     }
 
-    # All other requests serve React's index.html (for client-side routing)
+    # Proxy all other requests to backend (Node.js on 3000)
     location / {
-        try_files $uri /index.html;
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
     }
 }
 
