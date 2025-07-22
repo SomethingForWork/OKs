@@ -1,39 +1,83 @@
-root@DELRHDERS001U:/opt/ER_Linux/server# sudo find /opt/ER_Linux/frontend/build -type f -exec chmod 644 {} \;
-root@DELRHDERS001U:/opt/ER_Linux/server# sudo find /opt/ER_Linux/frontend/build -type d -exec chmod 755 {} \;
-root@DELRHDERS001U:/opt/ER_Linux/server# sudo nginx -t
-nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /etc/nginx/nginx.conf test is successful
-root@DELRHDERS001U:/opt/ER_Linux/server# sudo systemctl reload nginx
-root@DELRHDERS001U:/opt/ER_Linux/server# cd `/opt/ER_Linux/frontend
-> ^C
-root@DELRHDERS001U:/opt/ER_Linux/server# cd /opt/ER_Linux/frontend
-root@DELRHDERS001U:/opt/ER_Linux/frontend# ls
-build  node_modules  package.json  package-lock.json  public  README.md  src
-root@DELRHDERS001U:/opt/ER_Linux/frontend# ^C
-root@DELRHDERS001U:/opt/ER_Linux/frontend# ls -l /opt/ER_Linux/frontend/build/static/css/
+**Everything looks correct:**
+- The files exist at the right paths.
+- Permissions are correct.
+- Nginx config for `/static/` is correct and active.
 
-total 820
--rw-r--r-- 1 www-data www-data 232649 Jul 22 14:20 2.dbb74888.chunk.css
--rw-r--r-- 1 www-data www-data 582194 Jul 22 14:20 2.dbb74888.chunk.css.map
--rw-r--r-- 1 www-data www-data   5351 Jul 22 14:20 main.f36f01c9.chunk.css
--rw-r--r-- 1 www-data www-data  10612 Jul 22 14:20 main.f36f01c9.chunk.css.map
-root@DELRHDERS001U:/opt/ER_Linux/frontend# ls -l /opt/ER_Linux/frontend/build/static/js/
+---
 
-total 6000
--rw-r--r-- 1 www-data www-data  821900 Jul 22 14:20 2.7126ab4f.chunk.js
--rw-r--r-- 1 www-data www-data    1994 Jul 22 14:20 2.7126ab4f.chunk.js.LICENSE.txt
--rw-r--r-- 1 www-data www-data 4934747 Jul 22 14:20 2.7126ab4f.chunk.js.map
--rw-r--r-- 1 www-data www-data     907 Jul 22 14:20 3.78c7d907.chunk.js
--rw-r--r-- 1 www-data www-data    1998 Jul 22 14:20 3.78c7d907.chunk.js.map
--rw-r--r-- 1 www-data www-data   88267 Jul 22 14:20 main.acd6f444.chunk.js
--rw-r--r-- 1 www-data www-data  260361 Jul 22 14:20 main.acd6f444.chunk.js.map
--rw-r--r-- 1 www-data www-data    2350 Jul 22 14:20 runtime-main.1a55048b.js
--rw-r--r-- 1 www-data www-data   12469 Jul 22 14:20 runtime-main.1a55048b.js.map
-root@DELRHDERS001U:/opt/ER_Linux/frontend# ^C
-root@DELRHDERS001U:/opt/ER_Linux/frontend# cd
-root@DELRHDERS001U:~# sudo nginx -T | grep static
-nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /etc/nginx/nginx.conf test is successful
-    location /static/ {
-        alias /opt/ER_Linux/frontend/build/static/;
-root@DELRHDERS001U:~#
+## **Next Steps: Deep Debug**
+
+Let's do a final, step-by-step check to find the root cause:
+
+---
+
+### 1. **Direct File Test**
+
+On your server, run:
+```bash
+cat /opt/ER_Linux/frontend/build/static/css/main.f36f01c9.chunk.css | head -n 10
+```
+If you see CSS content, the file is readable.
+
+---
+
+### 2. **Nginx Error Log**
+
+Try to access `https://10.91.41.16/static/css/main.f36f01c9.chunk.css` in your browser, then immediately run:
+```bash
+sudo tail -n 30 /var/log/nginx/error.log
+```
+**Paste any errors you see.**
+
+---
+
+### 3. **Nginx Access Log**
+
+Check what Nginx is actually serving:
+```bash
+sudo tail -n 30 /var/log/nginx/access.log
+```
+Look for the line with `/static/css/main.f36f01c9.chunk.css` and see what status code is returned.
+
+---
+
+### 4. **Check for Duplicate/Conflicting Configs**
+
+Run:
+```bash
+sudo nginx -T | grep -B 5 -A 5 'location /static/'
+```
+This will show the full context of your `/static/` block.  
+**Paste the output here.**
+
+---
+
+### 5. **Check for SELinux/AppArmor (if on RHEL/CentOS/Ubuntu with security modules)**
+
+If you are on a system with SELinux or AppArmor, they may block Nginx from reading files in `/opt`.  
+Try moving your build to `/var/www/html/ers_build` and update your alias accordingly:
+```nginx
+location /static/ {
+    alias /var/www/html/ers_build/static/;
+    ...
+}
+```
+Then reload Nginx and test.
+
+---
+
+## **Summary**
+
+- Your files and config look correct.
+- If you still get 404s, the error log and access log will tell us exactly what’s wrong.
+- SELinux/AppArmor or a subtle config conflict could be the cause.
+
+---
+
+**Please provide:**
+- The output of the `cat` command above.
+- The last 30 lines of your Nginx error log after a failed request.
+- The last 30 lines of your Nginx access log after a failed request.
+- The full context of your `/static/` block from `nginx -T`.
+
+With this info, I can guarantee a fix!
