@@ -1,37 +1,41 @@
-server {
-    listen 443 ssl;
-    server_name 10.91.41.16;
-
-    ssl_certificate /etc/ssl/religare/religare.in.crt;
-    ssl_certificate_key /etc/ssl/religare/religare.in.key;
-
-    root /opt/ER_Linux/frontend/build;
-    index index.html;
-
-    # Serve static files directly
-    location /static/ {
-        alias /opt/ER_Linux/frontend/build/static/;
-        expires 30d;
-        add_header Cache-Control "public, max-age=2592000";
-    }
-
-    # Serve other assets (fonts, images, etc.)
-    location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|eot|otf|json)$ {
-        root /opt/ER_Linux/frontend/build;
-        expires 30d;
-        add_header Cache-Control "public, max-age=2592000";
-        try_files $uri =404;
-    }
-
-    # Proxy EVERYTHING else to backend
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-    }
-}
-
-server {
-    listen 80;
-    server_name 10.91.41.16;
-    return 301 https://$host$request_uri;
-}
+history.ts:494  Uncaught Error
+    at l (history.ts:494:11)
+    at hooks.tsx:190:3
+    at g (hooks.tsx:186:46)
+    at G (SessionManager.js:8:20)
+    at lo (react-dom-client.production.js:3681:21)
+    at qi (react-dom-client.production.js:5637:15)
+    at fs (react-dom-client.production.js:6666:14)
+    at Bc (react-dom-client.production.js:10860:14)
+    at Mc (react-dom-client.production.js:10743:37)
+    at Fc (react-dom-client.production.js:10724:7)
+l @ history.ts:494
+(anonymous) @ hooks.tsx:190
+g @ hooks.tsx:186
+G @ SessionManager.js:8
+lo @ react-dom-client.production.js:3681
+qi @ react-dom-client.production.js:5637
+fs @ react-dom-client.production.js:6666
+Bc @ react-dom-client.production.js:10860
+Mc @ react-dom-client.production.js:10743
+Fc @ react-dom-client.production.js:10724
+Tc @ react-dom-client.production.js:10332
+uu @ react-dom-client.production.js:11471
+C @ scheduler.production.js:143
+(anonymous) @ setImmediate.js:40
+u @ setImmediate.js:69
+r @ setImmediate.js:109
+postMessage
+n @ setImmediate.js:120
+l.setImmediate @ setImmediate.js:27
+E @ scheduler.production.js:187
+P @ scheduler.production.js:202
+t.unstable_scheduleCallback @ scheduler.production.js:326
+cu @ react-dom-client.production.js:11451
+lu @ react-dom-client.production.js:11379
+(anonymous) @ react-dom-client.production.js:11485
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
