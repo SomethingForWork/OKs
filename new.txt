@@ -1,48 +1,20 @@
-Great! Since you have already built the new frontend after fixing `App.js`, here’s what you should do next:
-
----
-
-## **1. Set Permissions (if you haven’t already)**
-Make sure Nginx can read the new build:
-```bash
-sudo chmod -R o+r /opt/ER_Linux/frontend/build
-sudo find /opt/ER_Linux/frontend/build -type d -exec chmod o+x {} \;
-sudo chmod o+x /opt /opt/ER_Linux /opt/ER_Linux/frontend
-```
-
----
-
-## **2. Reload Nginx**
-Apply any changes and serve the new build:
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
----
-
-## **3. Hard Refresh Your Browser**
-Clear your browser cache and reload the site:
-- Windows/Linux: `Ctrl+Shift+R`
-- Mac: `Cmd+Shift+R`
-
----
-
-## **4. Test Your Application**
-- Visit your site (e.g., https://10.91.41.16).
-- Check that the error is gone.
-- Test login, navigation, and session management.
-
----
-
-## **5. (Optional) Restart Backend**
-If you made any backend changes, restart your backend server:
-```bash
-pm2 restart er_server
-# or
-node index.js
-```
-
----
-
-**If you see any errors, let me know the exact message. Otherwise, you should now have a fully working deployment with no React Router errors!**
+{
+  "_id": {
+    "$oid": "6880b9f6116041b33a281541"
+  },
+  "name": "esltester2",
+  "email": "esltester2@religare.com",
+  "password": null,
+  "company_name": null,
+  "role": "user",
+  "deleted_at": null,
+  "status": true,
+  "authType": "ldap",
+  "created_at": {
+    "$date": "2025-07-23T10:31:18.690Z"
+  },
+  "updated_at": {
+    "$date": "2025-07-23T10:31:18.690Z"
+  },
+  "__v": 0
+}
