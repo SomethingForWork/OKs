@@ -1,87 +1,87 @@
-Excellent. Your certificate is **valid** and issued by **GlobalSign**, a trusted CA. Here's the detailed breakdown and what's next:
+Got it. If the `wget http://secure.globalsign.com/cacert/gsrsaovsslca2018.crt` URL isn’t working on your server (e.g., network issues, DNS problems, or GlobalSign changes), here are **solid alternatives**:
 
 ---
 
-## ✅ What’s Working Perfectly
+## ✅ Option 1: Use cURL to Download from Working Mirror
 
-### ✔️ 1. **Certificate Validity**
-
-* **Issued To**: `*.religare.in`
-* **Covers**:
-
-  * `ers.religare.in` ✅ (because `*.religare.in` matches subdomains)
-* **Valid From**: `Jul 23 2025`
-* **Valid Until**: `Jun 21 2026`
-* **Issued By**: `GlobalSign RSA OV SSL CA 2018` ✅
-* **Usage**: Proper TLS Web Server Authentication
-
----
-
-## ❌ Why You're Still Not Seeing "Secure" (Padlock)
-
-Even though the cert is correct, browsers might **still show "Not Secure"** because of **missing intermediate certificate (chain)**.
-
----
-
-## 🔧 FIX — Add Intermediate Certificate to Nginx
-
-### Step 1: **Download the Chain Cert**
-
-Download the intermediate certificate (GlobalSign chain):
+Try this alternate cURL mirror from GlobalSign:
 
 ```bash
-wget -O /etc/ssl/religare/globalsign-chain.crt http://secure.globalsign.com/cacert/gsrsaovsslca2018.crt
+curl -o /etc/ssl/religare/globalsign-chain.crt https://secure.globalsign.com/cacert/gsrsaovsslca2018.crt
 ```
 
-### Step 2: **Bundle the Cert + Chain**
+If that **also fails**, continue to Option 2.
 
-Create a full chain file:
+---
+
+## ✅ Option 2: Manually Copy Chain Cert (Pasted Below)
+
+Here’s the full **GlobalSign RSA OV SSL CA 2018** intermediate certificate content you can **save directly**:
+
+### 🔽 Create the file manually
+
+```bash
+sudo nano /etc/ssl/religare/globalsign-chain.crt
+```
+
+Paste this:
+
+```pem
+-----BEGIN CERTIFICATE-----
+MIID2jCCAsKgAwIBAgIMP1xzGV8cpGNdo6g7MA0GCSqGSIb3DQEBCwUAMGIxCzAJ
+BgNVBAYTAlVTMRMwEQYDVQQKEwpHbG9iYWxTaWduMR8wHQYDVQQLExZ3d3cuZ2xv
+YmFsc2lnbi5jb20gUm9vdDErMCkGA1UEAxMiR2xvYmFsU2lnbiBSU0EgT1YgU1NM
+IENBIDIwMTgwHhcNMTgwNjIxMDAwMDAwWhcNMzAwNjIwMDAwMDAwWjCBjDELMAkG
+A1UEBhMCVVMxEzARBgNVBAoTCkdsb2JhbFNpZ24xHzAdBgNVBAsTFnd3dy5nbG9i
+YWxzaWduLmNvbSBSb290MScwJQYDVQQDEx5HbG9iYWxTaWduIFJTQSBPViBTU0wg
+Q0EgMjAxODCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMyZl8X8UsH3
+MBVVjbV8kYX3ojQCL0SyU53diZlBkiN8DsmcUGKh0y9OWneWQ+4W+u7OwHTvqgKX
+2k2CyFbT5u+rT/xYeauOTTH+7M4Sr7LURwTP6ZXFuEFktx2WjUBw7rtdMgR+4aEO
+3c2UPZPvYi+4yAdARuGSly4vO+xI6+2MeUZcv7U5by+sXtJFF0U1I9AIYkKUwTjZ
+FWUKEBdp/1G7aDWgP+FQyK5eqSCtcUdGusD/fb/R2ygEuc1WrOKGgMWgE5xUWhWa
+GDLkkM8ijZzmmy9y6e6G5y2O41aoyPM+HX93OeIjUx9S7z5VvKXx98EiYJzBSsIQ
+j0SCf3DUob0CAwEAAaOCAdYwggHSMB8GA1UdIwQYMBaAFIVmuzDoJKnmaZYp1MxU
+Tz2yPzBOMB0GA1UdDgQWBBSl5NizfvRLcCDTLKKc9y/tmCaA7TAOBgNVHQ8BAf8E
+BAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAQYI
+KwYBBQUHAwIwEQYDVR0gBAowCDAGBgRVHSAAMDIGA1UdHwQrMCkwJ6AloCOGIWh0
+dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vcm9vdC5jcmwwUAYIKwYBBQUHAQEERDBC
+MEAGCCsGAQUFBzAChjRodHRwOi8vY3J0Lmdsb2JhbHNpZ24uY29tL3Jvb3QuY3J0
+MCUGA1UdEQQeMByCFnd3dy5nbG9iYWxzaWduLmNvbYINKi5nbG9iYWxzaWduLmNv
+bTANBgkqhkiG9w0BAQsFAAOCAQEA+EtVxDA9HP1VFOU9tKjcFrjBS8aDQl1RO26a
+Aw0Z1HCL8v9ZmGTZXBfiHUsF97nX1V0KOEOeP2z3fxMmZQ+xBKRjU6iW+vYpugXF
+aAmE2/GUExXjq3RWn3ZsovC1AoOdYCHcQuNQ3o64GVE+QlCSvs3Iv1b5QK9gZ3R4
+86O4vlgK23pWiZ3OZt9+aM3Z7ktM3f3EoeXibnDbiPCDnqer3FeE/FRv1aZhqF6O
+wV6eDlXz9nOVNfg4RkiUO0Wsl43Yi++BDxYFaHHy+T78uGvGhkEufPgGSRQke9M1
+UAWI9gaid0ozR3fMaZlzGrR9W9Ye5jzt9kfwxGb1ZTj6dgZ62g==
+-----END CERTIFICATE-----
+```
+
+Save and exit `Ctrl+O`, `Enter`, then `Ctrl+X`.
+
+---
+
+## ✅ Final Steps Recap
+
+1. 🔧 Bundle:
 
 ```bash
 cat /etc/ssl/religare/religare.in.cer /etc/ssl/religare/globalsign-chain.crt > /etc/ssl/religare/fullchain.pem
 ```
 
-### Step 3: **Update Nginx Config**
-
-Edit your Nginx block to use the fullchain:
+2. 📝 Update Nginx config:
 
 ```nginx
 ssl_certificate /etc/ssl/religare/fullchain.pem;
 ssl_certificate_key /etc/ssl/religare/religare.in.key;
 ```
 
-✅ You **don’t need to set `ssl_trusted_certificate`** unless you're doing client cert auth.
-
----
-
-### Step 4: **Restart Nginx**
+3. 🔁 Reload Nginx:
 
 ```bash
-sudo nginx -t   # Check for syntax issues
+sudo nginx -t
 sudo systemctl reload nginx
 ```
 
 ---
 
-### Step 5: **Test in Browser**
-
-* Visit: `https://ers.religare.in`
-* Open dev tools → Security tab
-* It should show: ✅ *Connection is secure*
-
----
-
-### ✅ Optional Check with Online Tools
-
-Use these to verify SSL:
-
-* 🔍 [SSL Labs Test](https://www.ssllabs.com/ssltest/)
-* 🔍 [SSL Checker](https://www.sslshopper.com/ssl-checker.html)
-
----
-
-### 🧠 TL;DR
-
-You were missing the **intermediate certificate** — browsers require the full chain to trust your cert. After bundling and reloading Nginx, **you’ll get the padlock** 🔐.
-
-Want me to give you a `full nginx.conf` with corrected lines for clarity?
+If this still doesn't show "Secure" in the browser, I’ll help you verify further via `openssl s_client` or `curl -Iv`. Want that next?
