@@ -1,1 +1,110 @@
-openssl x509 -in /etc/ssl/religare/religare.in.cer -noout -text
+root@DELRHDERS001P:~# openssl x509 -in /etc/ssl/religare/religare.in.cer -noout -text
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            24:9f:a2:ec:ca:0b:9a:d0:8f:b8:44:83
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C = BE, O = GlobalSign nv-sa, CN = GlobalSign RSA OV SSL CA 2018
+        Validity
+            Not Before: Jul 23 06:37:02 2025 GMT
+            Not After : Jun 21 10:11:04 2026 GMT
+        Subject: C = IN, ST = Uttar Pradesh, L = Noida, O = RELIGARE ENTERPRISES LIMITED, CN = *.religare.in
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:b8:e1:88:98:c8:33:c3:a2:ab:64:d9:57:98:b2:
+                    ad:ad:6a:8e:8c:7c:9a:ed:97:ff:8d:82:f4:3a:a3:
+                    6d:21:9c:27:6f:d6:e6:79:da:f4:3d:f6:ab:a8:92:
+                    e4:a2:08:16:26:79:b0:25:bd:53:a3:26:bb:6f:a8:
+                    f2:3f:0e:b2:7c:fa:64:4d:1c:ea:ae:52:94:33:34:
+                    b4:fa:e6:1f:3e:0c:cd:96:35:02:44:ee:f1:9c:f1:
+                    e1:b4:f9:63:ba:b2:f4:9f:51:4e:3b:da:bc:b3:c9:
+                    9b:c1:8f:31:a6:2c:6b:bb:39:58:c1:c8:ec:7b:fa:
+                    5d:9b:20:8b:85:e6:64:47:4e:3c:bb:41:2e:e3:fe:
+                    97:e7:5d:ef:6a:9d:3e:b3:45:27:8a:c0:78:d7:dd:
+                    2c:0a:f6:7d:e6:f4:c8:7f:82:c6:54:c9:00:2a:7e:
+                    89:a5:01:84:73:86:ea:7f:9f:31:09:bd:56:32:35:
+                    e1:c1:ae:9e:5c:68:2b:d2:a4:5e:d5:0f:30:38:e3:
+                    cb:fe:a8:73:c6:58:2b:fb:66:d5:a5:69:1c:be:a5:
+                    c9:4b:aa:bc:ae:13:b7:96:6d:b1:bd:19:3f:e3:50:
+                    73:02:3d:88:c1:92:d2:23:75:73:36:d8:d8:32:f3:
+                    d3:37:a7:1b:59:aa:63:87:78:5e:8b:cc:f2:d4:c0:
+                    b8:ef
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Basic Constraints: critical
+                CA:FALSE
+            Authority Information Access:
+                CA Issuers - URI:http://secure.globalsign.com/cacert/gsrsaovsslca2018.crt
+                OCSP - URI:http://ocsp.globalsign.com/gsrsaovsslca2018
+            X509v3 Certificate Policies:
+                Policy: 1.3.6.1.4.1.4146.1.20
+                  CPS: https://www.globalsign.com/repository/
+                Policy: 2.23.140.1.2.2
+            X509v3 Subject Alternative Name:
+                DNS:*.religare.in, DNS:religare.in
+            X509v3 Extended Key Usage:
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Authority Key Identifier:
+                F8:EF:7F:F2:CD:78:67:A8:DE:6F:8F:24:8D:88:F1:87:03:02:B3:EB
+            X509v3 Subject Key Identifier:
+                35:F0:B1:5B:36:B9:51:9F:92:32:4A:19:4F:44:6C:7A:58:AD:D5:88
+            CT Precertificate SCTs:
+                Signed Certificate Timestamp:
+                    Version   : v1 (0x0)
+                    Log ID    : 19:86:D4:C7:28:AA:6F:FE:BA:03:6F:78:2A:4D:01:91:
+                                AA:CE:2D:72:31:0F:AE:CE:5D:70:41:2D:25:4C:C7:D4
+                    Timestamp : Jul 23 06:37:05.422 2025 GMT
+                    Extensions: none
+                    Signature : ecdsa-with-SHA256
+                                30:46:02:21:00:87:C1:DB:B8:0D:28:DA:CC:E3:AE:6D:
+                                F0:91:DD:35:FF:BF:FF:A9:46:8B:82:91:29:A2:32:C0:
+                                5D:7A:5A:59:9B:02:21:00:D0:00:0C:21:DD:5C:F4:CD:
+                                DE:A7:9E:8A:A7:2F:E6:62:FD:B5:1A:B8:EF:84:E3:D9:
+                                C4:B1:22:51:F6:A1:31:AE
+                Signed Certificate Timestamp:
+                    Version   : v1 (0x0)
+                    Log ID    : CB:38:F7:15:89:7C:84:A1:44:5F:5B:C1:DD:FB:C9:6E:
+                                F2:9A:59:CD:47:0A:69:05:85:B0:CB:14:C3:14:58:E7
+                    Timestamp : Jul 23 06:37:05.440 2025 GMT
+                    Extensions: none
+                    Signature : ecdsa-with-SHA256
+                                30:44:02:20:09:85:AA:93:DF:7D:45:4A:DB:5B:AC:3E:
+                                65:6F:D6:97:45:43:23:91:1D:92:29:BA:76:B4:64:C6:
+                                E1:0D:B2:30:02:20:53:81:92:E4:46:9D:D5:AB:C0:24:
+                                17:9D:8B:EE:41:A5:B3:93:38:40:1A:56:A1:D2:B9:FE:
+                                5B:AB:F1:55:50:B6
+                Signed Certificate Timestamp:
+                    Version   : v1 (0x0)
+                    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:
+                                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21
+                    Timestamp : Jul 23 06:37:05.398 2025 GMT
+                    Extensions: none
+                    Signature : ecdsa-with-SHA256
+                                30:45:02:20:65:CA:EF:FF:C0:88:DB:21:47:E9:0B:9E:
+                                AB:E5:F1:08:A5:24:F0:1C:E7:55:29:54:B1:0C:5B:BB:
+                                F8:17:71:83:02:21:00:D7:9D:CA:CC:EF:90:D0:E5:7E:
+                                9B:A5:15:D3:A3:78:6B:DD:A0:20:78:BF:EE:97:72:8E:
+                                38:14:3A:51:69:07:02
+    Signature Algorithm: sha256WithRSAEncryption
+    Signature Value:
+        a4:14:cc:fe:ed:d8:cb:cf:6c:cc:41:69:ff:b8:e9:b5:ef:05:
+        5f:63:d5:2e:c1:f1:27:0c:c5:3c:fa:d2:4f:64:28:c5:dd:c6:
+        6a:a8:10:06:5c:bf:9f:2c:6c:75:b1:38:07:1a:1b:15:ba:5a:
+        17:13:16:02:77:e3:ea:63:76:a0:91:53:21:dd:60:5e:f6:0f:
+        67:3e:ed:9c:c5:57:28:a1:ca:c3:0a:2d:86:b4:33:84:42:d7:
+        57:17:64:ce:2a:b6:54:c0:2e:dd:84:f4:5c:1b:f2:3d:d2:42:
+        57:cd:65:df:94:6d:54:a5:66:e9:48:b7:4c:02:b1:92:8a:7b:
+        80:9b:f2:db:84:87:37:f5:48:41:40:f5:ed:c6:a8:63:e0:3d:
+        92:69:4b:a6:da:a0:b1:46:75:e2:86:96:e5:97:ec:4d:ab:46:
+        e6:83:a6:0d:4c:50:fb:98:32:1a:31:37:86:b6:82:4e:32:b5:
+        45:00:19:c2:da:8e:14:b5:d3:14:c6:80:92:77:64:e6:dd:b2:
+        a2:a1:e5:6b:53:34:c1:9f:aa:28:50:85:e3:b2:10:30:8f:9b:
+        1d:b9:f7:c3:6d:95:26:91:b6:52:c4:ba:16:b0:33:e0:5f:72:
+        b6:89:0e:40:33:94:95:a9:f4:87:59:2d:66:3d:90:f7:2b:f7:
+        05:ff:ca:c9
+root@DELRHDERS001P:~#
